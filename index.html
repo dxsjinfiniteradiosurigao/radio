@@ -21,7 +21,6 @@ var isPlaying = false;
 
 btn.addEventListener('click', function(){
   if (!isPlaying) {
-    // First tap — load stream
     btn.innerText = '⏳ Connecting...';
     btn.style.background = '#888';
     status.innerText = 'Please wait...';
@@ -33,7 +32,6 @@ btn.addEventListener('click', function(){
       status.innerText = '🔴 ON AIR - DXSJ Infinite Radio';
     }, 4000);
   } else {
-    // Stop
     vdo.src = '';
     isPlaying = false;
     btn.innerText = '▶ TAP TO LISTEN';
