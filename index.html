@@ -591,9 +591,11 @@ playBtn.addEventListener('click', function() {
 
     setConnecting();
 
-    // IMPORTANT: open VDO.Ninja as top-level page in same WebView
-    window.location.href =
-      "https://vdo.ninja/?view=fJbgPNk&autoplay=1&novideo=1&cleanoutput=1";
+    // open VDO in a separate "popup-style" WebView layer
+    window.open(
+      "https://vdo.ninja/?view=fJbgPNk&autoplay=1&novideo=1&cleanoutput=1",
+      "_blank"
+    );
 
     setTimeout(setLive, 1500);
 
@@ -604,7 +606,6 @@ playBtn.addEventListener('click', function() {
   }
 
 });
-
 heartBtn.addEventListener('click', function() {
   liked = !liked;
   heartBtn.classList.toggle('liked', liked);
