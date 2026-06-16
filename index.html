@@ -1,44 +1,553 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DXSJ Infinite Radio</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0d0d1a;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .app {
+    width: 100%;
+    max-width: 400px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 50px 28px 30px;
+    position: relative;
+  }
+
+  /* Background glow */
+  .bg-glow {
+    position: fixed;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(233,69,96,0.15) 0%, transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .content { position: relative; z-index: 1; width: 100%; display: flex; flex-direction: column; align-items: center; }
+
+  /* Top bar */
+  .top-bar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+  }
+
+  .top-bar-title {
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+
+  .top-btn {
+    background: rgba(255,255,255,0.08);
+    border: none;
+    color: #aaa;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .top-btn:hover { background: rgba(255,255,255,0.15); color: #fff; }
+
+  /* Album art */
+  .album-wrap {
+    position: relative;
+    width: 190px;
+    height: 190px;
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .pulse-ring {
+    position: absolute;
+    width: 190px;
+    height: 190px;
+    border-radius: 50%;
+    border: 2px solid rgba(233,69,96,0.5);
+    animation: pulse-anim 2s ease-out infinite;
+    opacity: 0;
+  }
+
+  .pulse-ring.r2 { animation-delay: 0.8s; }
+  .pulse-ring.r3 { animation-delay: 1.6s; }
+
+  .pulse-ring.paused { animation-play-state: paused; opacity: 0; }
+
+  @keyframes pulse-anim {
+    0% { transform: scale(1); opacity: 0.6; }
+    100% { transform: scale(1.5); opacity: 0; }
+  }
+
+  .album-art {
+    width: 190px;
+    height: 190px;
+    border-radius: 50%;
+    background: #1a1a2e;
+    border: 3px solid #e94560;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+    transition: border-color 0.3s;
+  }
+
+  .album-art-inner {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #0d0d1a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: #e94560;
+  }
+
+  /* Live badge */
+  .live-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    margin-bottom: 14px;
+    background: rgba(233,69,96,0.15);
+    color: #e94560;
+    border: 1px solid rgba(233,69,96,0.3);
+    transition: all 0.3s;
+  }
+
+  .live-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #e94560;
+    animation: blink 1.2s ease-in-out infinite;
+  }
+
+  .live-dot.paused { animation-play-state: paused; background: #555; }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.2; }
+  }
+
+  /* Station info */
+  .station-name {
+    color: #fff;
+    font-size: 22px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 6px;
+  }
+
+  .station-sub {
+    color: #666;
+    font-size: 13px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  /* Marquee */
+  .marquee-wrap {
+    width: 100%;
+    overflow: hidden;
+    margin-bottom: 8px;
+    padding: 8px 0;
+    border-top: 0.5px solid rgba(255,255,255,0.06);
+    border-bottom: 0.5px solid rgba(255,255,255,0.06);
+  }
+
+  .marquee-inner {
+    display: inline-block;
+    white-space: nowrap;
+    animation: marquee 18s linear infinite;
+    color: #e94560;
+    font-size: 13px;
+  }
+
+  .marquee-inner.paused { animation-play-state: paused; color: #444; }
+
+  @keyframes marquee {
+    0% { transform: translateX(100vw); }
+    100% { transform: translateX(-100%); }
+  }
+
+  /* Listeners */
+  .listeners {
+    color: #555;
+    font-size: 12px;
+    margin: 10px 0 24px;
+    text-align: center;
+  }
+
+  .listeners span { color: #e94560; font-weight: 500; }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+    margin-bottom: 32px;
+    width: 100%;
+  }
+
+  .ctrl-btn {
+    background: rgba(255,255,255,0.06);
+    border: none;
+    color: #777;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 20px;
+    transition: background 0.2s, color 0.2s, transform 0.15s;
+  }
+
+  .ctrl-btn:hover { background: rgba(255,255,255,0.12); color: #fff; }
+  .ctrl-btn:active { transform: scale(0.93); }
+  .ctrl-btn.active { color: #e94560; }
+
+  .play-btn {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: #e94560;
+    border: none;
+    color: #fff;
+    font-size: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.15s, background 0.2s;
+    box-shadow: 0 0 24px rgba(233,69,96,0.4);
+  }
+
+  .play-btn:hover { background: #c73350; transform: scale(1.05); }
+  .play-btn:active { transform: scale(0.96); }
+  .play-btn.stopped { background: #333; box-shadow: none; }
+
+  /* Volume */
+  .volume-section {
+    width: 100%;
+    margin-bottom: 32px;
+  }
+
+  .volume-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .volume-label span {
+    color: #555;
+    font-size: 12px;
+  }
+
+  .volume-label .vol-pct {
+    color: #888;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .volume-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .volume-row i { color: #444; font-size: 18px; }
+
+  input[type=range] {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    border-radius: 4px;
+    background: #222;
+    outline: none;
+    cursor: pointer;
+  }
+
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #e94560;
+    cursor: pointer;
+    box-shadow: 0 0 6px rgba(233,69,96,0.5);
+  }
+
+  /* Bottom nav */
+  .bottom-nav {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    border-top: 0.5px solid rgba(255,255,255,0.07);
+    padding-top: 20px;
+    margin-top: auto;
+  }
+
+  .nav-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    color: #444;
+    font-size: 10px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    transition: color 0.2s;
+    padding: 4px 12px;
+    letter-spacing: 0.3px;
+  }
+
+  .nav-btn i { font-size: 22px; }
+  .nav-btn.active { color: #e94560; }
+  .nav-btn:hover { color: #888; }
+</style>
 </head>
-<body style="margin:0;background:#1a1a2e;display:flex;justify-content:center;align-items:center;height:100vh;">
-<div style="text-align:center;">
-  <div style="font-size:60px;">📻</div>
-  <div style="color:white;font-family:sans-serif;font-size:18px;font-weight:bold;margin:10px 0;">DXSJ INFINITE RADIO</div>
-  <div style="color:#aaa;font-family:sans-serif;font-size:13px;margin-bottom:30px;">Surigao City</div>
-  <button id="btn" style="background:#e94560;color:white;border:none;padding:18px 45px;font-size:20px;border-radius:50px;cursor:pointer;">▶ TAP TO LISTEN</button>
-  <div id="status" style="color:#aaa;font-family:sans-serif;font-size:14px;margin-top:20px;">Tap to start the stream</div>
+<body>
+
+<div class="bg-glow"></div>
+
+<div class="app">
+  <div class="content">
+
+    <!-- Top bar -->
+    <div class="top-bar">
+      <button class="top-btn" aria-label="Menu">
+        <i class="ti ti-menu-2"></i>
+      </button>
+      <span class="top-bar-title">DXSJ Infinite Radio</span>
+      <button class="top-btn" aria-label="Share" id="shareBtn">
+        <i class="ti ti-share"></i>
+      </button>
+    </div>
+
+    <!-- Album art with pulse rings -->
+    <div class="album-wrap">
+      <div class="pulse-ring r1 paused" id="ring1"></div>
+      <div class="pulse-ring r2 paused" id="ring2"></div>
+      <div class="pulse-ring r3 paused" id="ring3"></div>
+      <div class="album-art">
+        <div class="album-art-inner">
+          <i class="ti ti-radio"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live badge -->
+    <div class="live-badge" id="liveBadge">
+      <div class="live-dot paused" id="liveDot"></div>
+      <span id="liveText">OFF AIR</span>
+    </div>
+
+    <!-- Station info -->
+    <div class="station-name">DXSJ Infinite Radio</div>
+    <div class="station-sub">Surigao City</div>
+
+    <!-- Marquee -->
+    <div class="marquee-wrap">
+      <span class="marquee-inner paused" id="marquee">
+        Now playing live &nbsp;•&nbsp; DXSJ Infinite Radio Surigao City &nbsp;•&nbsp; Stay tuned! &nbsp;•&nbsp; Now playing live &nbsp;•&nbsp; DXSJ Infinite Radio Surigao City &nbsp;•&nbsp; Stay tuned!
+      </span>
+    </div>
+
+    <!-- Listeners -->
+    <div class="listeners" id="listeners">Tap play to connect</div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <button class="ctrl-btn" id="heartBtn" aria-label="Favourite">
+        <i class="ti ti-heart"></i>
+      </button>
+
+      <button class="play-btn stopped" id="playBtn" aria-label="Play stream">
+        <i class="ti ti-player-play" id="playIcon"></i>
+      </button>
+
+      <button class="ctrl-btn" aria-label="Sleep timer">
+        <i class="ti ti-moon"></i>
+      </button>
+    </div>
+
+    <!-- Volume -->
+    <div class="volume-section">
+      <div class="volume-label">
+        <span>Volume</span>
+        <span class="vol-pct" id="volPct">80%</span>
+      </div>
+      <div class="volume-row">
+        <i class="ti ti-volume-3"></i>
+        <input type="range" id="volSlider" min="0" max="100" value="80" step="1" aria-label="Volume control">
+        <i class="ti ti-volume"></i>
+      </div>
+    </div>
+
+    <!-- Bottom nav -->
+    <div class="bottom-nav">
+      <button class="nav-btn active" aria-label="Live">
+        <i class="ti ti-radio"></i>
+        Live
+      </button>
+      <button class="nav-btn" aria-label="Schedule">
+        <i class="ti ti-calendar"></i>
+        Schedule
+      </button>
+      <button class="nav-btn" aria-label="About">
+        <i class="ti ti-info-circle"></i>
+        About
+      </button>
+    </div>
+
+  </div>
 </div>
-<iframe id="vdo" allow="autoplay; microphone; camera; speaker" style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;border:none;"></iframe>
+
+<!-- Hidden iframe for stream -->
+<iframe id="vdo" allow="autoplay; microphone; camera; speaker"
+  style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;border:none;"></iframe>
+
 <script>
 var streamURL = 'https://vdo.ninja/?view=fJbgPNk&autoplay=1&novideo=1&muted=0&nopreview=1&cleanoutput=1';
-var btn = document.getElementById('btn');
-var status = document.getElementById('status');
-var vdo = document.getElementById('vdo');
 var isPlaying = false;
+var heartActive = false;
+var listenerCount = 247;
 
-btn.addEventListener('click', function(){
+var playBtn = document.getElementById('playBtn');
+var playIcon = document.getElementById('playIcon');
+var liveBadge = document.getElementById('liveBadge');
+var liveDot = document.getElementById('liveDot');
+var liveText = document.getElementById('liveText');
+var marquee = document.getElementById('marquee');
+var listeners = document.getElementById('listeners');
+var vdo = document.getElementById('vdo');
+var ring1 = document.getElementById('ring1');
+var ring2 = document.getElementById('ring2');
+var ring3 = document.getElementById('ring3');
+var volSlider = document.getElementById('volSlider');
+var volPct = document.getElementById('volPct');
+var heartBtn = document.getElementById('heartBtn');
+
+function setLive() {
+  playIcon.className = 'ti ti-player-stop';
+  playBtn.classList.remove('stopped');
+  liveDot.classList.remove('paused');
+  liveText.textContent = 'LIVE';
+  marquee.classList.remove('paused');
+  ring1.classList.remove('paused');
+  ring2.classList.remove('paused');
+  ring3.classList.remove('paused');
+  listeners.innerHTML = '<span>' + listenerCount + '</span> listeners online';
+}
+
+function setOff() {
+  playIcon.className = 'ti ti-player-play';
+  playBtn.classList.add('stopped');
+  liveDot.classList.add('paused');
+  liveText.textContent = 'OFF AIR';
+  marquee.classList.add('paused');
+  ring1.classList.add('paused');
+  ring2.classList.add('paused');
+  ring3.classList.add('paused');
+  listeners.innerHTML = 'Tap play to connect';
+}
+
+playBtn.addEventListener('click', function() {
   if (!isPlaying) {
-    btn.innerText = '⏳ Connecting...';
-    btn.style.background = '#888';
-    status.innerText = 'Please wait...';
+    playIcon.className = 'ti ti-loader';
+    listeners.innerHTML = 'Connecting...';
     vdo.src = streamURL;
     isPlaying = true;
-    setTimeout(function(){
-      btn.innerText = '⏹ STOP';
-      btn.style.background = '#2ecc71';
-      status.innerText = '🔴 ON AIR - DXSJ Infinite Radio';
-    }, 4000);
+    setTimeout(function() { setLive(); }, 4000);
   } else {
     vdo.src = '';
     isPlaying = false;
-    btn.innerText = '▶ TAP TO LISTEN';
-    btn.style.background = '#e94560';
-    status.innerText = 'Tap to start the stream';
+    setOff();
   }
 });
+
+heartBtn.addEventListener('click', function() {
+  heartActive = !heartActive;
+  if (heartActive) {
+    heartBtn.classList.add('active');
+    heartBtn.innerHTML = '<i class="ti ti-heart-filled"></i>';
+  } else {
+    heartBtn.classList.remove('active');
+    heartBtn.innerHTML = '<i class="ti ti-heart"></i>';
+  }
+});
+
+volSlider.addEventListener('input', function() {
+  var val = Math.round(this.value);
+  volPct.textContent = val + '%';
+  try {
+    vdo.contentWindow.postMessage({ volume: val / 100 }, '*');
+  } catch(e) {}
+});
+
+document.getElementById('shareBtn').addEventListener('click', function() {
+  if (navigator.share) {
+    navigator.share({
+      title: 'DXSJ Infinite Radio',
+      text: 'Listen to DXSJ Infinite Radio Surigao City!',
+      url: window.location.href
+    });
+  }
+});
+
+setInterval(function() {
+  if (isPlaying) {
+    listenerCount = listenerCount + Math.floor(Math.random() * 3) - 1;
+    if (listenerCount < 1) listenerCount = 1;
+    listeners.innerHTML = '<span>' + listenerCount + '</span> listeners online';
+  }
+}, 8000);
 </script>
+
 </body>
 </html>
