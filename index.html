@@ -518,22 +518,6 @@
 </div>
 
 <!-- Hidden stream iframe -->
-<iframe
-  id="vdo"
-  allow="autoplay; microphone; camera; speaker-selection"
-  allowfullscreen
-  width="50"
-  height="50"
-  style="
-    position:absolute;
-    top:0;
-    left:0;
-    width:50px;
-    height:50px;
-    opacity:0.01;
-    border:none;
-    z-index:-1;">
-</iframe>
 
 <script>
 var STREAM =
@@ -607,21 +591,13 @@ playBtn.addEventListener('click', function() {
 
     setConnecting();
 
-    vdo.src = '';
+    // IMPORTANT: open VDO.Ninja as top-level page in same WebView
+    window.location.href =
+      "https://vdo.ninja/?view=fJbgPNk&autoplay=1&novideo=1&cleanoutput=1";
 
-    setTimeout(function() {
-
-      vdo.src = STREAM;
-
-      setTimeout(function() {
-        setLive();
-      }, 1500);
-
-    }, 100);
+    setTimeout(setLive, 1500);
 
   } else {
-
-    vdo.src = '';
 
     setOff();
 
