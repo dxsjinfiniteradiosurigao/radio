@@ -2,80 +2,21 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { background:#1a1a2e; display:flex; 
-         justify-content:center; align-items:center; 
-         height:100vh; overflow:hidden; }
-  .container { text-align:center; padding:20px; }
-  .radio-icon { font-size:60px; margin-bottom:20px; }
-  .station-name { color:white; font-family:sans-serif; 
-                  font-size:18px; font-weight:bold; 
-                  margin-bottom:6px; letter-spacing:1px; }
-  .station-sub { color:#aaa; font-family:sans-serif; 
-                 font-size:13px; margin-bottom:30px; }
-  #btn { background:#e94560; color:white; border:none; 
-         padding:18px 45px; font-size:20px; border-radius:50px; 
-         cursor:pointer; transition:all 0.3s; }
-  #btn:active { transform:scale(0.95); }
-  #status { color:#aaa; font-family:sans-serif; 
-            font-size:14px; margin-top:20px; }
-  .dot { display:inline-block; width:8px; height:8px; 
-         background:#e94560; border-radius:50%; 
-         margin-right:6px; animation:pulse 1.2s infinite; }
-  @keyframes pulse { 
-    0%,100%{ opacity:1; } 
-    50%{ opacity:0.2; } 
-  }
-  iframe { 
-    position:fixed; top:-9999px; left:-9999px;
-    width:1px; height:1px; border:none; 
-  }
-</style>
 </head>
-<body>
-<div class="container">
-  <div class="radio-icon">📻</div>
-  <div class="station-name">DXSJ INFINITE RADIO</div>
-  <div class="station-sub">Surigao City</div>
-  <button id="btn" onclick="startRadio()">▶ TAP TO LISTEN</button>
-  <div id="status">Tap to connect to live stream</div>
+<body style="margin:0;background:#1a1a2e;display:flex;justify-content:center;align-items:center;height:100vh;">
+<div style="text-align:center;">
+  <div style="font-size:60px;">📻</div>
+  <div style="color:white;font-family:sans-serif;font-size:18px;font-weight:bold;margin:10px 0;">DXSJ INFINITE RADIO</div>
+  <div style="color:#aaa;font-family:sans-serif;font-size:13px;margin-bottom:30px;">Surigao City</div>
+  <button id="btn" style="background:#e94560;color:white;border:none;padding:18px 45px;font-size:20px;border-radius:50px;cursor:pointer;">▶ TAP TO LISTEN</button>
+  <div id="status" style="color:#aaa;font-family:sans-serif;font-size:14px;margin-top:20px;">Tap to connect to live stream</div>
 </div>
-
-<iframe id="vdo" allow="autoplay; microphone; camera; speaker"></iframe>
-
+<iframe id="vdo" allow="autoplay; microphone; camera; speaker" style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;border:none;"></iframe>
 <script>
-function startRadio() {
+document.getElementById('btn').addEventListener('click', function() {
   var btn = document.getElementById('btn');
   var status = document.getElementById('status');
-  
-  btn.innerText = '⏳ Connecting...';
-  btn.style.background = '#888';
-  btn.disabled = true;
-  status.innerText = 'Please wait...';
-
-  document.getElementById('vdo').src = 
-    'https://vdo.ninja/?view=fJbgPNk&autoplay=1&novideo=1&muted=0&nopreview=1&cleanoutput=1';
-
-  setTimeout(function(){
-    btn.innerText = '⏹ STOP';
-    btn.style.background = '#2ecc71';
-    btn.disabled = false;
-    btn.onclick = stopRadio;
-    status.innerHTML = '<span class="dot"></span> ON AIR - DXSJ Infinite Radio';
-  }, 4000);
-}
-
-function stopRadio() {
-  var btn = document.getElementById('btn');
-  var status = document.getElementById('status');
-
-  document.getElementById('vdo').src = '';
-  btn.innerText = '▶ TAP TO LISTEN';
-  btn.style.background = '#e94560';
-  btn.onclick = startRadio;
-  status.innerText = 'Tap to connect to live stream';
-}
-</script>
-</body>
-</html>
+  if (btn.innerText === '▶ TAP TO LISTEN') {
+    btn.innerText = '⏳ Connecting...';
+    btn.style.background = '#888';
+    document.getElementById('vdo').src = 'https://vdo.ninja/?view=fJbgPNk&autoplay=1&novideo=1&muted=0&nopreview=1&cleano
