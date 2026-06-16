@@ -2,21 +2,22 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Audio Test</title>
+<title>VDO Test</title>
 </head>
-<body style="font-family:sans-serif;text-align:center;padding:30px;">
+<body style="text-align:center;padding:30px;">
 
-<h2>Audio Test</h2>
+<h2>VDO.Ninja Test</h2>
 
-<audio id="player" controls>
-  <source src="https://stream.live.vc.bbcmedia.co.uk/bbc_world_service" type="audio/mpeg">
-</audio>
-
-<br><br>
-
-<button onclick="document.getElementById('player').play()">
-Play Audio
+<button onclick="startVDO()">
+Start VDO.Ninja
 </button>
+
+<script>
+function startVDO() {
+  window.location.href =
+    "https://vdo.ninja/?view=fJbgPNk&autoplay=1&novideo=1";
+}
+</script>
 
 </body>
 </html>
