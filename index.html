@@ -2,21 +2,109 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>VDO Test</title>
+<title>DXSJ Infinite Radio</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f0f4ff;
+  text-align:center;
+}
+
+#playerArea{
+  width:100%;
+  height:80vh;
+  display:none;
+}
+
+#playerFrame{
+  width:100%;
+  height:100%;
+  border:none;
+}
+
+.playBtn{
+  margin-top:100px;
+  width:90px;
+  height:90px;
+  border:none;
+  border-radius:50%;
+  background:#dc1e3c;
+  color:white;
+  font-size:24px;
+  cursor:pointer;
+}
+
+.status{
+  margin-top:20px;
+  color:#1a3a8f;
+  font-weight:bold;
+}
+</style>
 </head>
-<body style="text-align:center;padding:30px;">
+<body>
 
-<h2>VDO.Ninja Test</h2>
+<h2>DXSJ Infinite Radio</h2>
 
-<button onclick="startVDO()">
-Start VDO.Ninja
+<button class="playBtn" id="playBtn">
+▶
 </button>
 
+<div class="status" id="status">
+OFF AIR
+</div>
+
+<div id="playerArea">
+  <iframe
+    id="playerFrame"
+    allow="autoplay; microphone; camera; speaker-selection"
+    allowfullscreen>
+  </iframe>
+</div>
+
 <script>
-function startVDO() {
-  window.location.href =
-    "https://vdo.ninja/?view=fJbgPNk&autoplay=1&novideo=1";
-}
+const STREAM =
+'https://vdo.ninja/?view=fJbgPNk&autoplay=1&novideo=1&cleanoutput=1';
+
+let playing = false;
+
+const playBtn = document.getElementById('playBtn');
+const status = document.getElementById('status');
+const playerArea = document.getElementById('playerArea');
+const playerFrame = document.getElementById('playerFrame');
+
+playBtn.onclick = function(){
+
+  if(!playing){
+
+    status.innerHTML = 'CONNECTING...';
+
+    playerArea.style.display = 'block';
+
+    playerFrame.src = STREAM;
+
+    playing = true;
+
+    playBtn.innerHTML = '■';
+
+    setTimeout(()=>{
+      status.innerHTML = 'LIVE';
+    },1500);
+
+  }else{
+
+    playerFrame.src = '';
+
+    playerArea.style.display = 'none';
+
+    status.innerHTML = 'OFF AIR';
+
+    playing = false;
+
+    playBtn.innerHTML = '▶';
+  }
+};
 </script>
 
 </body>
