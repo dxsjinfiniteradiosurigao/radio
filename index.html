@@ -8,28 +8,46 @@
   <div style="font-size:60px;">📻</div>
   <div style="color:white;font-family:sans-serif;font-size:18px;font-weight:bold;margin:10px 0;">DXSJ INFINITE RADIO</div>
   <div style="color:#aaa;font-family:sans-serif;font-size:13px;margin-bottom:30px;">Surigao City</div>
-  <button id="btn" style="background:#2ecc71;color:white;border:none;padding:18px 45px;font-size:20px;border-radius:50px;cursor:pointer;">⏹ STOP</button>
-  <div id="status" style="color:#aaa;font-family:sans-serif;font-size:14px;margin-top:20px;">🔴 ON AIR - DXSJ Infinite Radio</div>
+  <button id="btn" style="background:#888;color:white;border:none;padding:18px 45px;font-size:20px;border-radius:50px;cursor:pointer;">⏳ Connecting...</button>
+  <div id="status" style="color:#aaa;font-family:sans-serif;font-size:14px;margin-top:20px;">Please wait...</div>
 </div>
-<iframe id="vdo" src="https://vdo.ninja/?view=fJbgPNk&autoplay=1&novideo=1&muted=0&nopreview=1&cleanoutput=1" allow="autoplay; microphone; camera; speaker" style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;border:none;"></iframe>
+<iframe id="vdo" allow="autoplay; microphone; camera; speaker" style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;border:none;"></iframe>
 <script>
-document.getElementById('btn').addEventListener('click', function() {
-  var btn = document.getElementById('btn');
-  var status = document.getElementById('status');
+var streamURL = 'https://vdo.ninja/?view=fJbgPNk&autoplay=1&novideo=1&muted=0&nopreview=1&cleanoutput=1';
+var btn = document.getElementById('btn');
+var status = document.getElementById('status');
+var vdo = document.getElementById('vdo');
+
+function startStream() {
+  vdo.src = '';
+  setTimeout(function(){
+    vdo.src = streamURL;
+    setTimeout(function(){
+      btn.innerText = '⏹ STOP';
+      btn.style.background = '#2ecc71';
+      status.innerText = '🔴 ON AIR - DXSJ Infinite Radio';
+    }, 4000);
+  }, 1500);
+}
+
+// Auto start after page fully loads with delay
+window.addEventListener('load', function(){
+  setTimeout(function(){
+    startStream();
+  }, 2000);
+});
+
+btn.addEventListener('click', function(){
   if (btn.innerText === '⏹ STOP') {
-    document.getElementById('vdo').src = '';
+    vdo.src = '';
     btn.innerText = '▶ PLAY';
     btn.style.background = '#e94560';
     status.innerText = 'Stream stopped';
   } else {
     btn.innerText = '⏳ Connecting...';
     btn.style.background = '#888';
-    document.getElementById('vdo').src = 'https://vdo.ninja/?view=fJbgPNk&autoplay=1&novideo=1&muted=0&nopreview=1&cleanoutput=1';
-    setTimeout(function(){
-      btn.innerText = '⏹ STOP';
-      btn.style.background = '#2ecc71';
-      status.innerText = '🔴 ON AIR - DXSJ Infinite Radio';
-    }, 4000);
+    status.innerText = 'Please wait...';
+    startStream();
   }
 });
 </script>
