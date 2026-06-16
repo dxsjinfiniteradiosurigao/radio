@@ -54,14 +54,28 @@ function startRadio() {
   btn.disabled = true;
   status.innerText = 'Please wait...';
 
-  // Load stream immediately on click
   document.getElementById('vdo').src = 
     'https://vdo.ninja/?view=fJbgPNk&autoplay=1&novideo=1&muted=0&nopreview=1&cleanoutput=1';
 
-  // Update UI after short delay
   setTimeout(function(){
     btn.innerText = '⏹ STOP';
     btn.style.background = '#2ecc71';
     btn.disabled = false;
     btn.onclick = stopRadio;
-    status.innerHTML =
+    status.innerHTML = '<span class="dot"></span> ON AIR - DXSJ Infinite Radio';
+  }, 4000);
+}
+
+function stopRadio() {
+  var btn = document.getElementById('btn');
+  var status = document.getElementById('status');
+
+  document.getElementById('vdo').src = '';
+  btn.innerText = '▶ TAP TO LISTEN';
+  btn.style.background = '#e94560';
+  btn.onclick = startRadio;
+  status.innerText = 'Tap to connect to live stream';
+}
+</script>
+</body>
+</html>
