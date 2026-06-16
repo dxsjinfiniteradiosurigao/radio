@@ -8,8 +8,8 @@
   <div style="font-size:60px;">📻</div>
   <div style="color:white;font-family:sans-serif;font-size:18px;font-weight:bold;margin:10px 0;">DXSJ INFINITE RADIO</div>
   <div style="color:#aaa;font-family:sans-serif;font-size:13px;margin-bottom:30px;">Surigao City</div>
-  <button id="btn" style="background:#888;color:white;border:none;padding:18px 45px;font-size:20px;border-radius:50px;cursor:pointer;">⏳ Connecting...</button>
-  <div id="status" style="color:#aaa;font-family:sans-serif;font-size:14px;margin-top:20px;">Please wait...</div>
+  <button id="btn" style="background:#e94560;color:white;border:none;padding:18px 45px;font-size:20px;border-radius:50px;cursor:pointer;">▶ TAP TO LISTEN</button>
+  <div id="status" style="color:#aaa;font-family:sans-serif;font-size:14px;margin-top:20px;">Tap to start the stream</div>
 </div>
 <iframe id="vdo" allow="autoplay; microphone; camera; speaker" style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;border:none;"></iframe>
 <script>
@@ -17,56 +17,28 @@ var streamURL = 'https://vdo.ninja/?view=fJbgPNk&autoplay=1&novideo=1&muted=0&no
 var btn = document.getElementById('btn');
 var status = document.getElementById('status');
 var vdo = document.getElementById('vdo');
-
-function setLive() {
-  btn.innerText = '⏹ STOP';
-  btn.style.background = '#2ecc71';
-  status.innerText = '🔴 ON AIR - DXSJ Infinite Radio';
-}
-
-function setStopped() {
-  btn.innerText = '▶ PLAY';
-  btn.style.background = '#e94560';
-  status.innerText = 'Stream stopped';
-}
-
-function loadStream() {
-  vdo.src = streamURL;
-}
-
-function stopStream() {
-  vdo.src = '';
-}
-
-// Simulate stop → play automatically
-window.addEventListener('load', function(){
-  // Step 1: load stream
-  loadStream();
-  setTimeout(function(){
-    // Step 2: stop it
-    stopStream();
-    setTimeout(function(){
-      // Step 3: reload it (this is what makes it work)
-      loadStream();
-      setTimeout(function(){
-        setLive();
-      }, 4000);
-    }, 1000);
-  }, 3000);
-});
+var isPlaying = false;
 
 btn.addEventListener('click', function(){
-  if (btn.innerText === '⏹ STOP') {
-    stopStream();
-    setStopped();
-  } else {
+  if (!isPlaying) {
+    // First tap — load stream
     btn.innerText = '⏳ Connecting...';
     btn.style.background = '#888';
     status.innerText = 'Please wait...';
-    loadStream();
+    vdo.src = streamURL;
+    isPlaying = true;
     setTimeout(function(){
-      setLive();
+      btn.innerText = '⏹ STOP';
+      btn.style.background = '#2ecc71';
+      status.innerText = '🔴 ON AIR - DXSJ Infinite Radio';
     }, 4000);
+  } else {
+    // Stop
+    vdo.src = '';
+    isPlaying = false;
+    btn.innerText = '▶ TAP TO LISTEN';
+    btn.style.background = '#e94560';
+    status.innerText = 'Tap to start the stream';
   }
 });
 </script>
