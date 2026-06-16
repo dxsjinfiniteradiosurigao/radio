@@ -18,36 +18,55 @@ var btn = document.getElementById('btn');
 var status = document.getElementById('status');
 var vdo = document.getElementById('vdo');
 
-function startStream() {
-  vdo.src = '';
-  setTimeout(function(){
-    vdo.src = streamURL;
-    setTimeout(function(){
-      btn.innerText = '⏹ STOP';
-      btn.style.background = '#2ecc71';
-      status.innerText = '🔴 ON AIR - DXSJ Infinite Radio';
-    }, 4000);
-  }, 1500);
+function setLive() {
+  btn.innerText = '⏹ STOP';
+  btn.style.background = '#2ecc71';
+  status.innerText = '🔴 ON AIR - DXSJ Infinite Radio';
 }
 
-// Auto start after page fully loads with delay
+function setStopped() {
+  btn.innerText = '▶ PLAY';
+  btn.style.background = '#e94560';
+  status.innerText = 'Stream stopped';
+}
+
+function loadStream() {
+  vdo.src = streamURL;
+}
+
+function stopStream() {
+  vdo.src = '';
+}
+
+// Simulate stop → play automatically
 window.addEventListener('load', function(){
+  // Step 1: load stream
+  loadStream();
   setTimeout(function(){
-    startStream();
-  }, 2000);
+    // Step 2: stop it
+    stopStream();
+    setTimeout(function(){
+      // Step 3: reload it (this is what makes it work)
+      loadStream();
+      setTimeout(function(){
+        setLive();
+      }, 4000);
+    }, 1000);
+  }, 3000);
 });
 
 btn.addEventListener('click', function(){
   if (btn.innerText === '⏹ STOP') {
-    vdo.src = '';
-    btn.innerText = '▶ PLAY';
-    btn.style.background = '#e94560';
-    status.innerText = 'Stream stopped';
+    stopStream();
+    setStopped();
   } else {
     btn.innerText = '⏳ Connecting...';
     btn.style.background = '#888';
     status.innerText = 'Please wait...';
-    startStream();
+    loadStream();
+    setTimeout(function(){
+      setLive();
+    }, 4000);
   }
 });
 </script>
