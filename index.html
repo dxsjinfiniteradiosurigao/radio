@@ -1,177 +1,168 @@
-<div class="glass stats">
+<!-- Controls card -->
+<div class="card">
+    <!-- Program Schedule Card -->
+<div class="card">
 
-    <div id="currentProgram"
-        style="
-        font-size:28px;
-        font-weight:800;
-        color:#ffffff;
-        margin-bottom:10px;
-        ">
-        Loading...
-    </div>
+  <div id="currentProgram"
+       style="
+       font-size:18px;
+       font-weight:700;
+       color:#1a3a8f;
+       text-align:center;
+       margin-bottom:6px;">
+       Loading...
+  </div>
 
-    <div id="programStatus"
-        style="
-        color:#dc1e3c;
-        font-weight:700;
-        margin-bottom:8px;
-        ">
-        Checking Schedule...
-    </div>
+  <div id="programStatus"
+       style="
+       color:#dc1e3c;
+       font-size:13px;
+       font-weight:700;
+       text-align:center;
+       margin-bottom:8px;">
+       Checking schedule...
+  </div>
 
-    <div id="nextProgram"
-        style="
-        color:rgba(255,255,255,.75);
-        font-size:14px;
-        ">
-    </div>
+  <div id="nextProgram"
+       style="
+       color:#8a9bcc;
+       font-size:12px;
+       text-align:center;">
+  </div>
 
 </div>
+</script>
+    function updateProgramSchedule() {
 
-<script>
+  const now = new Date();
+  const day = now.getDay();
+  const mins = now.getHours() * 60 + now.getMinutes();
 
-function updateProgramSchedule() {
+  let programs = [];
 
-    const now = new Date();
+  // Monday-Saturday
+  if(day >= 1 && day <= 6){
+    programs.push({
+      title:'RATSADA BALITA',
+      start:360,
+      end:480
+    });
+  }
 
-    const day = now.getDay();
-    const currentTime =
-        now.getHours() * 60 +
-        now.getMinutes();
+  // Tuesday
+  if(day === 2){
+    programs.push({
+      title:'AN SANGGUNIAN',
+      start:480,
+      end:520
+    });
+  }
 
-    let programs = [];
+  // Monday-Friday
+  if(day >= 1 && day <= 5){
 
-    // MONDAY - SATURDAY
-    if(day >= 1 && day <= 6){
-        programs.push({
-            title:"RATSADA BALITA",
-            start:360,
-            end:480
-        });
+    programs.push({
+      title:'SABI MO, SABI KO',
+      start:540,
+      end:660
+    });
+
+    programs.push({
+      title:'ISUMBONG SA BARANGAY',
+      start:720,
+      end:780
+    });
+
+    programs.push({
+      title:'AFTERNOON DELIGHT',
+      start:900,
+      end:1020
+    });
+
+    programs.push({
+      title:'INFINITE ROCK',
+      start:1050,
+      end:1140
+    });
+
+  }
+
+  // Saturday
+  if(day === 6){
+
+    programs.push({
+      title:'WEEKEND COUNTDOWN & REQUEST SHOW',
+      start:600,
+      end:720
+    });
+
+  }
+
+  programs.sort((a,b)=>a.start-b.start);
+
+  let current = null;
+  let next = null;
+
+  for(let i=0;i<programs.length;i++){
+
+    if(mins >= programs[i].start &&
+       mins < programs[i].end){
+
+      current = programs[i];
+
+      if(i < programs.length - 1){
+        next = programs[i + 1];
+      }
+
+      break;
     }
 
-    // TUESDAY
-    if(day === 2){
-        programs.push({
-            title:"AN SANGGUNIAN",
-            start:480,
-            end:520
-        });
+    if(mins < programs[i].start && !next){
+      next = programs[i];
     }
 
-    // MONDAY - FRIDAY
-    if(day >= 1 && day <= 5){
+  }
 
-        programs.push({
-            title:"SABI MO, SABI KO",
-            start:540,
-            end:660
-        });
+  const currentEl =
+    document.getElementById('currentProgram');
 
-        programs.push({
-            title:"ISUMBONG SA BARANGAY",
-            start:720,
-            end:780
-        });
+  const statusEl =
+    document.getElementById('programStatus');
 
-        programs.push({
-            title:"AFTERNOON DELIGHT",
-            start:900,
-            end:1020
-        });
+  const nextEl =
+    document.getElementById('nextProgram');
 
-        programs.push({
-            title:"INFINITE ROCK",
-            start:1050,
-            end:1140
-        });
-    }
+  if(current){
 
-    // SATURDAY
-    if(day === 6){
-        programs.push({
-            title:"WEEKEND COUNTDOWN & REQUEST SHOW",
-            start:600,
-            end:720
-        });
-    }
+    currentEl.innerHTML =
+      '🎙️ ' + current.title;
 
-    programs.sort((a,b)=>a.start-b.start);
+    statusEl.innerHTML =
+      'NOW ON AIR';
 
-    let currentProgram = null;
-    let nextProgram = null;
+  } else {
 
-    for(let i=0;i<programs.length;i++){
+    currentEl.innerHTML =
+      '📻 Music Programming';
 
-        if(
-            currentTime >= programs[i].start &&
-            currentTime < programs[i].end
-        ){
+    statusEl.innerHTML =
+      'No scheduled show right now';
 
-            currentProgram = programs[i];
+  }
 
-            if(i < programs.length-1){
-                nextProgram = programs[i+1];
-            }
+  if(next){
 
-            break;
-        }
+    nextEl.innerHTML =
+      'Next: ' + next.title;
 
-        if(
-            currentTime < programs[i].start &&
-            !nextProgram
-        ){
-            nextProgram = programs[i];
-        }
-    }
+  } else {
 
-    const currentEl =
-        document.getElementById("currentProgram");
+    nextEl.innerHTML =
+      'Stay tuned for upcoming programs';
 
-    const statusEl =
-        document.getElementById("programStatus");
-
-    const nextEl =
-        document.getElementById("nextProgram");
-
-    if(currentProgram){
-
-        currentEl.innerHTML =
-            "🎙️ " + currentProgram.title;
-
-        statusEl.innerHTML =
-            "NOW ON AIR";
-
-    }else{
-
-        currentEl.innerHTML =
-            "📻 DXSJ Infinite Radio";
-
-        statusEl.innerHTML =
-            "Music Programming";
-
-    }
-
-    if(nextProgram){
-
-        nextEl.innerHTML =
-            "Next: " +
-            nextProgram.title;
-
-    }else{
-
-        nextEl.innerHTML =
-            "Stay tuned for upcoming programs";
-
-    }
+  }
 
 }
 
 updateProgramSchedule();
-
-setInterval(
-    updateProgramSchedule,
-    60000
-);
-
-</script>
+setInterval(updateProgramSchedule, 60000);
