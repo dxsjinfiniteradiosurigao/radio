@@ -518,10 +518,11 @@
 </div>
 
 <!-- Hidden stream iframe -->
+<iframe id="vdo" allow="autoplay; microphone; camera; speaker"
+  style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;border:none;"></iframe>
 
 <script>
-var STREAM =
-'https://vdo.ninja/?view=fJbgPNk&audioonly&autoplay=1&cleanoutput=1';
+var STREAM = 'https://vdo.ninja/?view=fJbgPNk&autoplay=1&novideo=1&muted=0&nopreview=1&cleanoutput=1';
 var playing = false;
 var liked = false;
 
@@ -584,28 +585,17 @@ function setConnecting() {
 }
 
 playBtn.addEventListener('click', function() {
-
   fireRipple();
-
   if (!playing) {
-
     setConnecting();
-
-    // open VDO in a separate "popup-style" WebView layer
-    window.open(
-      "https://vdo.ninja/?view=fJbgPNk&autoplay=1&novideo=1&cleanoutput=1",
-      "_blank"
-    );
-
-    setTimeout(setLive, 1500);
-
+    vdo.src = STREAM;
+    setTimeout(setLive, 4000);
   } else {
-
+    vdo.src = '';
     setOff();
-
   }
-
 });
+
 heartBtn.addEventListener('click', function() {
   liked = !liked;
   heartBtn.classList.toggle('liked', liked);
