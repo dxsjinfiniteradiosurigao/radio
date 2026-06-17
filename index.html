@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DXSJ Radio</title>
+<title>DXSJ Radio Bottom Sheet</title>
 
 <style>
 body {
   margin: 0;
   font-family: Arial;
+  height: 200vh;
   background: #0f1f4d;
-  height: 200vh; /* allow scroll */
 }
 
 /* FAKE CONTENT */
@@ -19,66 +19,93 @@ body {
   color: white;
 }
 
-/* PLAYER WRAPPER */
-.player {
+/* BACKDROP */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.3);
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.3s;
+  z-index: 9998;
+}
+
+/* PLAYER SHEET */
+.sheet {
   position: fixed;
   left: 0;
   right: 0;
-  top: 0;
-  height: 100vh;
-  background: linear-gradient(#1a3a8f, #0f1f4d);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  bottom: 0;
+  height: 90px;
+  background: #1a3a8f;
+  border-radius: 20px 20px 0 0;
   transition: all 0.35s ease;
   z-index: 9999;
-}
-
-/* MINI STATE */
-.player.mini {
-  height: 70px;
-  top: auto;
-  bottom: 0;
-  flex-direction: row;
-  justify-content: space-between;
-  padding: 10px 14px;
-  border-radius: 18px 18px 0 0;
-}
-
-/* TITLE */
-.title {
-  font-size: 22px;
   color: white;
-  font-weight: bold;
-  transition: 0.3s;
+  overflow: hidden;
 }
 
-.player.mini .title {
-  font-size: 14px;
+/* EXPANDED STATE */
+.sheet.expanded {
+  height: 100vh;
+  border-radius: 0;
 }
 
-/* STATUS */
-.status {
-  color: rgba(255,255,255,0.7);
-  font-size: 14px;
-}
-
-/* BUTTON */
-button {
+/* HEADER (DRAG HANDLE) */
+.handle {
   width: 60px;
-  height: 60px;
+  height: 5px;
+  background: rgba(255,255,255,0.4);
+  border-radius: 10px;
+  margin: 10px auto;
+}
+
+/* CONTENT */
+.inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 12px;
+}
+
+/* MINI MODE HIDE */
+.sheet:not(.expanded) .full {
+  display: none;
+}
+
+/* MINI MODE */
+.miniRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 14px;
+  height: 90px;
+}
+
+.title {
+  font-weight: bold;
+}
+
+button {
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   border: none;
   background: #dc1e3c;
   color: white;
-  font-size: 20px;
+  font-size: 18px;
 }
 
-.player.mini button {
-  width: 45px;
-  height: 45px;
-  font-size: 16px;
+.fullTitle {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.status {
+  opacity: 0.8;
+  font-size: 14px;
 }
 
 </style>
@@ -88,19 +115,31 @@ button {
 
 <div class="content">
   <h2>DXSJ Infinite Radio</h2>
-  <p>Scroll down to minimize player</p>
-  <p>Keep scrolling to see effect</p>
+  <p>Drag player up or down</p>
 </div>
 
-<!-- PLAYER -->
-<div class="player" id="playerBox">
+<div class="backdrop" id="backdrop"></div>
 
-  <div>
-    <div class="title">DXSJ Infinite Radio</div>
-    <div class="status" id="status">FULL PLAYER</div>
+<!-- SHEET -->
+<div class="sheet" id="sheet">
+
+  <!-- MINI -->
+  <div class="miniRow">
+    <div class="title">DXSJ Radio</div>
+    <button id="playBtnMini">▶</button>
   </div>
 
-  <button id="playBtn">▶</button>
+  <!-- FULL -->
+  <div class="inner full">
+
+    <div class="handle"></div>
+
+    <div class="fullTitle">DXSJ Infinite Radio</div>
+    <div class="status" id="status">Ready</div>
+
+    <button id="playBtnFull">▶</button>
+
+  </div>
 
 </div>
 
@@ -108,10 +147,13 @@ button {
 
 <script>
 
-var playerBox = document.getElementById("playerBox");
-var status = document.getElementById("status");
-var playBtn = document.getElementById("playBtn");
+var sheet = document.getElementById("sheet");
+var backdrop = document.getElementById("backdrop");
 
+var playMini = document.getElementById("playBtnMini");
+var playFull = document.getElementById("playBtnFull");
+
+var status = document.getElementById("status");
 var audio = document.getElementById("audio");
 
 var STREAM = "https://stream-177.surfernetwork.com/yy0d3w86zxhvv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJ5eTBkM3c4Nnp4aHZ2IiwiaG9zdCI6InN0cmVhbS0xNzcuc3VyZmVybmV0d29yay5jb20iLCJydHRsIjo1LCJqdGkiOiJUaWJ6cXJsZVJVV2hxRDBiekhfdFVnIiwiaWF0IjoxNzgxNjU1MzUxLCJleHAiOjE3ODE2NTU0MTF9.zY3pxvZUWlJW8V3nuVTnv5TO6viaHn_aec_sAJWqpWM";
@@ -119,32 +161,74 @@ var STREAM = "https://stream-177.surfernetwork.com/yy0d3w86zxhvv?zt=eyJhbGciOiJI
 var playing = false;
 
 /* PLAY */
-playBtn.onclick = async function () {
-  if (!playing) {
-    audio.src = STREAM;
-    audio.load();
-    await audio.play();
-    playing = true;
-    playBtn.innerHTML = "⏸";
-  } else {
-    audio.pause();
-    audio.src = "";
-    playing = false;
-    playBtn.innerHTML = "▶";
-  }
+function playRadio() {
+  audio.src = STREAM;
+  audio.load();
+  audio.play();
+  playing = true;
+
+  playMini.innerHTML = "⏸";
+  playFull.innerHTML = "⏸";
+  status.innerText = "LIVE";
+}
+
+/* STOP */
+function stopRadio() {
+  audio.pause();
+  audio.src = "";
+  playing = false;
+
+  playMini.innerHTML = "▶";
+  playFull.innerHTML = "▶";
+  status.innerText = "OFF AIR";
+}
+
+/* BUTTONS */
+playMini.onclick = function () {
+  playing ? stopRadio() : playRadio();
 };
 
-/* SCROLL DETECT → MINIMIZE / EXPAND */
-window.addEventListener("scroll", function () {
+playFull.onclick = function () {
+  playing ? stopRadio() : playRadio();
+};
 
-  if (window.scrollY > 80) {
-    playerBox.classList.add("mini");
-    status.innerText = "MINI PLAYER";
-  } else {
-    playerBox.classList.remove("mini");
-    status.innerText = "FULL PLAYER";
+/* TAP → EXPAND / COLLAPSE */
+sheet.addEventListener("click", function (e) {
+  if (!sheet.classList.contains("expanded")) {
+    sheet.classList.add("expanded");
+    backdrop.style.opacity = 1;
+    backdrop.style.pointerEvents = "auto";
+  }
+});
+
+/* BACKDROP → COLLAPSE */
+backdrop.onclick = function () {
+  sheet.classList.remove("expanded");
+  backdrop.style.opacity = 0;
+  backdrop.style.pointerEvents = "none";
+};
+
+/* DRAG SUPPORT */
+let startY = 0;
+
+sheet.addEventListener("touchstart", function (e) {
+  startY = e.touches[0].clientY;
+});
+
+sheet.addEventListener("touchend", function (e) {
+  let endY = e.changedTouches[0].clientY;
+
+  if (startY - endY > 80) {
+    sheet.classList.add("expanded");
+    backdrop.style.opacity = 1;
+    backdrop.style.pointerEvents = "auto";
   }
 
+  if (endY - startY > 80) {
+    sheet.classList.remove("expanded");
+    backdrop.style.opacity = 0;
+    backdrop.style.pointerEvents = "none";
+  }
 });
 
 </script>
