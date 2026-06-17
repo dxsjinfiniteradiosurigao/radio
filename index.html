@@ -1,233 +1,1651 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DXSJ Infinite Radio PRO</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
-<meta name="theme-color" content="#0b0f1a">
+<title>DXSJ 93.3 Infinite Radio Surigao</title>
+
+<link rel="manifest" href="manifest.json">
+
+<meta name="theme-color" content="#0b1220">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="DXSJ Radio">
+
+<link rel="stylesheet"
+href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+rel="stylesheet">
 
 <style>
+
+:root{
+
+--bg:#050816;
+--surface:rgba(255,255,255,.08);
+--surface2:rgba(255,255,255,.12);
+
+--text:#ffffff;
+--text2:#cfd8ff;
+--text3:#9aa4d8;
+
+--accent:#dc1e3c;
+--accent2:#1a3a8f;
+
+--glass:rgba(255,255,255,.08);
+--border:rgba(255,255,255,.12);
+
+--shadow:
+0 10px 40px rgba(0,0,0,.35);
+
+--radius:28px;
+
+--nav-height:90px;
+
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+-webkit-tap-highlight-color:transparent;
+}
+
+html,
 body{
-  margin:0;
-  font-family:system-ui;
-  background:#0b0f1a;
-  color:white;
-  overflow:hidden;
+width:100%;
+height:100%;
+overflow-x:hidden;
+font-family:'Inter',sans-serif;
+background:var(--bg);
+color:var(--text);
 }
 
-/* 🎨 Apple Music style animated background */
-.bg{
-  position:fixed;
-  inset:0;
-  background:
-    radial-gradient(circle at 20% 20%, #dc1e3c55, transparent 40%),
-    radial-gradient(circle at 80% 30%, #1db95455, transparent 40%),
-    radial-gradient(circle at 50% 80%, #3b82f655, transparent 40%);
-  filter:blur(60px);
-  animation:move 12s infinite alternate ease-in-out;
-  z-index:-1;
-}
-@keyframes move{
-  0%{transform:scale(1) translate(0,0);}
-  100%{transform:scale(1.3) translate(-30px,20px);}
+body{
+position:relative;
 }
 
-/* CENTER UI */
-.wrap{
-  height:100vh;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-  padding:20px;
+/* APP */
+
+#app{
+position:relative;
+width:100%;
+max-width:500px;
+margin:auto;
+padding-bottom:180px;
+min-height:100vh;
+z-index:2;
 }
 
-/* TITLE */
-h1{margin:0;font-size:22px;}
-p{color:#aaa;font-size:12px;}
+/* APPLE MUSIC BACKGROUND */
 
-/* SPECTRUM */
-canvas{
-  width:90%;
-  max-width:420px;
-  height:120px;
-  margin:20px 0;
-  border-radius:12px;
-  background:rgba(255,255,255,0.03);
+#bgGradient{
+position:fixed;
+inset:0;
+background:
+linear-gradient(
+135deg,
+#081126 0%,
+#0e2248 30%,
+#2b0d2e 65%,
+#04151e 100%
+);
+z-index:-20;
+overflow:hidden;
 }
 
-/* BUTTON */
-button{
-  padding:14px 26px;
-  border:none;
-  border-radius:999px;
-  background:#dc1e3c;
-  color:white;
-  font-weight:700;
+#bgBlur1,
+#bgBlur2,
+#bgBlur3{
+
+position:fixed;
+border-radius:50%;
+filter:blur(120px);
+opacity:.65;
+z-index:-10;
+
+animation:
+floatBlob 18s linear infinite;
+
 }
 
-/* STATUS */
-#status{
-  margin-top:10px;
-  font-size:12px;
-  color:#1db954;
+#bgBlur1{
+width:350px;
+height:350px;
+background:#1a3a8f;
+top:-100px;
+left:-80px;
 }
+
+#bgBlur2{
+width:280px;
+height:280px;
+background:#dc1e3c;
+right:-120px;
+top:20%;
+animation-duration:24s;
+}
+
+#bgBlur3{
+width:260px;
+height:260px;
+background:#2ec5ff;
+bottom:-120px;
+left:20%;
+animation-duration:30s;
+}
+
+@keyframes floatBlob{
+
+0%{
+transform:translate(0,0);
+}
+
+25%{
+transform:translate(50px,80px);
+}
+
+50%{
+transform:translate(-40px,120px);
+}
+
+75%{
+transform:translate(80px,-30px);
+}
+
+100%{
+transform:translate(0,0);
+}
+
+}
+
+/* PAGES */
+
+.tab-page{
+display:none;
+padding:
+max(env(safe-area-inset-top),20px)
+20px
+130px;
+animation:fadePage .35s ease;
+}
+
+.tab-page.active{
+display:block;
+}
+
+@keyframes fadePage{
+
+from{
+opacity:0;
+transform:translateY(20px);
+}
+
+to{
+opacity:1;
+transform:none;
+}
+
+}
+
+/* GLASS */
+
+.glass-card{
+
+background:var(--glass);
+
+backdrop-filter:blur(22px);
+-webkit-backdrop-filter:blur(22px);
+
+border:1px solid var(--border);
+
+border-radius:var(--radius);
+
+padding:22px;
+
+margin-bottom:18px;
+
+box-shadow:var(--shadow);
+
+}
+
+/* HEADER */
+
+.hero-header{
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+
+margin-bottom:20px;
+
+}
+
+.icon-btn{
+
+width:44px;
+height:44px;
+
+border:none;
+cursor:pointer;
+
+background:rgba(255,255,255,.08);
+
+border-radius:50%;
+
+color:#fff;
+
+font-size:20px;
+
+backdrop-filter:blur(20px);
+
+transition:.25s;
+
+}
+
+.icon-btn:hover{
+transform:scale(1.08);
+}
+
+.icon-btn:active{
+transform:scale(.92);
+}
+
+/* LIVE BADGE */
+
+#liveBadge{
+
+display:flex;
+align-items:center;
+gap:8px;
+
+padding:10px 16px;
+
+border-radius:999px;
+
+font-size:12px;
+font-weight:800;
+
+background:rgba(220,30,60,.12);
+
+border:1px solid rgba(220,30,60,.25);
+
+color:#ff7286;
+
+}
+
+.pulse{
+
+width:8px;
+height:8px;
+
+border-radius:50%;
+
+background:#ff3355;
+
+animation:pulse 1.5s infinite;
+
+}
+
+@keyframes pulse{
+
+0%{
+transform:scale(1);
+opacity:1;
+}
+
+100%{
+transform:scale(2.5);
+opacity:0;
+}
+
+}
+
+/* HOME HERO */
+
+.station-hero{
+
+display:flex;
+flex-direction:column;
+align-items:center;
+
+margin-top:15px;
+margin-bottom:25px;
+
+}
+
+#timeBlock{
+text-align:center;
+margin-bottom:25px;
+}
+
+#currentTime{
+
+font-size:48px;
+font-weight:800;
+
+letter-spacing:-2px;
+
+}
+
+#currentDate{
+
+font-size:14px;
+color:var(--text2);
+
+}
+
+.hero-logo{
+position:relative;
+margin-bottom:25px;
+}
+
+.station-logo{
+
+width:180px;
+height:180px;
+
+border-radius:50%;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+font-size:80px;
+
+background:
+linear-gradient(
+135deg,
+rgba(255,255,255,.12),
+rgba(255,255,255,.04)
+);
+
+border:1px solid rgba(255,255,255,.15);
+
+backdrop-filter:blur(20px);
+
+box-shadow:
+0 0 80px rgba(26,58,143,.4);
+
+}
+
+.logo-ring{
+
+position:absolute;
+
+inset:-20px;
+
+border-radius:50%;
+
+border:2px solid
+rgba(255,255,255,.12);
+
+animation:ring 4s linear infinite;
+
+}
+
+.logo-ring.ring2{
+animation-delay:2s;
+}
+
+@keyframes ring{
+
+0%{
+transform:scale(.9);
+opacity:0;
+}
+
+50%{
+opacity:.8;
+}
+
+100%{
+transform:scale(1.2);
+opacity:0;
+}
+
+}
+
+.station-hero h1{
+
+font-size:34px;
+font-weight:900;
+
+text-align:center;
+
+margin-bottom:8px;
+
+}
+
+.station-hero p{
+
+color:var(--text2);
+
+font-size:15px;
+
+}
+
+/* NOW PLAYING */
+
+.now-playing-card{
+
+position:relative;
+overflow:hidden;
+
+}
+
+.now-playing-card::before{
+
+content:'';
+
+position:absolute;
+
+left:-100%;
+top:0;
+
+width:100%;
+height:100%;
+
+background:
+linear-gradient(
+90deg,
+transparent,
+rgba(255,255,255,.12),
+transparent
+);
+
+animation:shine 5s infinite;
+
+}
+
+@keyframes shine{
+
+100%{
+left:120%;
+}
+
+}
+
+.card-label{
+
+font-size:11px;
+font-weight:800;
+
+letter-spacing:2px;
+
+color:#ff8094;
+
+margin-bottom:10px;
+
+}
+
+#songTitle{
+
+font-size:22px;
+font-weight:800;
+
+margin-bottom:4px;
+
+}
+
+#songArtist{
+
+font-size:14px;
+color:var(--text2);
+
+}
+
+/* PROGRAMS */
+
+.section-title{
+
+font-size:13px;
+font-weight:800;
+
+letter-spacing:1px;
+
+margin-bottom:10px;
+
+color:#9eb5ff;
+
+}
+
+#currentProgram{
+
+font-size:22px;
+font-weight:700;
+
+margin-bottom:6px;
+
+}
+
+#programStatus{
+
+color:#ff7286;
+font-size:14px;
+
+margin-bottom:8px;
+
+}
+
+#nextProgram{
+
+font-size:14px;
+color:var(--text2);
+
+}
+
+/* BIG PLAY BUTTON */
+
+#expandPlayerBtn{
+
+width:90px;
+height:90px;
+
+border:none;
+cursor:pointer;
+
+margin:35px auto 0;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+border-radius:50%;
+
+font-size:40px;
+
+color:white;
+
+background:
+linear-gradient(
+135deg,
+#dc1e3c,
+#ff5671
+);
+
+box-shadow:
+0 0 60px rgba(220,30,60,.55);
+
+animation:beat 2s infinite;
+
+}
+
+@keyframes beat{
+
+50%{
+transform:scale(1.08);
+}
+
+}
+
+/* PLAYER SHEET */
+
+#playerSheet{
+
+position:fixed;
+
+left:0;
+right:0;
+bottom:0;
+
+height:100vh;
+
+background:
+rgba(10,12,25,.95);
+
+backdrop-filter:blur(40px);
+
+z-index:999;
+
+border-radius:40px 40px 0 0;
+
+transform:translateY(100%);
+
+transition:
+transform .45s cubic-bezier(.22,1,.36,1);
+
+overflow:hidden;
+
+padding:
+20px
+24px
+140px;
+
+}
+
+#playerSheet.show{
+transform:translateY(0);
+}
+
+#playerDragHandle{
+
+width:60px;
+height:6px;
+
+border-radius:999px;
+
+background:
+rgba(255,255,255,.2);
+
+margin:
+0 auto
+20px;
+
+}
+
+/* MINI PLAYER */
+
+#miniPlayer{
+
+position:fixed;
+
+left:12px;
+right:12px;
+
+bottom:105px;
+
+height:72px;
+
+display:flex;
+align-items:center;
+justify-content:space-between;
+
+padding:12px 18px;
+
+border-radius:24px;
+
+background:
+rgba(255,255,255,.1);
+
+backdrop-filter:blur(25px);
+
+border:
+1px solid rgba(255,255,255,.12);
+
+z-index:500;
+
+box-shadow:var(--shadow);
+
+}
+
+.mini-left{
+display:flex;
+align-items:center;
+gap:14px;
+}
+
+.mini-cover{
+
+width:48px;
+height:48px;
+
+border-radius:14px;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+background:
+linear-gradient(
+135deg,
+#1a3a8f,
+#dc1e3c
+);
+
+}
+
+#miniTitle{
+font-weight:700;
+font-size:14px;
+}
+
+#miniSubtitle{
+font-size:12px;
+color:var(--text2);
+}
+
+/* NAVIGATION */
+
+#bottomNav{
+
+position:fixed;
+
+left:0;
+right:0;
+bottom:0;
+
+height:90px;
+
+display:flex;
+justify-content:space-around;
+align-items:center;
+
+background:
+rgba(5,8,22,.92);
+
+backdrop-filter:blur(25px);
+
+border-top:
+1px solid rgba(255,255,255,.08);
+
+z-index:1000;
+
+}
+
+.nav-btn{
+
+background:none;
+border:none;
+
+color:#9aa4d8;
+
+display:flex;
+flex-direction:column;
+
+align-items:center;
+
+gap:5px;
+
+font-size:11px;
+font-weight:700;
+
+cursor:pointer;
+
+transition:.25s;
+
+}
+
+.nav-btn i{
+font-size:24px;
+}
+
+.nav-btn.active{
+
+color:white;
+
+transform:translateY(-4px);
+
+}
+
+.nav-btn.active i{
+
+filter:
+drop-shadow(
+0 0 10px
+rgba(255,255,255,.4)
+);
+
+}
+
+/* PAGE HEADER */
+
+.page-header{
+
+margin-bottom:20px;
+
+}
+
+.page-header h2{
+
+font-size:30px;
+font-weight:900;
+
+}
+
+/* LIVESTREAM */
+
+.livestream-placeholder{
+
+text-align:center;
+
+padding:60px 20px;
+
+}
+
+.livestream-placeholder i{
+
+font-size:70px;
+
+margin-bottom:18px;
+
+color:#ff7286;
+
+}
+
+.livestream-placeholder h3{
+
+margin-bottom:10px;
+
+}
+
+/* RESPONSIVE */
+
+@media(max-width:420px){
+
+.station-logo{
+width:150px;
+height:150px;
+font-size:70px;
+}
+
+.station-hero h1{
+font-size:28px;
+}
+
+#currentTime{
+font-size:40px;
+}
+
+}
+
+
 </style>
-</head>
 
+</head>
 <body>
 
-<div class="bg"></div>
+<!-- Animated Background -->
 
-<div class="wrap">
-  <h1>DXSJ Infinite Radio</h1>
-  <p>Surigao City Live Broadcast</p>
+<div id="bgGradient"></div>
+<div id="bgBlur1"></div>
+<div id="bgBlur2"></div>
+<div id="bgBlur3"></div>
 
-  <canvas id="viz"></canvas>
+<div id="app">
 
-  <button onclick="togglePlay()">▶ Play / Stop</button>
+```
+<!-- HOME PAGE -->
+<section id="homeTab" class="tab-page active">
 
-  <div id="status">Offline</div>
+    <header class="hero-header">
+
+        <div class="header-left">
+            <div id="liveBadge">
+                <span class="pulse"></span>
+                LIVE
+            </div>
+        </div>
+
+        <div class="header-right">
+            <button id="shareBtn" class="icon-btn">
+                <i class="ti ti-share"></i>
+            </button>
+        </div>
+
+    </header>
+
+    <div class="station-hero">
+
+        <div id="timeBlock">
+            <div id="currentTime">00:00</div>
+            <div id="currentDate">
+                Loading Date...
+            </div>
+        </div>
+
+        <div class="hero-logo">
+
+            <div class="logo-ring"></div>
+            <div class="logo-ring ring2"></div>
+
+            <div class="station-logo">
+
+                <i class="ti ti-radio"></i>
+
+            </div>
+
+        </div>
+
+        <h1>
+            DXSJ Infinite Radio
+        </h1>
+
+        <p>
+            Surigao City • 93.3 FM
+        </p>
+
+    </div>
+
+    <!-- NOW PLAYING CARD -->
+
+    <div class="glass-card now-playing-card">
+
+        <div class="card-label">
+            NOW PLAYING
+        </div>
+
+        <div id="songTitle">
+            DXSJ Infinite Radio
+        </div>
+
+        <div id="songArtist">
+            Live Broadcast
+        </div>
+
+    </div>
+
+    <!-- PROGRAM CARD -->
+
+    <div class="glass-card">
+
+        <div class="section-title">
+            Current Program
+        </div>
+
+        <div id="currentProgram">
+            Loading...
+        </div>
+
+        <div id="programStatus">
+            Checking Schedule...
+        </div>
+
+        <div id="nextProgram">
+            Loading...
+        </div>
+
+    </div>
+
+    <!-- BIG PLAY BUTTON -->
+
+    <button id="expandPlayerBtn">
+
+        <i class="ti ti-player-play-filled"></i>
+
+    </button>
+
+</section>
+
+<!-- LIVESTREAM TAB -->
+
+<section id="livestreamTab" class="tab-page">
+
+    <div class="page-header">
+
+        <h2>Livestream</h2>
+
+    </div>
+
+    <div class="glass-card livestream-placeholder">
+
+        <i class="ti ti-video"></i>
+
+        <h3>
+            Livestream Coming Soon
+        </h3>
+
+        <p>
+            Video streaming will be available here.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- SCHEDULE TAB -->
+
+<section id="scheduleTab" class="tab-page">
+
+    <div class="page-header">
+
+        <h2>Program Schedule</h2>
+
+    </div>
+
+    <div id="scheduleContainer">
+
+        <!-- PART 4 -->
+
+    </div>
+
+</section>
+
+<!-- ABOUT TAB -->
+
+<section id="aboutTab" class="tab-page">
+
+    <div class="page-header">
+
+        <h2>About DXSJ</h2>
+
+    </div>
+
+    <div id="aboutContainer">
+
+        <!-- PART 4 -->
+
+    </div>
+
+</section>
+```
+
 </div>
 
-<audio id="audio" crossorigin="anonymous"></audio>
+<!-- FULLSCREEN PLAYER -->
+
+<div id="playerSheet">
+
+```
+<div id="playerDragHandle"></div>
+
+<div class="player-top">
+
+    <button id="closePlayer">
+
+        <i class="ti ti-chevron-down"></i>
+
+    </button>
+
+    <span>
+        DXSJ Infinite Radio
+    </span>
+
+    <button id="playerMenu">
+
+        <i class="ti ti-dots"></i>
+
+    </button>
+
+</div>
+
+<!-- ARTWORK -->
+
+<div id="artworkContainer">
+
+    <div id="vinylGlow"></div>
+
+    <div id="albumArt">
+
+        <div class="vinyl-record">
+
+            <div class="vinyl-center"></div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- NOW PLAYING -->
+
+<div id="playerMeta">
+
+    <div id="playerSongTitle">
+        DXSJ Infinite Radio
+    </div>
+
+    <div id="playerSongArtist">
+        Surigao City
+    </div>
+
+</div>
+
+<!-- FFT SPECTRUM -->
+
+<div id="visualizerWrap">
+
+    <canvas id="spectrum"></canvas>
+
+</div>
+
+<!-- PLAYER CONTROLS -->
+
+<div id="playerControls">
+
+    <button id="heartBtn">
+        <i class="ti ti-heart"></i>
+    </button>
+
+    <button id="playBtn">
+
+        <i class="ti ti-player-play-filled"></i>
+
+    </button>
+
+    <button id="sleepBtn">
+        <i class="ti ti-moon"></i>
+    </button>
+
+</div>
+
+<!-- VOLUME -->
+
+<div class="volume-wrap">
+
+    <i class="ti ti-volume-3"></i>
+
+    <input
+        type="range"
+        id="volumeSlider"
+        min="0"
+        max="100"
+        value="80">
+
+    <i class="ti ti-volume"></i>
+
+</div>
+```
+
+</div>
+
+<!-- MINI PLAYER -->
+
+<div id="miniPlayer">
+
+```
+<div class="mini-left">
+
+    <div class="mini-cover">
+        <i class="ti ti-radio"></i>
+    </div>
+
+    <div>
+
+        <div id="miniTitle">
+            DXSJ Infinite Radio
+        </div>
+
+        <div id="miniSubtitle">
+            Live Stream
+        </div>
+
+    </div>
+
+</div>
+
+<button id="miniPlay">
+
+    <i class="ti ti-player-play-filled"></i>
+
+</button>
+```
+
+</div>
+
+<!-- STICKY NAVIGATION -->
+
+<nav id="bottomNav">
+
+```
+<button
+    class="nav-btn active"
+    data-tab="home">
+
+    <i class="ti ti-home-filled"></i>
+
+    <span>Home</span>
+
+</button>
+
+<button
+    class="nav-btn"
+    data-tab="livestream">
+
+    <i class="ti ti-radio"></i>
+
+    <span>Live</span>
+
+</button>
+
+<button
+    class="nav-btn"
+    data-tab="schedule">
+
+    <i class="ti ti-calendar-event"></i>
+
+    <span>Schedule</span>
+
+</button>
+
+<button
+    class="nav-btn"
+    data-tab="about">
+
+    <i class="ti ti-info-circle"></i>
+
+    <span>About</span>
+
+</button>
+```
+
+</nav>
+
+<!-- AUDIO -->
+
+<audio
+id="audio"
+crossorigin="anonymous"
+preload="none"> </audio>
 
 <script>
-/* ================= STREAMS ================= */
-const STREAMS=[
-  "https://stream-02.surfernetwork.com/yy0d3w86zxhvv",
-  "https://stream-177.surfernetwork.com/yy0d3w86zxhvv"
+
+//////////////////////////////////////
+// DXSJ INFINITE RADIO
+// PART 4/5 - CONTENT ENGINE
+//////////////////////////////////////
+
+/* =========================
+   PROGRAM SCHEDULE DATA
+========================= */
+
+const schedule = [
+  { days:[1,2,3,4,5,6], start:"06:00", end:"08:00", title:"RATSADA BALITA" },
+  { days:[2], start:"08:00", end:"08:40", title:"AN SANGGUNIAN" },
+  { days:[1,2,3,4,5], start:"09:00", end:"11:00", title:"SABI MO, SABI KO" },
+  { days:[1,2,3,4,5], start:"12:00", end:"13:00", title:"ISUMBONG SA BARANGAY" },
+  { days:[1,2,3,4,5], start:"15:00", end:"17:00", title:"AFTERNOON DELIGHT" },
+  { days:[1,2,3,4,5], start:"17:30", end:"19:00", title:"INFINITE ROCK" },
+  { days:[6], start:"10:00", end:"12:00", title:"WEEKEND COUNTDOWN & REQUEST SHOW" }
 ];
 
-let index=0;
-let audio=document.getElementById("audio");
-let playing=false;
+/* =========================
+   TIME HELPERS
+========================= */
 
-/* ================= AUDIO ENGINE ================= */
-let ctx, analyser, source, data;
-
-function initAudio(){
-  ctx = new (window.AudioContext||window.webkitAudioContext)();
-  analyser = ctx.createAnalyser();
-  analyser.fftSize = 128;
-
-  source = ctx.createMediaElementSource(audio);
-  source.connect(analyser);
-  analyser.connect(ctx.destination);
-
-  data = new Uint8Array(analyser.frequencyBinCount);
+function toMinutes(t){
+  let [h,m] = t.split(":").map(Number);
+  return h*60 + m;
 }
 
-/* ================= SPECTRUM ANALYZER ================= */
-const canvas=document.getElementById("viz");
-const c=canvas.getContext("2d");
+function getCurrentProgram(){
+  const now = new Date();
+  const day = now.getDay();
+  const mins = now.getHours()*60 + now.getMinutes();
 
-function draw(){
-  requestAnimationFrame(draw);
-  if(!analyser) return;
+  let current = null;
+  let next = null;
 
-  analyser.getByteFrequencyData(data);
+  for(let i=0;i<schedule.length;i++){
+    let s = schedule[i];
 
-  c.clearRect(0,0,canvas.width,canvas.height);
+    if(!s.days.includes(day)) continue;
 
-  let w=canvas.width/data.length;
+    let start = toMinutes(s.start);
+    let end = toMinutes(s.end);
 
-  for(let i=0;i<data.length;i++){
-    let h=data[i];
+    if(mins >= start && mins < end){
+      current = s;
+      next = schedule[i+1] || null;
+      break;
+    }
 
-    c.fillStyle=`rgb(${h+100},40,80)`;
-    c.fillRect(i*w, canvas.height-h, w-2, h);
-
-    /* 🎚 HAPTIC BEAT */
-    if(h>210 && navigator.vibrate){
-      navigator.vibrate(8);
+    if(mins < start && !next){
+      next = s;
     }
   }
+
+  return {current,next};
 }
 
-/* ================= STREAM FALLBACK ================= */
-function playStream(){
-  audio.src = STREAMS[index];
+/* =========================
+   UI UPDATE SCHEDULE
+========================= */
 
-  audio.play().catch(()=>{
-    index = (index+1)%STREAMS.length;
-    playStream();
+function updateScheduleUI(){
+
+  const {current,next} = getCurrentProgram();
+
+  const curEl = document.getElementById("currentProgram");
+  const statEl = document.getElementById("programStatus");
+  const nextEl = document.getElementById("nextProgram");
+
+  if(current){
+    curEl.textContent = "🎙️ " + current.title;
+    statEl.textContent = "NOW ON AIR";
+  } else {
+    curEl.textContent = "📻 Music Automation";
+    statEl.textContent = "No live show";
+  }
+
+  if(next){
+    nextEl.textContent = "Next: " + next.title;
+  } else {
+    nextEl.textContent = "Stay tuned for updates";
+  }
+}
+
+/* =========================
+   NOTIFICATIONS (PWA READY)
+========================= */
+
+let notified = {};
+
+function requestNotifPermission(){
+  if("Notification" in window){
+    Notification.requestPermission();
+  }
+}
+
+function notify(title){
+  if(Notification.permission !== "granted") return;
+
+  new Notification("DXSJ 93.3 FM", {
+    body: title + " is now live",
+    icon: ""
   });
 }
 
-/* ================= MEDIA SESSION ================= */
-function setupMedia(){
-  if(!('mediaSession' in navigator)) return;
+/* check every minute */
+function checkProgramAlerts(){
+  const {current} = getCurrentProgram();
+
+  if(current && !notified[current.title]){
+    notified[current.title] = true;
+    notify(current.title);
+  }
+}
+
+/* =========================
+   NOW PLAYING (API READY)
+========================= */
+
+async function fetchNowPlaying(){
+
+  // FUTURE: replace with Icecast/Shoutcast JSON endpoint
+  // Example:
+  // let res = await fetch("/nowplaying.json");
+
+  const fake = {
+    title: "DXSJ Infinite Radio",
+    artist: "Live Broadcast"
+  };
+
+  document.getElementById("songTitle").textContent = fake.title;
+  document.getElementById("songArtist").textContent = fake.artist;
+
+  document.getElementById("playerSongTitle").textContent = fake.title;
+  document.getElementById("playerSongArtist").textContent = fake.artist;
+
+  document.getElementById("miniTitle").textContent = fake.title;
+}
+
+/* =========================
+   CANVAS RESIZE FIX
+========================= */
+
+function resizeCanvas(){
+  const c = document.getElementById("spectrum");
+  if(!c) return;
+
+  c.width = window.innerWidth;
+  c.height = 120;
+}
+
+window.addEventListener("resize", resizeCanvas);
+resizeCanvas();
+
+/* =========================
+   INIT LOOP
+========================= */
+
+setInterval(updateScheduleUI, 5000);
+setInterval(checkProgramAlerts, 60000);
+setInterval(fetchNowPlaying, 10000);
+
+updateScheduleUI();
+fetchNowPlaying();
+requestNotifPermission();
+
+const STREAM_URL =
+"https://stream-02.surfernetwork.com/yy0d3w86zxhvv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJ5eTBkM3c4Nnp4aHZ2IiwiaG9zdCI6InN0cmVhbS0wMi5zdXJmZXJuZXR3b3JrLmNvbSIsInJ0dGwiOjUsImp0aSI6IkE2cEVTYm5fU25HbThuWm9EanNfMnciLCJpYXQiOjE3ODE2NjE2NzMsImV4cCI6MTc4MTY2MTczM30.6Tn_3u43yGL4md_7fNktLhT3ZH-n2icVwyeM7oq0kXE";
+
+const audio = document.getElementById("audio");
+
+/* UI ELEMENTS */
+const playBtn = document.getElementById("playBtn");
+const miniPlay = document.getElementById("miniPlay");
+const miniPlayer = document.getElementById("miniPlayer");
+const playerSheet = document.getElementById("playerSheet");
+
+const navBtns = document.querySelectorAll(".nav-btn");
+const tabs = {
+  home: document.getElementById("homeTab"),
+  livestream: document.getElementById("livestreamTab"),
+  schedule: document.getElementById("scheduleTab"),
+  about: document.getElementById("aboutTab")
+};
+
+/* STATE */
+let isPlaying = false;
+let audioCtx, analyser, source, dataArray;
+let reconnectInterval;
+let currentTab = "home";
+
+/* =========================
+   TAB SYSTEM (SPOTIFY STYLE)
+========================= */
+function switchTab(tab) {
+  currentTab = tab;
+
+  Object.keys(tabs).forEach(t => {
+    tabs[t].classList.remove("active");
+  });
+
+  tabs[tab].classList.add("active");
+
+  navBtns.forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.tab === tab);
+  });
+
+  // mini-player stays visible always
+}
+
+/* NAV EVENTS */
+navBtns.forEach(btn => {
+  btn.addEventListener("click", () => {
+    switchTab(btn.dataset.tab);
+  });
+});
+
+/* =========================
+   PLAYER SYSTEM
+========================= */
+async function startStream() {
+  try {
+    audio.src = STREAM_URL;
+    audio.crossOrigin = "anonymous";
+    await audio.play();
+
+    setupAudioGraph();
+    isPlaying = true;
+
+    updateUIPlaying(true);
+    setupMediaSession();
+
+  } catch (e) {
+    console.log("Stream failed, retrying...");
+    retryStream();
+  }
+}
+
+function retryStream() {
+  clearInterval(reconnectInterval);
+
+  reconnectInterval = setInterval(() => {
+    if (!isPlaying) return;
+
+    audio.src = STREAM_URL;
+    audio.play().catch(() => {});
+  }, 5000);
+}
+
+function stopStream() {
+  audio.pause();
+  audio.src = "";
+  isPlaying = false;
+
+  updateUIPlaying(false);
+}
+
+/* =========================
+   AUDIO VISUALIZER (REAL FFT)
+========================= */
+function setupAudioGraph() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+
+  if (source) source.disconnect();
+
+  source = audioCtx.createMediaElementSource(audio);
+  analyser = audioCtx.createAnalyser();
+
+  analyser.fftSize = 256;
+  const bufferLength = analyser.frequencyBinCount;
+
+  dataArray = new Uint8Array(bufferLength);
+
+  source.connect(analyser);
+  analyser.connect(audioCtx.destination);
+
+  drawSpectrum();
+}
+
+function drawSpectrum() {
+  const canvas = document.getElementById("spectrum");
+  const ctx = canvas.getContext("2d");
+
+  function render() {
+    requestAnimationFrame(render);
+
+    if (!analyser) return;
+
+    analyser.getByteFrequencyData(dataArray);
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const barWidth = (canvas.width / dataArray.length) * 1.5;
+    let x = 0;
+
+    for (let i = 0; i < dataArray.length; i++) {
+      let v = dataArray[i];
+      let h = v / 255 * canvas.height;
+
+      ctx.fillStyle = `rgb(${v + 80}, 80, 255)`;
+      ctx.fillRect(x, canvas.height - h, barWidth, h);
+
+      x += barWidth + 1;
+    }
+  }
+
+  render();
+}
+
+/* =========================
+   MEDIA SESSION (LOCK SCREEN)
+========================= */
+function setupMediaSession() {
+  if (!("mediaSession" in navigator)) return;
 
   navigator.mediaSession.metadata = new MediaMetadata({
-    title:"DXSJ Infinite Radio",
-    artist:"Surigao City",
-    album:"Live Broadcast"
+    title: "DXSJ Infinite Radio",
+    artist: "Surigao City",
+    album: "Live Broadcast",
+    artwork: []
   });
 
-  navigator.mediaSession.setActionHandler("play", togglePlay);
-  navigator.mediaSession.setActionHandler("pause", togglePlay);
+  navigator.mediaSession.setActionHandler("play", () => {
+    startStream();
+  });
+
+  navigator.mediaSession.setActionHandler("pause", () => {
+    stopStream();
+  });
 }
 
-/* ================= NOTIFICATIONS ================= */
-async function enableNotif(){
-  if(!("Notification" in window)) return;
-  await Notification.requestPermission();
-}
+/* =========================
+   UI STATES
+========================= */
+function updateUIPlaying(state) {
+  const icon = playBtn.querySelector("i");
+  const miniIcon = miniPlay.querySelector("i");
 
-/* ================= NOW PLAYING (API READY) ================= */
-async function nowPlaying(){
-  try{
-    let res = await fetch("nowplaying.json");
-    let data = await res.json();
-    document.getElementById("status").innerText = "Now Playing: "+data.title;
-  }catch(e){}
-}
+  if (state) {
+    icon.className = "ti ti-player-pause-filled";
+    miniIcon.className = "ti ti-player-pause-filled";
 
-/* ================= PLAY ================= */
-function togglePlay(){
+    playerSheet.classList.add("playing");
+    miniPlayer.classList.add("playing");
 
-  if(!playing){
-    if(!ctx) initAudio();
-    ctx.resume();
+  } else {
+    icon.className = "ti ti-player-play-filled";
+    miniIcon.className = "ti ti-player-play-filled";
 
-    playStream();
-    draw();
-
-    setupMedia();
-    enableNotif();
-
-    playing=true;
-    document.getElementById("status").innerText="LIVE";
-  }
-  else{
-    audio.pause();
-    playing=false;
-    document.getElementById("status").innerText="OFFLINE";
+    playerSheet.classList.remove("playing");
+    miniPlayer.classList.remove("playing");
   }
 }
 
-/* ================= PWA SERVICE WORKER (INLINE) ================= */
-if("serviceWorker" in navigator){
-  const sw = `
-    const CACHE="dxsj-v1";
-    self.addEventListener("install",e=>{
-      e.waitUntil(caches.open(CACHE).then(c=>c.addAll(["./"])));
-    });
-    self.addEventListener("fetch",e=>{
-      e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request)));
-    });
-  `;
+/* =========================
+   PLAY BUTTONS
+========================= */
+playBtn.addEventListener("click", () => {
+  if (!isPlaying) startStream();
+  else stopStream();
+});
 
-  const blob=new Blob([sw],{type:"text/javascript"});
-  navigator.serviceWorker.register(URL.createObjectURL(blob));
+miniPlay.addEventListener("click", () => {
+  if (!isPlaying) startStream();
+  else stopStream();
+});
+
+/* =========================
+   DRAG MINI PLAYER (BASIC)
+========================= */
+let startY = 0;
+let currentY = 0;
+let dragging = false;
+
+miniPlayer.addEventListener("touchstart", e => {
+  dragging = true;
+  startY = e.touches[0].clientY;
+});
+
+miniPlayer.addEventListener("touchmove", e => {
+  if (!dragging) return;
+
+  currentY = e.touches[0].clientY;
+  let diff = currentY - startY;
+
+  miniPlayer.style.transform = `translateY(${diff}px)`;
+});
+
+miniPlayer.addEventListener("touchend", () => {
+  dragging = false;
+  miniPlayer.style.transform = "";
+});
+
+/* =========================
+   TIME / DATE
+========================= */
+function updateTime() {
+  const now = new Date();
+
+  const time = now.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+
+  const date = now.toDateString();
+
+  const t = document.getElementById("currentTime");
+  const d = document.getElementById("currentDate");
+
+  if (t) t.textContent = time;
+  if (d) d.textContent = date;
 }
 
-/* ================= INIT ================= */
-setInterval(nowPlaying,15000);
-nowPlaying();
+setInterval(updateTime, 1000);
+updateTime();
+
+/* =========================
+   INIT
+========================= */
+switchTab("home");
 
 </script>
 
