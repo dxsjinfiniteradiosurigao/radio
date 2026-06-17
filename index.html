@@ -1415,6 +1415,17 @@ let audioCtx, analyser, source, dataArray;
 let reconnectInterval;
 let currentTab = "home";
 
+async function startStream() {
+  audio.src = STREAM;
+  await audio.play();
+
+  playing = true;
+  status.textContent = "LIVE";
+
+  setupMediaSession();
+  setupAudio();
+}    
+    
 /* =========================
    TAB SYSTEM (SPOTIFY STYLE)
 ========================= */
