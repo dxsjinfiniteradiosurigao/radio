@@ -4,31 +4,111 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>DXSJ Infinite Radio</title>
+
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   background: #f0f4ff;
   min-height: 100vh;
-  display: flex;
-  justify-content: center;
+  overflow-x: hidden;
 }
 
+/* MAIN APP */
 .app {
   width: 100%;
   max-width: 420px;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background: #f0f4ff;
-  position: relative;
+  margin: 0 auto;
+  padding-bottom: 140px; /* space for fixed player */
 }
 
-/* KEEP YOUR UI SAME (trimmed for clarity in this reply) */
-/* --- your full CSS remains unchanged --- */
+/* HEADER */
+.top-band {
+  background: #1a3a8f;
+  padding: 40px 20px;
+  color: #fff;
+  text-align: center;
+}
+
+/* CARD */
+.card {
+  background: #fff;
+  margin: 14px;
+  padding: 16px;
+  border-radius: 18px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+/* FIXED PLAYER */
+.player-fixed {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff;
+  box-shadow: 0 -6px 20px rgba(0,0,0,0.12);
+  border-radius: 20px 20px 0 0;
+  padding: 14px;
+  z-index: 9999;
+}
+
+/* CONTROLS */
+.ctrl-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.play-btn {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: #dc1e3c;
+  border: none;
+  color: #fff;
+  font-size: 26px;
+}
+
+.side-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  background: #f0f4ff;
+}
+
+/* VOLUME */
+.vol-section {
+  margin-top: 10px;
+}
+
+input[type=range] {
+  width: 100%;
+}
+
+/* TEXT */
+.station-name {
+  font-size: 20px;
+  font-weight: bold;
+  color: #1a3a8f;
+  text-align: center;
+}
+
+.station-sub {
+  text-align: center;
+  color: #8a9bcc;
+}
 
 </style>
 </head>
@@ -37,100 +117,69 @@ body {
 
 <div class="app">
 
-  <!-- TOP -->
   <div class="top-band">
-    <div class="top-row">
-      <button class="icon-btn"><i class="ti ti-menu-2"></i></button>
-      <span class="top-title">DXSJ Infinite Radio</span>
-      <button class="icon-btn" id="shareBtn"><i class="ti ti-share"></i></button>
-    </div>
-
-    <div class="album-wrap">
-      <div class="album">
-        <div class="album-inner">
-          <i class="ti ti-radio"></i>
-        </div>
-      </div>
-    </div>
+    <h2>DXSJ Infinite Radio</h2>
+    <p>Surigao City</p>
   </div>
 
-  <!-- BODY -->
-  <div class="body">
-
-    <div class="card">
-      <div class="station-name">DXSJ Infinite Radio</div>
-      <div class="station-sub">Surigao City</div>
-    </div>
-
-    <!-- CONTROLS -->
-    <div class="card">
-
-      <div class="ctrl-row">
-        <button class="side-btn" id="heartBtn"><i class="ti ti-heart"></i></button>
-
-        <div class="play-wrap">
-          <button class="play-btn off-state" id="playBtn">
-            <i class="ti ti-player-play" id="playIcon"></i>
-          </button>
-        </div>
-
-        <button class="side-btn"><i class="ti ti-moon"></i></button>
-      </div>
-
-      <div class="vol-section">
-        <input type="range" id="volSlider" min="0" max="100" value="80">
-      </div>
-
-    </div>
-
+  <div class="card">
+    <div class="station-name">Live Radio</div>
+    <div class="station-sub">Now Streaming</div>
   </div>
 
 </div>
 
-<!-- ✅ AUDIO MUST BE INSIDE BODY -->
+<!-- FIXED PLAYER -->
+<div class="card player-fixed">
+
+  <div class="ctrl-row">
+    <button class="side-btn" id="heartBtn">❤</button>
+
+    <button class="play-btn" id="playBtn">▶</button>
+
+    <button class="side-btn">🌙</button>
+  </div>
+
+  <div class="vol-section">
+    <input type="range" id="volSlider" min="0" max="100" value="80">
+  </div>
+
+</div>
+
+<!-- AUDIO PLAYER -->
 <audio id="player" preload="none"></audio>
 
 <script>
 
 var STREAM = "https://stream-177.surfernetwork.com/yy0d3w86zxhvv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJ5eTBkM3c4Nnp4aHZ2IiwiaG9zdCI6InN0cmVhbS0xNzcuc3VyZmVybmV0d29yay5jb20iLCJydHRsIjo1LCJqdGkiOiJUaWJ6cXJsZVJVV2hxRDBiekhfdFVnIiwiaWF0IjoxNzgxNjU1MzUxLCJleHAiOjE3ODE2NTU0MTF9.zY3pxvZUWlJW8V3nuVTnv5TO6viaHn_aec_sAJWqpWM";
 
-var playing = false;
-
 var player = document.getElementById("player");
 var playBtn = document.getElementById("playBtn");
-var playIcon = document.getElementById("playIcon");
 
-function setLive(){
-  playing = true;
-  playIcon.className = "ti ti-player-stop";
-}
+var playing = false;
 
-function setOff(){
-  playing = false;
-  playIcon.className = "ti ti-player-play";
-}
-
-playBtn.addEventListener("click", async function () {
+playBtn.onclick = async function () {
 
   if (!playing) {
     try {
       player.src = STREAM;
       player.load();
       await player.play();
-      setLive();
+      playBtn.innerHTML = "⏸";
+      playing = true;
     } catch (e) {
       console.log(e);
-      setOff();
     }
   } else {
     player.pause();
     player.src = "";
-    setOff();
+    playBtn.innerHTML = "▶";
+    playing = false;
   }
 
-});
+};
 
-/* AUTO PLAY ON LOAD */
+/* AUTOPLAY */
 window.addEventListener("load", function () {
   setTimeout(() => {
     playBtn.click();
