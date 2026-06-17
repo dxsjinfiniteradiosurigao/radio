@@ -5,14 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>DXSJ Infinite Radio</title>
 
-<link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0b1b3a">
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 
 <style>
 :root{
-  --bg1:#0b1b3a;
+  --bg1:#071427;
   --bg2:#1a3a8f;
   --accent:#dc1e3c;
   --glass: rgba(255,255,255,0.08);
@@ -23,40 +22,53 @@
 body{
   height:100vh;
   overflow:hidden;
-  background:linear-gradient(120deg,var(--bg1),var(--bg2));
   color:#fff;
+  background:linear-gradient(120deg,var(--bg1),var(--bg2));
 }
 
-/* background glow */
 .bg{
   position:fixed;
   inset:0;
-  background:radial-gradient(circle at 20% 20%, rgba(220,30,60,0.25), transparent 40%),
-             radial-gradient(circle at 80% 80%, rgba(26,58,143,0.4), transparent 40%);
+  background:
+    radial-gradient(circle at 20% 20%, rgba(220,30,60,0.25), transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(26,58,143,0.35), transparent 40%);
+  animation:bgmove 8s ease-in-out infinite alternate;
   z-index:-1;
 }
 
-/* top info */
-.topbar{
+@keyframes bgmove{
+  from{transform:scale(1)}
+  to{transform:scale(1.15)}
+}
+
+/* CLOCK */
+.clock{
   position:absolute;
   top:10px;
   width:100%;
   text-align:center;
   font-size:12px;
-  opacity:0.85;
+  opacity:.8;
 }
 
-/* home */
+/* HOME */
+.page{
+  height:100%;
+  display:none;
+  padding:20px;
+}
+.page.active{display:block;}
+
 .home{
   height:100%;
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  gap:10px;
+  gap:12px;
 }
 
-/* album */
+/* VISUALIZER */
 .album{
   width:220px;
   height:220px;
@@ -76,8 +88,8 @@ canvas{
   height:100%;
 }
 
-/* button */
-button{
+/* PLAY */
+button.play{
   width:80px;
   height:80px;
   border-radius:50%;
@@ -88,55 +100,55 @@ button{
   box-shadow:0 10px 30px rgba(220,30,60,0.4);
 }
 
-/* mini player */
+/* MINI PLAYER */
 .mini{
   position:fixed;
-  bottom:60px;
+  bottom:65px;
   left:10px;
   right:10px;
   height:65px;
   background:rgba(255,255,255,0.08);
-  backdrop-filter:blur(20px);
+  backdrop-filter:blur(18px);
   border-radius:16px;
   display:flex;
-  align-items:center;
   justify-content:space-between;
-  padding:0 12px;
+  align-items:center;
+  padding:0 14px;
   transform:translateY(120%);
   transition:.3s;
 }
-
 .mini.show{transform:translateY(0);}
 
-/* tabs */
+/* TABS */
 .tabs{
   position:fixed;
   bottom:0;
   width:100%;
   height:60px;
+  background:rgba(0,0,0,0.35);
+  backdrop-filter:blur(20px);
   display:flex;
   justify-content:space-around;
   align-items:center;
-  background:rgba(0,0,0,0.35);
-  backdrop-filter:blur(20px);
+  z-index:10;
 }
 
 .tab{
   font-size:11px;
-  opacity:0.6;
+  opacity:.6;
   text-align:center;
 }
-
 .tab.active{opacity:1}
 
-/* pages */
-.page{
-  height:100%;
-  padding:20px;
-  overflow:auto;
-  display:none;
+/* CARDS */
+.card{
+  background:var(--glass);
+  padding:16px;
+  border-radius:16px;
+  margin-bottom:10px;
+  backdrop-filter:blur(18px);
+  border:1px solid rgba(255,255,255,0.1);
 }
-.page.active{display:block;}
 </style>
 </head>
 
@@ -144,8 +156,8 @@ button{
 
 <div class="bg"></div>
 
-<!-- TIME -->
-<div class="topbar" id="clock">Loading time...</div>
+<!-- CLOCK -->
+<div class="clock" id="clock">Loading...</div>
 
 <!-- HOME -->
 <div class="page active" id="home">
@@ -156,29 +168,37 @@ button{
     </div>
 
     <h2>DXSJ Infinite Radio</h2>
-    <button id="play">▶</button>
+    <button class="play" id="play">▶</button>
 
   </div>
 </div>
 
 <!-- LIVE -->
 <div class="page" id="live">
-  <h3>Livestream ready</h3>
+  <div class="card">Livestream tab ready</div>
 </div>
 
 <!-- SCHEDULE -->
 <div class="page" id="schedule">
-  <p>Schedule tab content here</p>
+  <div class="card">MON–SAT: RATSADA BALITA 6AM–8AM</div>
+  <div class="card">TUESDAY: AN SANGGUNIAN 8AM–8:40AM</div>
+  <div class="card">MON–FRI: SABI MO, SABI KO 9AM–11AM</div>
+  <div class="card">MON–FRI: ISUMBONG SA BARANGAY 12NN–1PM</div>
+  <div class="card">MON–FRI: AFTERNOON DELIGHT 3PM–5PM</div>
+  <div class="card">MON–FRI: INFINITE ROCK 5:30PM–7PM</div>
+  <div class="card">SAT: WEEKEND COUNTDOWN 10AM–12NN</div>
 </div>
 
 <!-- ABOUT -->
 <div class="page" id="about">
-  <p>About station info here</p>
+  <div class="card">
+    DXSJ 93.3 Infinite Radio Surigao is a leading FM radio station serving Surigao City and the neighboring communities...
+  </div>
 </div>
 
 <!-- MINI PLAYER -->
 <div class="mini" id="mini">
-  <div>Now Playing</div>
+  <div>🎧 Now Playing</div>
   <button id="miniBtn">⏯</button>
 </div>
 
@@ -191,28 +211,29 @@ button{
 </div>
 
 <script>
+/* STREAM */
 const STREAM="https://stream-02.surfernetwork.com/yy0d3w86zxhvv?...";
 
+/* CLOCK */
+setInterval(()=>{
+  const d=new Date();
+  document.getElementById("clock").innerText=
+  d.toLocaleDateString()+" • "+d.toLocaleTimeString();
+},1000);
+
+/* AUDIO */
 let audio=new Audio();
 audio.crossOrigin="anonymous";
 
-let ctx, analyser, source;
+let ctx,analyser,source;
 let playing=false;
 
-/* CLOCK */
-function updateClock(){
-  const d=new Date();
-  document.getElementById("clock").innerText=
-    d.toLocaleDateString()+" • "+d.toLocaleTimeString();
-}
-setInterval(updateClock,1000);
-updateClock();
-
-/* VISUALIZER FIX */
-function setup(){
+/* FIXED VISUALIZER */
+function initAudio(){
   ctx=new AudioContext();
   analyser=ctx.createAnalyser();
   source=ctx.createMediaElementSource(audio);
+
   source.connect(analyser);
   analyser.connect(ctx.destination);
   analyser.fftSize=64;
@@ -248,7 +269,7 @@ document.getElementById("play").onclick=async()=>{
     audio.src=STREAM;
     await audio.play();
 
-    if(!ctx) setup();
+    if(!ctx) initAudio();
     draw();
 
     document.getElementById("mini").classList.add("show");
@@ -263,7 +284,42 @@ document.getElementById("play").onclick=async()=>{
 function nav(id){
   document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
   document.getElementById(id).classList.add("active");
+
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
 }
+
+/* PWA (INLINE SERVICE WORKER) */
+if("serviceWorker" in navigator){
+  const swBlob = new Blob([`
+    const CACHE="dxsj-cache-v1";
+    self.addEventListener("install",e=>{
+      e.waitUntil(caches.open(CACHE).then(c=>c.addAll(["./"])));
+    });
+    self.addEventListener("fetch",e=>{
+      e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request)));
+    });
+  `],{type:"text/javascript"});
+
+  navigator.serviceWorker.register(URL.createObjectURL(swBlob));
+}
+
+/* INLINE MANIFEST (AUTO PWA) */
+const manifest = {
+  name:"DXSJ Infinite Radio",
+  short_name:"DXSJ",
+  start_url:".",
+  display:"standalone",
+  theme_color:"#0b1b3a",
+  background_color:"#0b1b3a",
+  icons:[{src:"icon.png",sizes:"512x512",type:"image/png"}]
+};
+
+const blob=new Blob([JSON.stringify(manifest)],{type:"application/json"});
+const url=URL.createObjectURL(blob);
+const link=document.createElement("link");
+link.rel="manifest";
+link.href=url;
+document.head.appendChild(link);
 </script>
 
 </body>
