@@ -2,124 +2,83 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>DXSJ Infinite Radio</title>
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DXSJ Radio</title>
 
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
-}
-
 body {
-  background: #f0f4ff;
+  margin: 0;
+  font-family: Arial;
+  background: #0f1f4d;
+  height: 200vh; /* allow scroll */
 }
 
-/* SCROLL AREA */
+/* FAKE CONTENT */
 .content {
   padding: 20px;
-  padding-bottom: 140px;
+  color: white;
 }
 
-.card {
-  background: white;
-  padding: 16px;
-  margin-bottom: 12px;
-  border-radius: 16px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-}
-
-/* MINI PLAYER (SPOTIFY STYLE) */
-.mini-player {
+/* PLAYER WRAPPER */
+.player {
   position: fixed;
-  bottom: 0;
   left: 0;
   right: 0;
-  background: #1a3a8f;
-  color: white;
-  padding: 12px 14px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  z-index: 9999;
-}
-
-.mini-left {
-  display: flex;
-  flex-direction: column;
-}
-
-.station {
-  font-size: 14px;
-  font-weight: bold;
-}
-
-.status {
-  font-size: 11px;
-  opacity: 0.8;
-}
-
-.controls button {
-  background: #dc1e3c;
-  border: none;
-  color: white;
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  font-size: 18px;
-}
-
-/* FULL PLAYER (SPOTIFY EXPAND) */
-.full-player {
-  position: fixed;
   top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: #0f1f4d;
-  color: white;
-  display: none;
+  height: 100vh;
+  background: linear-gradient(#1a3a8f, #0f1f4d);
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  z-index: 10000;
+  transition: all 0.35s ease;
+  z-index: 9999;
 }
 
-.full-player.active {
-  display: flex;
+/* MINI STATE */
+.player.mini {
+  height: 70px;
+  top: auto;
+  bottom: 0;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-radius: 18px 18px 0 0;
 }
 
-.close-btn {
-  position: absolute;
-  top: 20px;
-  right: 20px;
+/* TITLE */
+.title {
   font-size: 22px;
-}
-
-.big-title {
-  font-size: 22px;
+  color: white;
   font-weight: bold;
-  margin-bottom: 10px;
+  transition: 0.3s;
 }
 
-.big-status {
+.player.mini .title {
   font-size: 14px;
-  opacity: 0.8;
-  margin-bottom: 20px;
 }
 
-.big-btn {
-  width: 80px;
-  height: 80px;
+/* STATUS */
+.status {
+  color: rgba(255,255,255,0.7);
+  font-size: 14px;
+}
+
+/* BUTTON */
+button {
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   border: none;
-  font-size: 26px;
   background: #dc1e3c;
   color: white;
+  font-size: 20px;
+}
+
+.player.mini button {
+  width: 45px;
+  height: 45px;
+  font-size: 16px;
 }
 
 </style>
@@ -127,134 +86,66 @@ body {
 
 <body>
 
-<!-- SCROLL CONTENT -->
 <div class="content">
+  <h2>DXSJ Infinite Radio</h2>
+  <p>Scroll down to minimize player</p>
+  <p>Keep scrolling to see effect</p>
+</div>
 
-  <div class="card">
-    <h2>DXSJ Infinite Radio</h2>
-    <p>Surigao City Live Broadcast</p>
+<!-- PLAYER -->
+<div class="player" id="playerBox">
+
+  <div>
+    <div class="title">DXSJ Infinite Radio</div>
+    <div class="status" id="status">FULL PLAYER</div>
   </div>
 
-  <div class="card">
-    <p>📻 News & Music Programming</p>
-  </div>
-
-  <div class="card">
-    <p>🎙️ Stay tuned for live shows</p>
-  </div>
+  <button id="playBtn">▶</button>
 
 </div>
 
-<!-- MINI PLAYER -->
-<div class="mini-player" id="miniPlayer">
-
-  <div class="mini-left">
-    <div class="station">DXSJ Infinite Radio</div>
-    <div class="status" id="miniStatus">OFF AIR</div>
-  </div>
-
-  <div class="controls">
-    <button id="playBtn">▶</button>
-  </div>
-
-</div>
-
-<!-- FULL PLAYER -->
-<div class="full-player" id="fullPlayer">
-
-  <div class="close-btn" id="closeBtn">✕</div>
-
-  <div class="big-title">DXSJ Infinite Radio</div>
-  <div class="big-status" id="bigStatus">OFF AIR</div>
-
-  <button class="big-btn" id="bigPlay">▶</button>
-
-</div>
-
-<!-- AUDIO -->
-<audio id="player"></audio>
+<audio id="audio"></audio>
 
 <script>
 
-var STREAM = "https://stream-177.surfernetwork.com/yy0d3w86zxhvv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJ5eTBkM3c4Nnp4aHZ2IiwiaG9zdCI6InN0cmVhbS0xNzcuc3VyZmVybmV0d29yay5jb20iLCJydHRsIjo1LCJqdGkiOiJUaWJ6cXJsZVJVV2hxRDBiekhfdFVnIiwiaWF0IjoxNzgxNjU1MzUxLCJleHAiOjE3ODE2NTU0MTF9.zY3pxvZUWlJW8V3nuVTnv5TO6viaHn_aec_sAJWqpWM";
+var playerBox = document.getElementById("playerBox");
+var status = document.getElementById("status");
+var playBtn = document.getElementById("playBtn");
 
-var player = document.getElementById("player");
+var audio = document.getElementById("audio");
+
+var STREAM = "https://stream-177.surfernetwork.com/yy0d3w86zxhvv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJ5eTBkM3c4Nnp4aHZ2IiwiaG9zdCI6InN0cmVhbS0xNzcuc3VyZmVybmV0d29yay5jb20iLCJydHRsIjo1LCJqdGkiOiJUaWJ6cXJsZVJVV2hxRDBiekhfdFVnIiwiaWF0IjoxNzgxNjU1MzUxLCJleHAiOjE3ODE2NTU0MTF9.zY3pxvZUWlJW8V3nuVTnv5TO6viaHn_aec_sAJWqpWM";
 
 var playing = false;
 
-/* ELEMENTS */
-var playBtn = document.getElementById("playBtn");
-var bigPlay = document.getElementById("bigPlay");
-var miniStatus = document.getElementById("miniStatus");
-var bigStatus = document.getElementById("bigStatus");
-
-var fullPlayer = document.getElementById("fullPlayer");
-var miniPlayer = document.getElementById("miniPlayer");
-
-/* PLAY FUNCTION */
-async function startRadio() {
-  player.src = STREAM;
-  player.load();
-
-  try {
-    await player.play();
+/* PLAY */
+playBtn.onclick = async function () {
+  if (!playing) {
+    audio.src = STREAM;
+    audio.load();
+    await audio.play();
     playing = true;
-
     playBtn.innerHTML = "⏸";
-    bigPlay.innerHTML = "⏸";
-
-    miniStatus.innerText = "LIVE";
-    bigStatus.innerText = "LIVE BROADCAST";
-
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-/* STOP FUNCTION */
-function stopRadio() {
-  player.pause();
-  player.src = "";
-
-  playing = false;
-
-  playBtn.innerHTML = "▶";
-  bigPlay.innerHTML = "▶";
-
-  miniStatus.innerText = "OFF AIR";
-  bigStatus.innerText = "OFF AIR";
-}
-
-/* MINI PLAY */
-playBtn.onclick = function () {
-  if (!playing) startRadio();
-  else stopRadio();
-};
-
-/* FULL PLAY */
-bigPlay.onclick = function () {
-  if (!playing) startRadio();
-  else stopRadio();
-};
-
-/* OPEN FULL PLAYER */
-miniPlayer.onclick = function (e) {
-  if (e.target.tagName !== "BUTTON") {
-    fullPlayer.classList.add("active");
+  } else {
+    audio.pause();
+    audio.src = "";
+    playing = false;
+    playBtn.innerHTML = "▶";
   }
 };
 
-/* CLOSE FULL PLAYER */
-document.getElementById("closeBtn").onclick = function () {
-  fullPlayer.classList.remove("active");
-};
+/* SCROLL DETECT → MINIMIZE / EXPAND */
+window.addEventListener("scroll", function () {
 
-/* AUTO START (optional) */
-window.onload = function () {
-  setTimeout(() => {
-    playBtn.click();
-  }, 1200);
-};
+  if (window.scrollY > 80) {
+    playerBox.classList.add("mini");
+    status.innerText = "MINI PLAYER";
+  } else {
+    playerBox.classList.remove("mini");
+    status.innerText = "FULL PLAYER";
+  }
+
+});
 
 </script>
 
