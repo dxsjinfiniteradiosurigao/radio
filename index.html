@@ -2,194 +2,116 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>DXSJ Infinite Radio</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DXSJ Infinite Radio PRO</title>
 
 <style>
-:root{
-  --bg:#070b14;
-  --glass:rgba(255,255,255,.08);
-  --stroke:rgba(255,255,255,.15);
-  --accent:#ff2d55;
-  --blue:#4da3ff;
-  --text:#eaf0ff;
-  --muted:#9fb0d0;
-}
-
-*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,Segoe UI;}
 body{
-  background:radial-gradient(circle at top,#18243f,#070b14);
-  color:var(--text);
-  overflow:hidden;
+margin:0;
+background:#070b14;
+color:#fff;
+font-family:-apple-system,BlinkMacSystemFont,Segoe UI;
+overflow:hidden;
 }
-
-/* APP */
-.app{height:100vh;display:flex;flex-direction:column;}
 
 /* FULLSCREEN PLAYER */
 .hero{
-  position:fixed;
-  inset:0;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  transition:.6s cubic-bezier(.2,.8,.2,1);
-  z-index:20;
+position:fixed;
+inset:0;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+transition:.5s;
 }
 
-/* COLLAPSED MODE */
 .app.collapsed .hero{
-  height:140px;
-  justify-content:flex-start;
-  padding-top:10px;
-  backdrop-filter: blur(20px);
-  background:rgba(10,14,25,.6);
+height:120px;
+justify-content:flex-start;
+padding-top:10px;
+backdrop-filter:blur(20px);
+background:rgba(0,0,0,.4);
 }
 
 /* VISUALIZER */
-.visualizer{
-  width:90%;
-  height:160px;
-  display:flex;
-  align-items:flex-end;
-  justify-content:center;
-  gap:3px;
-  margin-bottom:20px;
-  transition:.6s;
+canvas{
+width:90%;
+height:180px;
+border-radius:20px;
 }
 
-.app.collapsed .visualizer{
-  height:30px;
-  margin-bottom:6px;
+/* META */
+.meta{text-align:center;margin-top:10px}
+.meta h1{font-size:18px}
+.meta p{font-size:12px;color:#9fb0d0}
+
+/* PLAY BUTTON */
+button{
+margin-top:12px;
+width:60px;
+height:60px;
+border-radius:50%;
+border:none;
+background:#ff2d55;
+color:white;
+font-size:20px;
 }
 
-.bar{
-  width:4px;
-  height:10px;
-  background:linear-gradient(to top,var(--accent),var(--blue));
-  border-radius:4px;
-  animation:beat 1s infinite ease-in-out;
+/* TABS */
+.tabs{
+position:fixed;
+top:130px;
+left:0;
+right:0;
+display:none;
+gap:8px;
+padding:10px;
 }
+.app.collapsed .tabs{display:flex}
 
-@keyframes beat{
-  0%,100%{height:10px;opacity:.4}
-  50%{height:120px;opacity:1}
+.tab{
+flex:1;
+text-align:center;
+padding:10px;
+background:rgba(255,255,255,.08);
+border-radius:12px;
+cursor:pointer;
 }
+.tab.active{background:#4da3ff55}
 
-/* ALBUM */
-.album{
-  width:140px;
-  height:140px;
-  border-radius:20px;
-  background:radial-gradient(circle,#ff2d55,#4da3ff);
-  filter:blur(8px);
-  transition:.5s;
+/* CONTENT */
+.content{
+position:fixed;
+top:180px;
+bottom:70px;
+left:0;
+right:0;
+overflow:auto;
+display:none;
+padding:10px;
 }
+.app.collapsed .content{display:block}
 
-.playing .album{
-  filter:blur(2px) brightness(1.2);
-  transform:scale(1.05);
-}
-
-/* TEXT */
-.meta{
-  text-align:center;
-  margin-top:10px;
-}
-
-.meta h1{font-size:18px;}
-.meta p{font-size:12px;color:var(--muted);}
-
-/* BUTTON */
-.playBtn{
-  margin-top:14px;
-  width:60px;
-  height:60px;
-  border-radius:50%;
-  border:none;
-  background:var(--accent);
-  color:#fff;
-  font-size:22px;
-  cursor:pointer;
+.card{
+background:rgba(255,255,255,.06);
+padding:12px;
+border-radius:16px;
+margin-bottom:10px;
 }
 
 /* MINI PLAYER */
 .mini{
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  height:70px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 14px;
-  background:rgba(20,25,40,.75);
-  backdrop-filter: blur(20px);
-  border-top:1px solid rgba(255,255,255,.1);
-  z-index:50;
-}
-
-/* TABS (hidden until collapsed) */
-.tabs{
-  position:fixed;
-  top:70px;
-  left:0;
-  right:0;
-  display:none;
-  padding:10px;
-  gap:8px;
-}
-
-.app.collapsed .tabs{
-  display:flex;
-}
-
-.tab{
-  flex:1;
-  padding:10px;
-  text-align:center;
-  background:rgba(255,255,255,.06);
-  border-radius:12px;
-  font-size:13px;
-  cursor:pointer;
-}
-
-.tab.active{
-  background:rgba(77,163,255,.25);
-}
-
-/* CONTENT */
-.content{
-  position:fixed;
-  top:120px;
-  bottom:70px;
-  left:0;
-  right:0;
-  overflow:auto;
-  padding:10px;
-  display:none;
-}
-
-.app.collapsed .content{
-  display:block;
-}
-
-.card{
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:16px;
-  padding:14px;
-  margin-bottom:10px;
-  backdrop-filter: blur(18px);
-}
-
-pre{
-  white-space:pre-wrap;
-  font-size:13px;
-  line-height:1.5;
-  color:#dce6ff;
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+height:70px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:0 14px;
+background:rgba(0,0,0,.6);
+backdrop-filter:blur(20px);
 }
 </style>
 </head>
@@ -198,119 +120,159 @@ pre{
 
 <div class="app" id="app">
 
-  <!-- FULLSCREEN HERO PLAYER -->
-  <div class="hero playing" id="hero">
+<div class="hero">
 
-    <div class="visualizer" id="viz"></div>
+<canvas id="canvas"></canvas>
 
-    <div class="album"></div>
+<div class="meta">
+<h1>DXSJ Infinite Radio</h1>
+<p id="status">Ready</p>
+</div>
 
-    <div class="meta">
-      <h1>DXSJ Infinite Radio</h1>
-      <p id="now">Tap play to listen</p>
-    </div>
+<button id="play">▶</button>
 
-    <button class="playBtn" id="playBtn">▶</button>
-  </div>
+</div>
 
-  <!-- TABS -->
-  <div class="tabs">
-    <div class="tab active" onclick="openTab('live')">Live</div>
-    <div class="tab" onclick="openTab('schedule')">Schedule</div>
-    <div class="tab" onclick="openTab('about')">About</div>
-  </div>
+<div class="tabs">
+<div class="tab active" onclick="tab('live')">Live</div>
+<div class="tab" onclick="tab('schedule')">Schedule</div>
+<div class="tab" onclick="tab('about')">About</div>
+</div>
 
-  <!-- CONTENT -->
-  <div class="content">
+<div class="content">
 
-    <div id="live" class="card">
-      LIVE STREAM ACTIVE
-    </div>
+<div id="live" class="card">LIVE STREAM</div>
 
-    <div id="schedule" class="card" style="display:none">
-<pre>MONDAY - SATURDAY: RATSADA BALITA 6:00AM-8:00AM 
-TUESDAY: AN SANGGUNIAN 8:00AM-8:40AM
-MONDAY - FRIDAY: SABI MO, SABI KO 9:00AM - 11:00AM
-MONDAY - FRIDAY: ISUMBONG SA BARANGAY 12:00NN - 1:00PM
-MONDAY - FRIDAY: AFTERNOON DELIGHT 3:00PM - 5:00PM
-MONDAY - FRIDAY: INFINITE ROCK 5:30PM - 7:00PM
-SATUDAY: WEEKEND COUNTDOWN & REQUEST SHOW: 10:00AM - 12:00NN</pre>
-    </div>
+<div id="schedule" class="card" style="display:none">
+MONDAY - SATURDAY: RATSADA BALITA 6:00AM-8:00AM<br>
+TUESDAY: AN SANGGUNIAN 8:00AM-8:40AM<br>
+MONDAY - FRIDAY: SABI MO, SABI KO 9:00AM - 11:00AM<br>
+MONDAY - FRIDAY: ISUMBONG SA BARANGAY 12:00NN - 1:00PM<br>
+MONDAY - FRIDAY: AFTERNOON DELIGHT 3:00PM - 5:00PM<br>
+MONDAY - FRIDAY: INFINITE ROCK 5:30PM - 7:00PM<br>
+SATURDAY: WEEKEND COUNTDOWN 10:00AM - 12:00NN
+</div>
 
-    <div id="about" class="card" style="display:none">
-DXSJ 93.3 Infinite Radio Surigao is a leading FM radio station serving Surigao City and the neighboring communities of Surigao del Norte. Dedicated to delivering quality entertainment, timely news, public affairs, and community-centered programming, the station has become a trusted source of information and inspiration for thousands of listeners across the region.
+<div id="about" class="card" style="display:none">
+DXSJ 93.3 Infinite Radio Surigao is a leading FM radio station serving Surigao City...
+</div>
 
-As part of the growing Infinite Radio Network, DXSJ 93.3 FM combines modern broadcasting technology with a strong commitment to public service...
-    </div>
+</div>
 
-  </div>
-
-  <!-- MINI PLAYER -->
-  <div class="mini">
-    <div>LIVE</div>
-    <button onclick="toggleCollapse()">▲</button>
-  </div>
+<div class="mini">
+<div>LIVE</div>
+<div onclick="toggle()">▲</div>
+</div>
 
 </div>
 
 <audio id="audio"></audio>
 
 <script>
+
 const STREAM="https://stream-02.surfernetwork.com/yy0d3w86zxhvv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJ5eTBkM3c4Nnp4aHZ2IiwiaG9zdCI6InN0cmVhbS0wMi5zdXJmZXJuZXR3b3JrLmNvbSIsInJ0dGwiOjUsImp0aSI6IjZpUUV6QS1QU0ppTXo4TndQU2xVTXciLCJpYXQiOjE3ODE2NTk0MDgsImV4cCI6MTc4MTY1OTQ2OH0.NYufZCc9oMLBIxCNekWEJ36jHNteLzCOIxhUkjUXKgc";
 
 const app=document.getElementById("app");
 const audio=document.getElementById("audio");
 audio.src=STREAM;
 
+let ctx,analyser,dataArray,source;
 let playing=false;
 
-/* VISUALIZER */
-const viz=document.getElementById("viz");
-for(let i=0;i<40;i++){
-  let b=document.createElement("div");
-  b.className="bar";
-  b.style.animationDuration=(0.6+Math.random()*0.8)+"s";
-  viz.appendChild(b);
+/* AUDIO ANALYZER */
+function setupAudio(){
+
+ctx=new (window.AudioContext||window.webkitAudioContext)();
+analyser=ctx.createAnalyser();
+analyser.fftSize=256;
+
+source=ctx.createMediaElementSource(audio);
+source.connect(analyser);
+analyser.connect(ctx.destination);
+
+dataArray=new Uint8Array(analyser.frequencyBinCount);
+
+draw();
+}
+
+/* SPECTRUM */
+const canvas=document.getElementById("canvas");
+const c=canvas.getContext("2d");
+
+function draw(){
+requestAnimationFrame(draw);
+
+if(!analyser)return;
+
+analyser.getByteFrequencyData(dataArray);
+
+c.clearRect(0,0,canvas.width,canvas.height);
+
+let w=canvas.width/dataArray.length;
+
+for(let i=0;i<dataArray.length;i++){
+
+let h=dataArray[i];
+
+c.fillStyle="rgb("+(h+50)+",80,255)";
+c.fillRect(i*w,canvas.height-h/2,w,canvas.height);
+}
 }
 
 /* PLAY */
-document.getElementById("playBtn").onclick=async()=>{
-  if(!playing){
-    await audio.play();
-    playing=true;
-    app.classList.add("playing");
-    document.getElementById("now").innerText="LIVE STREAM ACTIVE";
-  }else{
-    audio.pause();
-    playing=false;
-    app.classList.remove("playing");
-    document.getElementById("now").innerText="PAUSED";
-  }
+document.getElementById("play").onclick=async()=>{
+
+if(!playing){
+await audio.play();
+setupAudio();
+playing=true;
+document.getElementById("status").innerText="LIVE";
+mediaSession();
+notify("Live Started");
+}else{
+audio.pause();
+playing=false;
+document.getElementById("status").innerText="Paused";
+}
 };
 
-/* COLLAPSE SYSTEM */
-function toggleCollapse(){
-  app.classList.toggle("collapsed");
+/* TABS */
+function tab(id){
+document.querySelectorAll(".card").forEach(e=>e.style.display="none");
+document.getElementById(id).style.display="block";
 }
 
-/* SCROLL TO COLLAPSE */
-let startY=0;
-
-document.addEventListener("touchstart",(e)=>{
-  startY=e.touches[0].clientY;
-});
-
-document.addEventListener("touchmove",(e)=>{
-  let diff=startY-e.touches[0].clientY;
-  if(diff>80) app.classList.add("collapsed");
-  if(diff<-80) app.classList.remove("collapsed");
-});
-
-/* TAB SWITCH */
-function openTab(id){
-  document.querySelectorAll(".card").forEach(c=>c.style.display="none");
-  document.getElementById(id).style.display="block";
+/* COLLAPSE */
+function toggle(){
+app.classList.toggle("collapsed");
 }
+
+/* MEDIA SESSION (LOCK SCREEN CONTROLS) */
+function mediaSession(){
+if('mediaSession' in navigator){
+navigator.mediaSession.metadata=new MediaMetadata({
+title:"DXSJ Infinite Radio",
+artist:"Surigao Broadcast",
+album:"Live FM",
+artwork:[{src:"",sizes:"512x512",type:"image/png"}]
+});
+
+navigator.mediaSession.setActionHandler('play',()=>audio.play());
+navigator.mediaSession.setActionHandler('pause',()=>audio.pause());
+}
+}
+
+/* NOTIFICATIONS */
+function notify(msg){
+if(Notification.permission==="granted"){
+new Notification("DXSJ Radio",{body:msg});
+}
+}
+
+if(Notification.permission!=="granted"){
+Notification.requestPermission();
+}
+
 </script>
 
 </body>
