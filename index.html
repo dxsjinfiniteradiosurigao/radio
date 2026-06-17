@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<title>DXSJ Infinite Radio</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>93.3 Infinite Radio Surigao</title>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 
@@ -16,12 +16,12 @@
 }
 
 body{
-  background: radial-gradient(circle at top,#1a3a8f,#0b1220);
+  background: radial-gradient(circle at top,#0b1b3a,#050814);
   color:#fff;
   overflow-x:hidden;
 }
 
-/* APP */
+/* GLASS APP */
 .app{
   max-width:420px;
   margin:auto;
@@ -32,149 +32,157 @@ body{
 
 /* HEADER */
 .header{
-  padding:28px 20px 10px;
   text-align:center;
-}
-.logo{font-size:20px;font-weight:800;}
-.sub{font-size:12px;opacity:.7;}
-
-/* CONTENT */
-.content{
-  flex:1;
-  overflow:auto;
-  padding-bottom:110px;
+  padding:26px 16px 10px;
 }
 
-/* CARD */
+.logo{
+  font-size:20px;
+  font-weight:800;
+  letter-spacing:.5px;
+}
+
+.sub{
+  font-size:12px;
+  opacity:.6;
+}
+
+/* GLASS CARD */
 .card{
-  margin:15px;
-  background:rgba(255,255,255,0.08);
-  backdrop-filter: blur(14px);
-  border:1px solid rgba(255,255,255,0.1);
-  border-radius:20px;
-  padding:16px;
-  animation:fade .4s ease;
-}
-@keyframes fade{
-  from{opacity:0;transform:translateY(10px);}
-  to{opacity:1;transform:translateY(0);}
+  margin:14px;
+  padding:18px;
+  border-radius:24px;
+  background: rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.12);
+  backdrop-filter: blur(22px);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.35);
+  transition:.3s;
 }
 
-/* PLAYER */
-.circle{
-  width:140px;
-  height:140px;
+/* ALBUM */
+.albumWrap{
+  position:relative;
+  width:150px;
+  height:150px;
   margin:auto;
+}
+
+/* AUDIO REACTIVE GLOW */
+.glow{
+  position:absolute;
+  inset:-20px;
   border-radius:50%;
-  background:conic-gradient(#ff2d55,#1a3a8f,#ff2d55);
+  background: radial-gradient(circle, rgba(0,255,200,.35), transparent 60%);
+  filter: blur(18px);
+  opacity:.6;
+  transition:.1s;
+}
+
+/* rotating disc */
+.disc{
+  width:150px;
+  height:150px;
+  border-radius:50%;
+  background: conic-gradient(#ff2d55,#00ffd5,#3b82f6,#ff2d55);
+  animation:spin 6s linear infinite;
   display:flex;
   align-items:center;
   justify-content:center;
-  animation:spin 6s linear infinite;
 }
-@keyframes spin{to{transform:rotate(360deg);}}
 
-.inner{
+@keyframes spin{
+  to{transform:rotate(360deg);}
+}
+
+.center{
   width:110px;
   height:110px;
-  background:#0b1220;
+  background:#050814;
   border-radius:50%;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:30px;
+  font-size:28px;
 }
 
+/* WAVEFORM */
+.eq{
+  display:flex;
+  justify-content:center;
+  gap:3px;
+  margin-top:14px;
+  height:30px;
+  align-items:flex-end;
+}
+
+.bar{
+  width:4px;
+  height:6px;
+  background:#00ffd5;
+  border-radius:2px;
+  animation:wave 1s infinite ease-in-out;
+  opacity:.8;
+}
+
+.bar:nth-child(2){animation-delay:.1s;}
+.bar:nth-child(3){animation-delay:.2s;}
+.bar:nth-child(4){animation-delay:.3s;}
+.bar:nth-child(5){animation-delay:.4s;}
+
+@keyframes wave{
+  0%,100%{height:6px;}
+  50%{height:26px;}
+}
+
+/* STATUS */
 .status{
   text-align:center;
   margin-top:10px;
   font-weight:700;
 }
 
-.live{
-  color:#00ff99;
-  animation:blink 1.2s infinite;
-}
-@keyframes blink{50%{opacity:.4;}}
+.live{color:#00ffd5; animation:blink 1.2s infinite;}
+@keyframes blink{50%{opacity:.3;}}
 
-/* BUTTONS */
+/* CONTROLS */
 .controls{
   display:flex;
   justify-content:center;
   gap:18px;
-  margin-top:15px;
+  margin-top:14px;
 }
 
 .btn{
-  width:48px;
-  height:48px;
+  width:46px;
+  height:46px;
   border-radius:50%;
   border:none;
-  background:rgba(255,255,255,0.1);
+  background:rgba(255,255,255,0.08);
   color:#fff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  backdrop-filter: blur(10px);
 }
 
 .play{
   width:64px;
   height:64px;
-  background:#ff2d55;
-  box-shadow:0 10px 30px rgba(255,45,85,.3);
-}
-
-/* MINI PLAYER FIX */
-.mini{
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  background:rgba(10,15,30,0.92);
-  backdrop-filter: blur(14px);
-  border-top:1px solid rgba(255,255,255,0.1);
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:10px 15px;
-
-  transform:translateY(120%);
-  transition:0.35s cubic-bezier(.4,0,.2,1);
-  z-index:999;
-}
-
-.mini.show{
-  transform:translateY(0);
-}
-
-.mini-left{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.dot{
-  width:10px;
-  height:10px;
-  border-radius:50%;
-  background:#ff2d55;
-  animation:blink 1s infinite;
+  background:linear-gradient(135deg,#ff2d55,#ff7a18);
+  box-shadow:0 10px 30px rgba(255,45,85,.25);
 }
 
 /* TABS */
 .tabs{
   display:flex;
-  position:sticky;
-  top:0;
-  background:rgba(10,15,30,0.6);
-  backdrop-filter: blur(10px);
-  z-index:10;
+  margin-top:10px;
+  background:rgba(255,255,255,0.04);
+  backdrop-filter: blur(12px);
+  border-radius:14px;
+  overflow:hidden;
 }
 
 .tab{
   flex:1;
   text-align:center;
-  padding:12px;
+  padding:10px;
   font-size:12px;
   opacity:.6;
   cursor:pointer;
@@ -182,25 +190,51 @@ body{
 
 .tab.active{
   opacity:1;
-  border-bottom:2px solid #ff2d55;
+  background:rgba(255,255,255,0.1);
 }
 
 /* SECTIONS */
 .section{display:none;}
 .section.active{display:block;}
 
-/* SCHEDULE */
-.schedule-item{
-  padding:10px;
-  border-bottom:1px solid rgba(255,255,255,0.1);
-  font-size:13px;
+/* MINI PLAYER */
+.mini{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  padding:10px 14px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:rgba(10,15,30,0.6);
+  backdrop-filter: blur(25px);
+  border-top:1px solid rgba(255,255,255,0.1);
+
+  transform:translateY(120%);
+  transition:.35s ease;
+  z-index:999;
+}
+
+.mini.show{transform:translateY(0);}
+
+/* DRAG HANDLE */
+.handle{
+  position:absolute;
+  top:-10px;
+  left:50%;
+  transform:translateX(-50%);
+  width:60px;
+  height:5px;
+  border-radius:10px;
+  background:rgba(255,255,255,0.2);
 }
 
 /* ABOUT */
 .about{
   font-size:13px;
   line-height:1.6;
-  opacity:.9;
+  opacity:.85;
 }
 </style>
 </head>
@@ -215,88 +249,96 @@ body{
   </div>
 
   <!-- TABS -->
-  <div class="tabs">
+  <div class="card tabs">
     <div class="tab active" data-tab="live">Live</div>
     <div class="tab" data-tab="schedule">Schedule</div>
     <div class="tab" data-tab="about">About</div>
   </div>
 
-  <div class="content" id="scrollArea">
+  <!-- LIVE -->
+  <div id="live" class="section active">
+    <div class="card">
 
-    <!-- LIVE -->
-    <div id="live" class="section active">
-      <div class="card">
-        <div class="circle">
-          <div class="inner"><i class="ti ti-radio"></i></div>
-        </div>
-
-        <div class="status" id="status">OFF AIR</div>
-
-        <div class="controls">
-          <button class="btn"><i class="ti ti-heart"></i></button>
-          <button class="btn play" id="playBtn"><i class="ti ti-player-play"></i></button>
-          <button class="btn"><i class="ti ti-volume"></i></button>
+      <div class="albumWrap">
+        <div class="glow" id="glow"></div>
+        <div class="disc">
+          <div class="center"><i class="ti ti-radio"></i></div>
         </div>
       </div>
-    </div>
 
-    <!-- SCHEDULE -->
-    <div id="schedule" class="section">
-      <div class="card">
-        <div class="schedule-item">MON-SAT: RATSADA BALITA — 6:00AM - 8:00AM</div>
-        <div class="schedule-item">TUE: AN SANGGUNIAN — 8:00AM - 8:40AM</div>
-        <div class="schedule-item">MON-FRI: SABI MO, SABI KO — 9:00AM - 11:00AM</div>
-        <div class="schedule-item">MON-FRI: ISUMBONG SA BARANGAY — 12:00NN - 1:00PM</div>
-        <div class="schedule-item">MON-FRI: AFTERNOON DELIGHT — 3:00PM - 5:00PM</div>
-        <div class="schedule-item">MON-FRI: INFINITE ROCK — 5:30PM - 7:00PM</div>
-        <div class="schedule-item">SAT: WEEKEND COUNTDOWN — 10:00AM - 12:00NN</div>
+      <div class="status" id="status">OFF AIR</div>
+
+      <!-- WAVEFORM -->
+      <div class="eq" id="eq">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
       </div>
+
+      <div class="controls">
+        <button class="btn"><i class="ti ti-heart"></i></button>
+        <button class="btn play" id="playBtn"><i class="ti ti-player-play"></i></button>
+        <button class="btn"><i class="ti ti-volume"></i></button>
+      </div>
+
     </div>
+  </div>
 
-    <!-- ABOUT -->
-    <div id="about" class="section">
-      <div class="card about">
+  <!-- SCHEDULE -->
+  <div id="schedule" class="section">
+    <div class="card about">
+      MON-SAT: RATSADA BALITA 6AM-8AM<br>
+      TUE: AN SANGGUNIAN 8AM-8:40AM<br>
+      MON-FRI: SABI MO, SABI KO 9AM-11AM<br>
+      MON-FRI: ISUMBONG SA BARANGAY 12NN-1PM<br>
+      MON-FRI: AFTERNOON DELIGHT 3PM-5PM<br>
+      MON-FRI: INFINITE ROCK 5:30PM-7PM<br>
+      SAT: WEEKEND COUNTDOWN 10AM-12NN
+    </div>
+  </div>
 
-DXSJ 93.3 Infinite Radio Surigao is a leading FM radio station serving Surigao City and neighboring communities.
+  <!-- ABOUT -->
+  <div id="about" class="section">
+    <div class="card about">
+93.3 Infinite Radio Surigao is a leading FM station delivering news, entertainment, and public service programming across Surigao del Norte.
 
 <br><br>
 
-It delivers entertainment, news, public affairs, and community-centered programming trusted by thousands of listeners.
-
-<br><br>
-
-As part of Infinite Radio Network, it upholds responsible broadcasting and public service.
-
-<br><br>
+Mission: Reliable information and quality entertainment.<br>
+Vision: Most trusted station in the Philippines.<br><br>
 
 Frequency: 93.3 FM<br>
 Call Sign: DXSJ<br>
-Station: Infinite Radio Surigao<br>
-Location: Surigao City, Philippines<br>
-Slogan: Your Kind of Song, Your Kind of Radio<br><br>
+Location: Surigao City<br>
+Slogan: Your Kind of Song, Your Kind of Radio
+Mission:<br>
+To provide reliable information, quality entertainment, and meaningful public service through responsible and innovative broadcasting.<br>
 
-Mission: Reliable information and entertainment.<br>
-Vision: Most trusted station in the Philippines.<br><br>
+Vision:<br>
+To be the most trusted and influential multimedia broadcasting station in the Philippines, empowering communities through information, education, and entertainment.<br>
 
-Contact: 0905-827-8704
-
-      </div>
+Contact:<br>
+📻 DXSJ 93.3 FM Infinite Radio Surigao<br>
+📍 Surigao City, Surigao del Norte<br>
+📞 0905-827-8704<br>
+🌐 Facebook: DXSJ 93.3 Infinite Radio Surigao<br>
     </div>
-
   </div>
+
 </div>
 
 <!-- MINI PLAYER -->
-<div class="mini" id="miniBar">
-  <div class="mini-left">
-    <div class="dot"></div>
-    <div>
-      <div style="font-size:12px;font-weight:700;">Now Playing</div>
-      <div style="font-size:10px;opacity:.6;">DXSJ Infinite Radio</div>
-    </div>
+<div class="mini" id="mini">
+  <div class="handle"></div>
+
+  <div>
+    <div style="font-size:12px;font-weight:700;">Now Playing</div>
+    <div style="font-size:10px;opacity:.6;" id="np">DXSJ Infinite Radio</div>
   </div>
 
-  <button class="btn play" id="miniPlay">
+  <button class="btn play" id="miniBtn">
     <i class="ti ti-player-play"></i>
   </button>
 </div>
@@ -305,51 +347,74 @@ Contact: 0905-827-8704
 const STREAM = "https://stream-02.surfernetwork.com/yy0d3w86zxhvv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJ5eTBkM3c4Nnp4aHZ2IiwiaG9zdCI6InN0cmVhbS0wMi5zdXJmZXJuZXR3b3JrLmNvbSIsInJ0dGwiOjUsImp0aSI6IjZpUUV6QS1QU0ppTXo4TndQU2xVTXciLCJpYXQiOjE3ODE2NTk0MDgsImV4cCI6MTc4MTY1OTQ2OH0.NYufZCc9oMLBIxCNekWEJ36jHNteLzCOIxhUkjUXKgc";
 
 let audio = new Audio(STREAM);
-let playing = false;
+let playing=false;
 
-const playBtn = document.getElementById("playBtn");
-const miniBar = document.getElementById("miniBar");
-const miniPlay = document.getElementById("miniPlay");
-const status = document.getElementById("status");
-const scrollArea = document.getElementById("scrollArea");
+const playBtn=document.getElementById("playBtn");
+const mini=document.getElementById("mini");
+const miniBtn=document.getElementById("miniBtn");
+const status=document.getElementById("status");
+const glow=document.getElementById("glow");
 
+/* AUDIO VISUAL REACT */
+function animateGlow(intensity){
+  glow.style.opacity = 0.3 + intensity;
+}
+
+/* PLAY */
 function playRadio(){
   audio.play();
-  playing = true;
-  status.innerHTML = "<span class='live'>LIVE</span>";
-  playBtn.innerHTML = "<i class='ti ti-player-pause'></i>";
-  miniPlay.innerHTML = "<i class='ti ti-player-pause'></i>";
+  playing=true;
+  status.innerHTML="<span class='live'>LIVE</span>";
+  playBtn.innerHTML="<i class='ti ti-player-pause'></i>";
+  miniBtn.innerHTML="<i class='ti ti-player-pause'></i>";
 }
 
+/* STOP */
 function stopRadio(){
   audio.pause();
-  audio.src = STREAM;
-  playing = false;
-  status.innerHTML = "OFF AIR";
-  playBtn.innerHTML = "<i class='ti ti-player-play'></i>";
-  miniPlay.innerHTML = "<i class='ti ti-player-play'></i>";
+  playing=false;
+  status.innerHTML="OFF AIR";
+  playBtn.innerHTML="<i class='ti ti-player-play'></i>";
+  miniBtn.innerHTML="<i class='ti ti-player-play'></i>";
 }
 
-playBtn.onclick = ()=> playing ? stopRadio() : playRadio();
-miniPlay.onclick = ()=> playing ? stopRadio() : playRadio();
+playBtn.onclick=()=>playing?stopRadio():playRadio();
+miniBtn.onclick=()=>playing?stopRadio():playRadio();
 
-/* SHOW MINI PLAYER ONLY AFTER SCROLL */
-scrollArea.addEventListener("scroll", ()=>{
-  if(scrollArea.scrollTop > 120){
-    miniBar.classList.add("show");
+/* MINI DRAG */
+let startY=0;
+let currentY=0;
+
+mini.addEventListener("touchstart",(e)=>{
+  startY=e.touches[0].clientY;
+});
+
+mini.addEventListener("touchmove",(e)=>{
+  currentY=e.touches[0].clientY;
+  let diff=startY-currentY;
+
+  if(diff< -50){
+    mini.classList.remove("show");
+  }
+});
+
+/* SHOW MINI ON SCROLL */
+window.addEventListener("scroll",()=>{
+  if(window.scrollY>120){
+    mini.classList.add("show");
   }else{
-    miniBar.classList.remove("show");
+    mini.classList.remove("show");
   }
 });
 
 /* TABS */
-document.querySelectorAll(".tab").forEach(tab=>{
-  tab.onclick = ()=>{
-    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-    tab.classList.add("active");
+document.querySelectorAll(".tab").forEach(t=>{
+  t.onclick=()=>{
+    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+    t.classList.add("active");
 
     document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
-    document.getElementById(tab.dataset.tab).classList.add("active");
+    document.getElementById(t.dataset.tab).classList.add("active");
   };
 });
 </script>
