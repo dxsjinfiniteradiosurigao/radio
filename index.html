@@ -3,90 +3,82 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>DXSJ Infinite Radio</title>
+<title>DXSJ Infinite Radio PRO</title>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;}
+
 body{
   background:#05070d;
-  color:#fff;
   overflow:hidden;
+  color:#fff;
 }
 
-/* ===== APP WRAPPER ===== */
+/* ===== AUDIO REACTIVE BACKGROUND ===== */
+.bg{
+  position:fixed;
+  inset:0;
+  background:radial-gradient(circle at 20% 20%, rgba(220,30,60,0.25), transparent 40%),
+             radial-gradient(circle at 80% 70%, rgba(26,58,143,0.35), transparent 40%),
+             #05070d;
+  filter:blur(40px);
+  transform:scale(1.2);
+  transition:0.2s;
+}
+
+/* ===== APP LAYOUT ===== */
 .app{
+  position:relative;
   height:100vh;
   display:flex;
   flex-direction:column;
 }
 
-/* ===== ANIMATED BACKGROUND ===== */
-.bg{
-  position:fixed;
-  inset:0;
-  background:radial-gradient(circle at 20% 20%, #1a3a8f55, transparent 40%),
-             radial-gradient(circle at 80% 70%, #dc1e3c33, transparent 40%),
-             #05070d;
-  animation:bgMove 8s infinite alternate ease-in-out;
-  z-index:-2;
-}
-@keyframes bgMove{
-  0%{transform:scale(1)}
-  100%{transform:scale(1.08)}
-}
-
-/* ===== VIEWS ===== */
-.view{
+/* ===== MAIN HOME ===== */
+.home{
   flex:1;
-  display:none;
-  padding:20px;
-  overflow:auto;
-}
-.view.active{display:block;}
-
-/* ===== HOME PLAYER ===== */
-.hero{
-  height:100%;
   display:flex;
   flex-direction:column;
-  justify-content:center;
   align-items:center;
-  text-align:center;
-  gap:20px;
+  justify-content:center;
+  gap:18px;
 }
 
-/* VISUALIZER */
-canvas{
-  width:260px;
-  height:100px;
-  border-radius:20px;
-  background:rgba(255,255,255,0.05);
-  backdrop-filter:blur(20px);
-}
-
-/* TITLE */
-.station{
+.title{
   font-size:22px;
   font-weight:800;
 }
+
 .status{
+  font-size:12px;
   color:#aaa;
 }
 
-/* BUTTON */
-.play{
-  width:80px;
-  height:80px;
-  border-radius:50%;
-  border:none;
-  background:#dc1e3c;
-  color:#fff;
-  font-size:30px;
+/* ===== SPECTRUM ANALYZER ===== */
+canvas{
+  width:320px;
+  height:120px;
+  border-radius:20px;
+  background:rgba(255,255,255,0.04);
+  backdrop-filter:blur(20px);
+  box-shadow:0 0 40px rgba(220,30,60,0.1);
 }
 
-/* ===== TABS (FIXED) ===== */
+/* ===== PLAY BUTTON ===== */
+.play{
+  width:78px;
+  height:78px;
+  border-radius:50%;
+  border:none;
+  background:linear-gradient(135deg,#dc1e3c,#ff3b6b);
+  color:#fff;
+  font-size:28px;
+  box-shadow:0 10px 40px rgba(220,30,60,0.35);
+}
+
+/* ===== BOTTOM NAV ===== */
 .tabs{
   position:fixed;
   bottom:0;
@@ -96,93 +88,94 @@ canvas{
   display:flex;
   justify-content:space-around;
   align-items:center;
-  background:rgba(10,12,20,0.8);
-  backdrop-filter:blur(20px);
-  border-top:1px solid rgba(255,255,255,0.1);
+  background:rgba(10,12,18,0.75);
+  backdrop-filter:blur(25px);
+  border-top:1px solid rgba(255,255,255,0.08);
   z-index:50;
 }
+
 .tab{
+  font-size:11px;
+  color:#888;
   display:flex;
   flex-direction:column;
   align-items:center;
-  font-size:11px;
-  color:#aaa;
-  cursor:pointer;
+  transition:0.2s;
 }
 .tab.active{color:#dc1e3c;}
 
-/* ===== MINI PLAYER ===== */
+/* ===== MINI PLAYER (TRUE DRAG SHEET) ===== */
 .mini{
   position:fixed;
   left:10px;
   right:10px;
   bottom:80px;
-  height:70px;
-  background:rgba(20,22,30,0.85);
-  backdrop-filter:blur(20px);
-  border-radius:16px;
+  height:72px;
+  border-radius:18px;
+  background:rgba(20,22,30,0.65);
+  backdrop-filter:blur(25px);
   display:flex;
   align-items:center;
   justify-content:space-between;
-  padding:10px 14px;
+  padding:12px 14px;
   z-index:40;
-  transition:0.3s;
-}
-.mini.expanded{
-  height:140px;
-  flex-direction:column;
-  justify-content:center;
-}
-.drag{
-  width:40px;
-  height:4px;
-  background:#555;
-  border-radius:10px;
-  margin-bottom:6px;
+  transform:translateY(0);
+  transition:transform 0.25s cubic-bezier(.2,.9,.2,1);
+  touch-action:none;
 }
 
-/* SCHEDULE + ABOUT */
+.mini.expanded{
+  height:220px;
+  align-items:flex-start;
+  flex-direction:column;
+}
+
+/* drag handle */
+.handle{
+  width:42px;
+  height:5px;
+  background:#555;
+  border-radius:10px;
+  margin-bottom:8px;
+}
+
+/* ===== SCHEDULE / ABOUT ===== */
+.page{
+  padding:20px;
+  overflow:auto;
+  height:100%;
+}
+
 .card{
   background:rgba(255,255,255,0.05);
   padding:16px;
   border-radius:16px;
-  margin-bottom:12px;
   backdrop-filter:blur(20px);
-}
-
-/* SCROLL SAFE SPACE */
-.bottom-space{
-  height:160px;
+  margin-bottom:12px;
+  line-height:1.5;
 }
 </style>
 </head>
 
 <body>
 
-<div class="bg"></div>
+<div class="bg" id="bg"></div>
 
 <div class="app">
 
 <!-- HOME -->
-<div class="view active" id="home">
-  <div class="hero">
-    <div class="station">DXSJ 93.3 Infinite Radio</div>
-    <div class="status" id="status">OFF AIR</div>
+<div class="home view active" id="home">
+  <div class="title">DXSJ 93.3 Infinite Radio</div>
+  <div class="status" id="status">OFF AIR</div>
 
-    <canvas id="vis"></canvas>
+  <canvas id="spectrum"></canvas>
 
-    <button class="play" id="playBtn">▶</button>
-  </div>
-</div>
-
-<!-- LIVESTREAM -->
-<div class="view" id="live">
-  <div class="card">Livestream ready (setup later)</div>
+  <button class="play" id="playBtn">▶</button>
 </div>
 
 <!-- SCHEDULE -->
-<div class="view" id="schedule">
-  <div class="card">
+<div class="page view" id="schedule">
+<div class="card">
 MONDAY - SATURDAY: RATSADA BALITA 6:00AM-8:00AM<br><br>
 TUESDAY: AN SANGGUNIAN 8:00AM-8:40AM<br><br>
 MONDAY - FRIDAY: SABI MO, SABI KO 9:00AM - 11:00AM<br><br>
@@ -190,24 +183,19 @@ MONDAY - FRIDAY: ISUMBONG SA BARANGAY 12:00NN - 1:00PM<br><br>
 MONDAY - FRIDAY: AFTERNOON DELIGHT 3:00PM - 5:00PM<br><br>
 MONDAY - FRIDAY: INFINITE ROCK 5:30PM - 7:00PM<br><br>
 SATURDAY: WEEKEND COUNTDOWN & REQUEST SHOW 10:00AM - 12:00NN
-  </div>
+</div>
 </div>
 
 <!-- ABOUT -->
-<div class="view" id="about">
-  <div class="card">
-DXSJ 93.3 Infinite Radio Surigao is a leading FM radio station serving Surigao City and the neighboring communities of Surigao del Norte. Dedicated to delivering quality entertainment, timely news, public affairs, and community-centered programming, the station has become a trusted source of information and inspiration for thousands of listeners across the region.<br><br>
-
-As part of the growing Infinite Radio Network, DXSJ 93.3 FM combines modern broadcasting technology with a strong commitment to public service.<br><br>
-
-Driven by its mission to provide responsible broadcasting and meaningful content, DXSJ continues to uphold integrity and community involvement.<br><br>
+<div class="page view" id="about">
+<div class="card">
+DXSJ 93.3 Infinite Radio Surigao is a leading FM radio station serving Surigao City and the neighboring communities of Surigao del Norte. Dedicated to delivering quality entertainment, timely news, public affairs, and community-centered programming...<br><br>
 
 Frequency: 93.3 FM<br>
 Call Sign: DXSJ<br>
-Station Name: Infinite Radio Surigao<br>
 Location: Surigao City<br>
 Slogan: Your Kind of Song, Your Kind of Radio
-  </div>
+</div>
 </div>
 
 </div>
@@ -215,8 +203,8 @@ Slogan: Your Kind of Song, Your Kind of Radio
 <!-- MINI PLAYER -->
 <div class="mini" id="mini">
   <div>
-    <div class="drag"></div>
-    <div style="font-size:14px;font-weight:700;">Now Playing</div>
+    <div class="handle"></div>
+    <div style="font-size:13px;font-weight:700;">Now Playing</div>
     <div style="font-size:11px;color:#aaa;">DXSJ Live Stream</div>
   </div>
   <button id="miniBtn">▶</button>
@@ -224,63 +212,72 @@ Slogan: Your Kind of Song, Your Kind of Radio
 
 <!-- TABS -->
 <div class="tabs">
-  <div class="tab active" data-tab="home"><i class="ti ti-home"></i>Home</div>
-  <div class="tab" data-tab="live"><i class="ti ti-radio"></i>Live</div>
-  <div class="tab" data-tab="schedule"><i class="ti ti-calendar"></i>Schedule</div>
-  <div class="tab" data-tab="about"><i class="ti ti-info-circle"></i>About</div>
+  <div class="tab active" data="home"><i class="ti ti-home"></i>Home</div>
+  <div class="tab" data="schedule"><i class="ti ti-calendar"></i>Schedule</div>
+  <div class="tab" data="about"><i class="ti ti-info-circle"></i>About</div>
 </div>
 
 <script>
-const STREAM="https://stream-02.surfernetwork.com/yy0d3w86zxhvv?zt=eyJhbGciOiJIUzI1NiJ9.ey...";
+const STREAM="https://stream-02.surfernetwork.com/yy0d3w86zxhvv?...";
 
-let audio=new Audio();
-audio.src=STREAM;
+let audio=new Audio(STREAM);
 audio.crossOrigin="anonymous";
 
+let ctx, analyser, dataArray;
 let playing=false;
 
-/* ===== VISUALIZER ===== */
-const canvas=document.getElementById("vis");
-const ctx=canvas.getContext("2d");
-canvas.width=260;
-canvas.height=100;
-
-let audioCtx,analyser,dataArray;
-
+/* ===== AUDIO ENGINE ===== */
 function initAudio(){
-  audioCtx=new (window.AudioContext||window.webkitAudioContext)();
-  analyser=audioCtx.createAnalyser();
-  let src=audioCtx.createMediaElementSource(audio);
+  ctx=new (window.AudioContext||window.webkitAudioContext)();
+  analyser=ctx.createAnalyser();
+  analyser.fftSize=256; // HIGH RESOLUTION FFT 🔥
+  const src=ctx.createMediaElementSource(audio);
   src.connect(analyser);
-  analyser.connect(audioCtx.destination);
-  analyser.fftSize=64;
+  analyser.connect(ctx.destination);
   dataArray=new Uint8Array(analyser.frequencyBinCount);
 }
+
+/* ===== SPECTRUM ===== */
+const canvas=document.getElementById("spectrum");
+const c=canvas.getContext("2d");
+canvas.width=320;
+canvas.height=120;
 
 function draw(){
   requestAnimationFrame(draw);
   if(!analyser) return;
+
   analyser.getByteFrequencyData(dataArray);
 
-  ctx.clearRect(0,0,canvas.width,canvas.height);
+  c.clearRect(0,0,canvas.width,canvas.height);
 
-  let barWidth=8;
+  let barW=4;
   let x=10;
 
-  for(let i=0;i<dataArray.length;i++){
-    let h=dataArray[i]/2;
+  let avg=0;
 
-    ctx.fillStyle="rgba(220,30,60,0.8)";
-    ctx.fillRect(x,canvas.height-h,barWidth,h);
-    x+=12;
+  for(let i=0;i<dataArray.length;i++){
+    let v=dataArray[i];
+    avg+=v;
+
+    let h=v/2;
+
+    c.fillStyle=`rgb(${200+v/2},30,80)`;
+    c.fillRect(x,canvas.height-h,barW,h);
+
+    x+=6;
   }
+
+  // reactive background glow
+  avg/=dataArray.length;
+  document.getElementById("bg").style.opacity=0.4 + avg/300;
 }
 draw();
 
 /* ===== PLAY ===== */
 document.getElementById("playBtn").onclick=async()=>{
-  if(!audioCtx) initAudio();
-  await audioCtx.resume();
+  if(!ctx) initAudio();
+  await ctx.resume();
 
   if(!playing){
     audio.play();
@@ -293,12 +290,44 @@ document.getElementById("playBtn").onclick=async()=>{
   }
 };
 
-/* ===== MINI PLAYER ===== */
+/* ===== MINI PLAYER PHYSICS DRAG ===== */
 const mini=document.getElementById("mini");
-const miniBtn=document.getElementById("miniBtn");
 
-miniBtn.onclick=()=>{
+let startY=0, currentY=0, dragging=false;
+
+mini.addEventListener("touchstart",e=>{
+  dragging=true;
+  startY=e.touches[0].clientY;
+});
+
+mini.addEventListener("touchmove",e=>{
+  if(!dragging) return;
+  currentY=e.touches[0].clientY;
+
+  let diff=currentY-startY;
+
+  if(diff>0){
+    mini.style.transform=`translateY(${diff}px)`;
+  }
+});
+
+mini.addEventListener("touchend",e=>{
+  dragging=false;
+
+  let diff=currentY-startY;
+
+  mini.style.transform="";
+
+  if(diff>80){
+    mini.classList.toggle("expanded");
+  }
+});
+
+/* ===== MINI BUTTON ===== */
+document.getElementById("miniBtn").onclick=async()=>{
   if(!playing){
+    if(!ctx) initAudio();
+    await ctx.resume();
     audio.play();
     playing=true;
   }else{
@@ -307,16 +336,6 @@ miniBtn.onclick=()=>{
   }
 };
 
-/* DRAG MINI */
-let startY;
-mini.addEventListener("touchstart",e=>startY=e.touches[0].clientY);
-mini.addEventListener("touchend",e=>{
-  let endY=e.changedTouches[0].clientY;
-  if(startY-endY>30){
-    mini.classList.toggle("expanded");
-  }
-});
-
 /* ===== TABS ===== */
 document.querySelectorAll(".tab").forEach(t=>{
   t.onclick=()=>{
@@ -324,7 +343,7 @@ document.querySelectorAll(".tab").forEach(t=>{
     t.classList.add("active");
 
     document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
-    document.getElementById(t.dataset.tab).classList.add("active");
+    document.getElementById(t.getAttribute("data")).classList.add("active");
   };
 });
 </script>
