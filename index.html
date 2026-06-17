@@ -384,9 +384,13 @@ height:6px;
 border-radius:999px;
 background:rgba(255,255,255,.2);
 margin:0 auto 20px;
+cursor:grab;
+touch-action:none;
 }
 
 .player-top{
+cursor:grab;
+touch-action:none;
 display:flex;
 align-items:center;
 justify-content:space-between;
@@ -716,13 +720,13 @@ text-align:right;
             </div>
         </div>
 
-        <h1>DXSJ Infinite Radio</h1>
+        <h1>93.3 Infinite Radio Surigao</h1>
         <p>Surigao City &bull; 93.3 FM</p>
     </div>
 
     <div class="glass-card now-playing-card">
         <div class="card-label">NOW PLAYING</div>
-        <div id="songTitle">DXSJ Infinite Radio</div>
+        <div id="songTitle">93.3 Infinite Radio Surigao</div>
         <div id="songArtist">Live Broadcast</div>
     </div>
 
@@ -785,7 +789,7 @@ text-align:right;
         <button id="closePlayer">
             <i class="ti ti-chevron-down"></i>
         </button>
-        <span>DXSJ Infinite Radio</span>
+        <span>93.3 Infinite Radio Surigao</span>
         <button id="playerMenu">
             <i class="ti ti-dots"></i>
         </button>
@@ -801,7 +805,7 @@ text-align:right;
     </div>
 
     <div id="playerMeta">
-        <div id="playerSongTitle">DXSJ Infinite Radio</div>
+        <div id="playerSongTitle">93.3 Infinite Radio Surigao</div>
         <div id="playerSongArtist">Surigao City</div>
     </div>
 
@@ -836,7 +840,7 @@ text-align:right;
             <i class="ti ti-radio"></i>
         </div>
         <div>
-            <div id="miniTitle">DXSJ Infinite Radio</div>
+            <div id="miniTitle">93.3 Infinite Radio Surigao</div>
             <div id="miniSubtitle">Live Stream</div>
         </div>
     </div>
@@ -1007,7 +1011,7 @@ async function fetchNowPlaying(){
   // Example: let res = await fetch("/nowplaying.json");
 
   const fake = {
-    title: "DXSJ Infinite Radio",
+    title: "93.3 Infinite Radio Surigao",
     artist: "Live Broadcast"
   };
 
@@ -1096,6 +1100,79 @@ expandPlayerBtn.addEventListener("click", () => {
 
 closePlayerBtn.addEventListener("click", () => {
   playerSheet.classList.remove("show");
+});
+
+/* =========================
+   DRAG PLAYER SHEET TO DISMISS
+========================= */
+const playerDragHandle = document.getElementById("playerDragHandle");
+const playerTop = document.querySelector(".player-top");
+
+let sheetStartY = 0;
+let sheetCurrentY = 0;
+let sheetDragging = false;
+
+function sheetDragStart(y) {
+  sheetDragging = true;
+  sheetStartY = y;
+  sheetCurrentY = y;
+  playerSheet.style.transition = "none";
+}
+
+function sheetDragMove(y) {
+  if (!sheetDragging) return;
+
+  sheetCurrentY = y;
+  const diff = sheetCurrentY - sheetStartY;
+
+  // only allow dragging downward
+  if (diff > 0) {
+    playerSheet.style.transform = `translateY(${diff}px)`;
+  }
+}
+
+function sheetDragEnd() {
+  if (!sheetDragging) return;
+  sheetDragging = false;
+
+  playerSheet.style.transition = "";
+  playerSheet.style.transform = "";
+
+  const diff = sheetCurrentY - sheetStartY;
+
+  // dismiss if dragged down far enough
+  if (diff > 120) {
+    playerSheet.classList.remove("show");
+  }
+}
+
+[playerDragHandle, playerTop].forEach(el => {
+  if (!el) return;
+
+  el.addEventListener("touchstart", e => {
+    sheetDragStart(e.touches[0].clientY);
+  });
+
+  el.addEventListener("touchmove", e => {
+    sheetDragMove(e.touches[0].clientY);
+  });
+
+  el.addEventListener("touchend", sheetDragEnd);
+
+  // desktop mouse support
+  el.addEventListener("mousedown", e => {
+    sheetDragStart(e.clientY);
+
+    const onMouseMove = e2 => sheetDragMove(e2.clientY);
+    const onMouseUp = () => {
+      sheetDragEnd();
+      document.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseup", onMouseUp);
+    };
+
+    document.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("mouseup", onMouseUp);
+  });
 });
 
 /* =========================
@@ -1201,7 +1278,7 @@ function setupMediaSession() {
   if (!("mediaSession" in navigator)) return;
 
   navigator.mediaSession.metadata = new MediaMetadata({
-    title: "DXSJ Infinite Radio",
+    title: "93.3 Infinite Radio Surigao",
     artist: "Surigao City",
     album: "Live Broadcast",
     artwork: []
@@ -1296,7 +1373,7 @@ miniPlayer.addEventListener("click", (e) => {
 document.getElementById("shareBtn").addEventListener("click", () => {
   if (navigator.share) {
     navigator.share({
-      title: "DXSJ Infinite Radio",
+      title: "93.3 Infinite Radio Surigao",
       text: "Listen to DXSJ 93.3 Infinite Radio live from Surigao City!",
       url: window.location.href
     }).catch(() => {});
