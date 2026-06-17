@@ -522,7 +522,7 @@
   style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;border:none;"></iframe>
 
 <script>
-var STREAM = 'https://vdo.ninja/?view=fJbgPNk&autoplay=1&novideo=1&muted&noheader&cleanoutput';
+var STREAM = "https://stream-177.surfernetwork.com/yy0d3w86zxhvv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJ5eTBkM3c4Nnp4aHZ2IiwiaG9zdCI6InN0cmVhbS0xNzcuc3VyZmVybmV0d29yay5jb20iLCJydHRsIjo1LCJqdGkiOiJUaWJ6cXJsZVJVV2hxRDBiekhfdFVnIiwiaWF0IjoxNzgxNjU1MzUxLCJleHAiOjE3ODE2NTU0MTF9.zY3pxvZUWlJW8V3nuVTnv5TO6viaHn_aec_sAJWqpWM";
 var playing = false;
 var liked = false;
 
@@ -584,14 +584,29 @@ function setConnecting() {
   btext.textContent = 'CONNECTING';
 }
 
-playBtn.addEventListener('click', function() {
+var player = document.getElementById("player");
+
+playBtn.addEventListener('click', async function() {
   fireRipple();
+
   if (!playing) {
     setConnecting();
-    vdo.src = STREAM;
-    setTimeout(setLive, 4000);
+
+    try {
+      player.src = STREAM;
+      player.load();
+
+      await player.play(); // important for Android
+
+      setLive();
+    } catch (e) {
+      console.log("Playback failed:", e);
+      setOff();
+    }
+
   } else {
-    vdo.src = '';
+    player.pause();
+    player.src = "";
     setOff();
   }
 });
@@ -766,7 +781,16 @@ function updateProgramSchedule() {
 
 updateProgramSchedule();
 setInterval(updateProgramSchedule, 60000);
+
+ window.addEventListener('load', function () {
+  setTimeout(function () {
+    playBtn.click();
+  }, 1000);
+});
+ 
 </script>
 
 </body>
+ <audio id="player" preload="none"></audio>
 </html>
+
