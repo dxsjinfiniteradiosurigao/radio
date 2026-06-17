@@ -652,12 +652,22 @@ margin-bottom:10px;
 display:flex;
 justify-content:space-between;
 align-items:center;
-padding:14px 0;
+padding:14px 12px;
+margin:0 -12px;
 border-bottom:1px solid var(--border);
+border-radius:16px;
+transition:.25s;
 }
 
 .schedule-item:last-child{
 border-bottom:none;
+}
+
+.schedule-item-now{
+background:rgba(220,30,60,.12);
+border:1px solid rgba(220,30,60,.3);
+border-bottom:1px solid rgba(220,30,60,.3);
+box-shadow:0 0 24px rgba(220,30,60,.2);
 }
 
 .schedule-time{
@@ -666,10 +676,30 @@ color:var(--text2);
 min-width:110px;
 }
 
+.schedule-item-now .schedule-time{
+color:#ff8094;
+font-weight:700;
+}
+
 .schedule-title{
 font-weight:700;
 flex:1;
 text-align:right;
+display:flex;
+align-items:center;
+justify-content:flex-end;
+gap:8px;
+}
+
+.schedule-now-badge{
+font-size:10px;
+font-weight:800;
+letter-spacing:.5px;
+color:#fff;
+background:linear-gradient(135deg,#dc1e3c,#ff5671);
+padding:3px 8px;
+border-radius:999px;
+box-shadow:0 0 10px rgba(220,30,60,.5);
 }
 
 @media(max-width:420px){
@@ -758,7 +788,7 @@ text-align:right;
 <!-- SCHEDULE TAB -->
 <section id="scheduleTab" class="tab-page">
     <div class="page-header">
-        <h2>Program Schedule</h2>
+        <h2>Today's Schedule</h2>
     </div>
     <div class="glass-card" id="scheduleContainer">
         <!-- populated by JS -->
@@ -954,7 +984,7 @@ function updateScheduleUI(){
 }
 
 /* =========================
-   SCHEDULE PAGE LIST
+   SCHEDULE PAGE LIST (TODAY ONLY)
 ========================= */
 const dayNames = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 
@@ -962,12 +992,36 @@ function renderScheduleList(){
   const container = document.getElementById("scheduleContainer");
   if(!container) return;
 
-  container.innerHTML = schedule.map(s => {
-    const days = s.days.map(d => dayNames[d]).join(", ");
-    return `
+  const now = new Date();
+  const today = now.getDay();
+  const mins = now.getHours()*60 + now.getMinutes();
+
+  const todays = schedule
+    .filter(s => s.days.includes(today))
+    .slice()
+    .sort((a,b) => toMinutes(a.start) - toMinutes(b.start));
+
+  if(todays.length === 0){
+    container.innerHTML = `
       <div class="schedule-item">
-        <div class="schedule-time">${s.start} - ${s.end}<br><span style="opacity:.6">${days}</span></div>
-        <div class="schedule-title">${s.title}</div>
+        <div class="schedule-title" style="text-align:left;">No scheduled programs today. Enjoy our music automation!</div>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = todays.map(s => {
+    const start = toMinutes(s.start);
+    const end = toMinutes(s.end);
+    const isNow = mins >= start && mins < end;
+
+    return `
+      <div class="schedule-item${isNow ? ' schedule-item-now' : ''}">
+        <div class="schedule-time">${s.start} - ${s.end}</div>
+        <div class="schedule-title">
+          ${s.title}
+          ${isNow ? '<span class="schedule-now-badge">NOW</span>' : ''}
+        </div>
       </div>
     `;
   }).join("");
@@ -1415,7 +1469,10 @@ requestNotifPermission();
 updateTime();
 
 setInterval(updateTime, 1000);
-setInterval(updateScheduleUI, 5000);
+setInterval(() => {
+  updateScheduleUI();
+  renderScheduleList();
+}, 5000);
 setInterval(checkProgramAlerts, 60000);
 setInterval(fetchNowPlaying, 10000);
 
