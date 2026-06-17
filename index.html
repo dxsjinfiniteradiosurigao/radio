@@ -2,235 +2,281 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DXSJ Radio Bottom Sheet</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>DXSJ Infinite Radio</title>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 
 <style>
-body {
-  margin: 0;
-  font-family: Arial;
-  height: 200vh;
-  background: #0f1f4d;
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  background:#0b1220;
+  color:#fff;
+  overflow-x:hidden;
 }
 
-/* FAKE CONTENT */
-.content {
-  padding: 20px;
-  color: white;
+/* APP */
+.app{
+  width:100%;
+  max-width:430px;
+  margin:0 auto;
+  min-height:200vh; /* allow scroll demo */
+  position:relative;
 }
 
-/* BACKDROP */
-.backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.3);
-  opacity: 0;
-  pointer-events: none;
-  transition: 0.3s;
-  z-index: 9998;
+/* =========================
+   HERO PLAYER (FULLSCREEN)
+========================= */
+.hero{
+  position:sticky;
+  top:0;
+  z-index:100;
+  height:420px;
+  background:linear-gradient(135deg,#0f2a6b,#1a3a8f);
+  border-bottom-left-radius:30px;
+  border-bottom-right-radius:30px;
+  overflow:hidden;
+  transition:all .5s ease;
 }
 
-/* PLAYER SHEET */
-.sheet {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 90px;
-  background: #1a3a8f;
-  border-radius: 20px 20px 0 0;
-  transition: all 0.35s ease;
-  z-index: 9999;
-  color: white;
-  overflow: hidden;
+/* COLLAPSED STATE (Spotify-like mini player) */
+.hero.mini{
+  height:78px;
+  border-radius:0;
+  display:flex;
+  align-items:center;
+  padding:10px 14px;
 }
 
-/* EXPANDED STATE */
-.sheet.expanded {
-  height: 100vh;
-  border-radius: 0;
+/* TOP BAR */
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:18px;
 }
 
-/* HEADER (DRAG HANDLE) */
-.handle {
-  width: 60px;
-  height: 5px;
-  background: rgba(255,255,255,0.4);
-  border-radius: 10px;
-  margin: 10px auto;
+.title{
+  font-weight:700;
+  font-size:14px;
+  letter-spacing:.5px;
 }
 
-/* CONTENT */
-.inner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  gap: 12px;
+.icon-btn{
+  width:38px;height:38px;
+  border-radius:50%;
+  border:none;
+  background:rgba(255,255,255,.12);
+  color:#fff;
 }
 
-/* MINI MODE HIDE */
-.sheet:not(.expanded) .full {
-  display: none;
+/* CENTER CONTENT */
+.center{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  height:100%;
+  transition:.4s;
 }
 
-/* MINI MODE */
-.miniRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 14px;
-  height: 90px;
+/* hide center when mini */
+.hero.mini .center{
+  flex-direction:row;
+  justify-content:flex-start;
+  gap:12px;
+  height:auto;
 }
 
-.title {
-  font-weight: bold;
+/* DISC */
+.disc{
+  width:160px;
+  height:160px;
+  border-radius:50%;
+  background:#fff;
+  border:6px solid #ff2d55;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:.5s;
 }
 
-button {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  border: none;
-  background: #dc1e3c;
-  color: white;
-  font-size: 18px;
+.hero.mini .disc{
+  width:48px;
+  height:48px;
+  border-width:3px;
 }
 
-.fullTitle {
-  font-size: 22px;
-  font-weight: bold;
+/* pulse */
+.ring{
+  position:absolute;
+  width:160px;height:160px;
+  border-radius:50%;
+  border:2px solid rgba(255,45,85,.4);
+  animation:pulse 2s infinite;
 }
 
-.status {
-  opacity: 0.8;
-  font-size: 14px;
+@keyframes pulse{
+  0%{transform:scale(1);opacity:.7}
+  100%{transform:scale(1.6);opacity:0}
 }
 
+/* TEXT */
+.meta{
+  text-align:center;
+  margin-top:16px;
+  transition:.4s;
+}
+
+.hero.mini .meta{
+  margin-top:0;
+  text-align:left;
+}
+
+.meta h1{
+  font-size:20px;
+}
+
+.hero.mini .meta h1{
+  font-size:14px;
+}
+
+.meta p{
+  font-size:12px;
+  opacity:.7;
+}
+
+/* =========================
+   PLAYER CONTROLS
+========================= */
+.controls{
+  margin-top:18px;
+  display:flex;
+  gap:18px;
+  justify-content:center;
+}
+
+.hero.mini .controls{
+  margin-left:auto;
+}
+
+/* PLAY */
+.play{
+  width:68px;
+  height:68px;
+  border-radius:50%;
+  border:none;
+  background:#ff2d55;
+  color:#fff;
+  font-size:26px;
+  box-shadow:0 10px 30px rgba(255,45,85,.35);
+}
+
+/* MINI MODE PLAY */
+.hero.mini .play{
+  width:44px;height:44px;
+  font-size:18px;
+}
+
+/* LIKE */
+.btn{
+  width:48px;height:48px;
+  border-radius:50%;
+  border:none;
+  background:rgba(255,255,255,.12);
+  color:#fff;
+}
+
+/* =========================
+   CONTENT BELOW
+========================= */
+.content{
+  padding:20px;
+  color:#222;
+}
+
+.card{
+  background:#fff;
+  border-radius:18px;
+  padding:16px;
+  margin-bottom:12px;
+}
+
+/* sticky mini shadow */
+.hero.mini{
+  box-shadow:0 10px 30px rgba(0,0,0,.3);
+}
 </style>
 </head>
 
 <body>
 
-<div class="content">
-  <h2>DXSJ Infinite Radio</h2>
-  <p>Drag player up or down</p>
-</div>
+<div class="app">
 
-<div class="backdrop" id="backdrop"></div>
+  <!-- HERO PLAYER -->
+  <div class="hero" id="hero">
 
-<!-- SHEET -->
-<div class="sheet" id="sheet">
+    <div class="top">
+      <button class="icon-btn"><i class="ti ti-menu-2"></i></button>
+      <div class="title">DXSJ Infinite Radio</div>
+      <button class="icon-btn"><i class="ti ti-share"></i></button>
+    </div>
 
-  <!-- MINI -->
-  <div class="miniRow">
-    <div class="title">DXSJ Radio</div>
-    <button id="playBtnMini">▶</button>
+    <div class="center">
+
+      <div style="position:relative">
+        <div class="ring"></div>
+        <div class="disc">
+          <i class="ti ti-radio" style="font-size:34px;color:#1a3a8f;"></i>
+        </div>
+      </div>
+
+      <div class="meta">
+        <h1>DXSJ Infinite Radio</h1>
+        <p>Surigao City • Live Stream</p>
+
+        <div class="controls">
+          <button class="btn"><i class="ti ti-heart"></i></button>
+          <button class="play" id="playBtn"><i class="ti ti-player-play"></i></button>
+          <button class="btn"><i class="ti ti-volume"></i></button>
+        </div>
+      </div>
+
+    </div>
   </div>
 
-  <!-- FULL -->
-  <div class="inner full">
+  <!-- CONTENT -->
+  <div class="content">
 
-    <div class="handle"></div>
+    <div class="card">
+      <b>Now Playing</b><br>
+      Smooth Radio Mix
+    </div>
 
-    <div class="fullTitle">DXSJ Infinite Radio</div>
-    <div class="status" id="status">Ready</div>
+    <div class="card">
+      Scroll down → player collapses like Spotify
+    </div>
 
-    <button id="playBtnFull">▶</button>
+    <div class="card" style="height:600px">
+      More content...
+    </div>
 
   </div>
 
 </div>
-
-<audio id="audio"></audio>
 
 <script>
+const hero = document.getElementById("hero");
 
-var sheet = document.getElementById("sheet");
-var backdrop = document.getElementById("backdrop");
-
-var playMini = document.getElementById("playBtnMini");
-var playFull = document.getElementById("playBtnFull");
-
-var status = document.getElementById("status");
-var audio = document.getElementById("audio");
-
-var STREAM = "https://stream-177.surfernetwork.com/yy0d3w86zxhvv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJ5eTBkM3c4Nnp4aHZ2IiwiaG9zdCI6InN0cmVhbS0xNzcuc3VyZmVybmV0d29yay5jb20iLCJydHRsIjo1LCJqdGkiOiJUaWJ6cXJsZVJVV2hxRDBiekhfdFVnIiwiaWF0IjoxNzgxNjU1MzUxLCJleHAiOjE3ODE2NTU0MTF9.zY3pxvZUWlJW8V3nuVTnv5TO6viaHn_aec_sAJWqpWM";
-
-var playing = false;
-
-/* PLAY */
-function playRadio() {
-  audio.src = STREAM;
-  audio.load();
-  audio.play();
-  playing = true;
-
-  playMini.innerHTML = "⏸";
-  playFull.innerHTML = "⏸";
-  status.innerText = "LIVE";
-}
-
-/* STOP */
-function stopRadio() {
-  audio.pause();
-  audio.src = "";
-  playing = false;
-
-  playMini.innerHTML = "▶";
-  playFull.innerHTML = "▶";
-  status.innerText = "OFF AIR";
-}
-
-/* BUTTONS */
-playMini.onclick = function () {
-  playing ? stopRadio() : playRadio();
-};
-
-playFull.onclick = function () {
-  playing ? stopRadio() : playRadio();
-};
-
-/* TAP → EXPAND / COLLAPSE */
-sheet.addEventListener("click", function (e) {
-  if (!sheet.classList.contains("expanded")) {
-    sheet.classList.add("expanded");
-    backdrop.style.opacity = 1;
-    backdrop.style.pointerEvents = "auto";
+window.addEventListener("scroll", () => {
+  if(window.scrollY > 120){
+    hero.classList.add("mini");
+  } else {
+    hero.classList.remove("mini");
   }
 });
-
-/* BACKDROP → COLLAPSE */
-backdrop.onclick = function () {
-  sheet.classList.remove("expanded");
-  backdrop.style.opacity = 0;
-  backdrop.style.pointerEvents = "none";
-};
-
-/* DRAG SUPPORT */
-let startY = 0;
-
-sheet.addEventListener("touchstart", function (e) {
-  startY = e.touches[0].clientY;
-});
-
-sheet.addEventListener("touchend", function (e) {
-  let endY = e.changedTouches[0].clientY;
-
-  if (startY - endY > 80) {
-    sheet.classList.add("expanded");
-    backdrop.style.opacity = 1;
-    backdrop.style.pointerEvents = "auto";
-  }
-
-  if (endY - startY > 80) {
-    sheet.classList.remove("expanded");
-    backdrop.style.opacity = 0;
-    backdrop.style.pointerEvents = "none";
-  }
-});
-
 </script>
 
 </body>
