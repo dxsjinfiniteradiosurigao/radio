@@ -8,6 +8,15 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 
 <style>
+:root{
+  --bg1:#0b1220;
+  --bg2:#0f1b3d;
+  --card:rgba(255,255,255,0.08);
+  --glass:rgba(255,255,255,0.12);
+  --accent:#ff2d55;
+  --text:#ffffff;
+}
+
 *{
   margin:0;
   padding:0;
@@ -16,7 +25,9 @@
 }
 
 body{
-  background:linear-gradient(180deg,#eef3ff,#f7f9ff);
+  background: radial-gradient(circle at top,#1a2a6c,#0b1220 60%);
+  color:white;
+  overflow-x:hidden;
 }
 
 /* APP */
@@ -24,24 +35,42 @@ body{
   max-width:430px;
   margin:auto;
   min-height:100vh;
+  position:relative;
 }
 
 /* HEADER */
 .header{
-  padding:55px 20px 35px;
-  background:linear-gradient(135deg,#1a3a8f,#2b59ff);
-  color:white;
-  border-bottom-left-radius:35px;
-  border-bottom-right-radius:35px;
-  transition:.4s ease;
+  padding:55px 20px 40px;
+  background: linear-gradient(135deg,#1a3a8f,#ff2d55);
+  border-bottom-left-radius:40px;
+  border-bottom-right-radius:40px;
+  position:relative;
+  transition:0.5s ease;
+  overflow:hidden;
 }
 
+/* glow */
+.header::before{
+  content:"";
+  position:absolute;
+  inset:-50px;
+  background:radial-gradient(circle,#ff2d55 0%,transparent 60%);
+  opacity:.25;
+  animation:pulse 4s infinite;
+}
+
+@keyframes pulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.1)}
+}
+
+/* COLLAPSE */
 .header.shrink{
-  transform:translateY(-140px);
+  transform:translateY(-140px) scale(.9);
   opacity:0;
-  pointer-events:none;
 }
 
+/* TOP */
 .topbar{
   display:flex;
   justify-content:space-between;
@@ -49,73 +78,123 @@ body{
 }
 
 .iconbtn{
-  width:38px;
-  height:38px;
+  width:40px;
+  height:40px;
   border-radius:50%;
   border:none;
-  background:rgba(255,255,255,.15);
+  background:rgba(255,255,255,0.15);
   color:white;
-}
-
-.title{
-  font-weight:700;
-  font-size:14px;
+  backdrop-filter:blur(10px);
 }
 
 /* DISC */
 .disc{
-  width:170px;
-  height:170px;
-  margin:30px auto 0;
+  width:180px;
+  height:180px;
+  margin:35px auto 0;
   border-radius:50%;
-  background:white;
-  border:5px solid #ff2d55;
-  box-shadow:0 10px 25px rgba(0,0,0,.2);
+  background:conic-gradient(#ff2d55,#ffb86b,#ff2d55);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 20px 60px rgba(0,0,0,0.4);
+  position:relative;
 }
 
+/* spinning vinyl */
 .spin{
   animation:spin 4s linear infinite;
 }
 @keyframes spin{to{transform:rotate(360deg)}}
+
+.disc::after{
+  content:"";
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  background:#0b1220;
+  position:absolute;
+}
+
+/* WAVEFORM */
+.wave{
+  display:flex;
+  justify-content:center;
+  gap:4px;
+  margin-top:20px;
+}
+
+.wave span{
+  width:4px;
+  height:10px;
+  background:white;
+  border-radius:10px;
+  opacity:.4;
+}
+
+.playing .wave span{
+  animation:wave 1s infinite ease-in-out;
+  background:#ff2d55;
+}
+
+.playing .wave span:nth-child(2){animation-delay:.1s}
+.playing .wave span:nth-child(3){animation-delay:.2s}
+.playing .wave span:nth-child(4){animation-delay:.3s}
+.playing .wave span:nth-child(5){animation-delay:.4s}
+
+@keyframes wave{
+  0%,100%{height:8px;opacity:.3}
+  50%{height:24px;opacity:1}
+}
 
 /* MAIN */
 .main{
   padding:20px;
 }
 
-/* CARD */
+/* GLASS CARD */
 .card{
-  background:white;
-  padding:16px;
-  border-radius:18px;
+  background:var(--card);
+  border:1px solid rgba(255,255,255,0.1);
+  padding:18px;
+  border-radius:20px;
   margin-bottom:15px;
-  box-shadow:0 8px 20px rgba(0,0,0,.06);
+  backdrop-filter:blur(20px);
+  box-shadow:0 10px 30px rgba(0,0,0,0.2);
 }
 
-/* CONTROLS */
+/* BUTTONS */
 .controls{
   display:flex;
   justify-content:center;
-  gap:20px;
+  gap:18px;
   margin-top:15px;
 }
 
 .btn{
-  width:48px;
-  height:48px;
+  width:50px;
+  height:50px;
   border-radius:50%;
   border:none;
-  background:#eef2ff;
+  background:rgba(255,255,255,0.1);
+  color:white;
+  backdrop-filter:blur(10px);
 }
 
 .play{
-  width:70px;
-  height:70px;
+  width:75px;
+  height:75px;
   border-radius:50%;
   border:none;
-  background:#ff2d55;
+  background:var(--accent);
   color:white;
-  font-size:24px;
+  font-size:26px;
+  box-shadow:0 15px 40px rgba(255,45,85,.4);
+  transition:.2s;
+}
+
+.play:active{
+  transform:scale(.9);
 }
 
 /* MINI PLAYER */
@@ -126,19 +205,20 @@ body{
   transform:translateX(-50%);
   width:92%;
   max-width:420px;
-  background:white;
-  border-radius:18px;
+  background:rgba(255,255,255,0.1);
+  backdrop-filter:blur(20px);
+  border-radius:20px;
   padding:10px 14px;
   display:flex;
   justify-content:space-between;
   align-items:center;
-  box-shadow:0 10px 30px rgba(0,0,0,.12);
-  transition:.3s ease;
+  transition:.4s ease;
+  border:1px solid rgba(255,255,255,0.15);
 }
 
 .miniplayer.hide{
   opacity:0;
-  transform:translate(-50%,40px);
+  transform:translate(-50%,50px);
   pointer-events:none;
 }
 
@@ -149,10 +229,10 @@ body{
 }
 
 .mini-disc{
-  width:38px;
-  height:38px;
+  width:40px;
+  height:40px;
   border-radius:50%;
-  background:linear-gradient(135deg,#ff2d55,#ff8a00);
+  background:linear-gradient(135deg,#ff2d55,#ffb86b);
 }
 
 /* TABS */
@@ -161,25 +241,33 @@ body{
   bottom:0;
   left:0;
   width:100%;
-  background:white;
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(20px);
   display:flex;
   justify-content:space-around;
-  padding:10px 0;
-  border-top:1px solid #eee;
+  padding:12px 0;
+  border-top:1px solid rgba(255,255,255,0.1);
 }
 
 .tab{
-  font-size:11px;
-  color:#888;
+  font-size:12px;
+  color:rgba(255,255,255,0.6);
+  transition:.3s;
 }
 
 .tab.active{
   color:#ff2d55;
+  transform:scale(1.1);
 }
 
 /* SECTIONS */
-.section{display:none}
+.section{display:none; animation:fade .4s ease}
 .section.active{display:block}
+
+@keyframes fade{
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:translateY(0)}
+}
 </style>
 </head>
 
@@ -198,54 +286,49 @@ body{
 
   <div class="disc spin"></div>
 
+  <div class="wave" id="wave">
+    <span></span><span></span><span></span><span></span><span></span>
+  </div>
+
 </div>
 
-<!-- AUDIO PLAYER (REAL STREAM) -->
+<!-- AUDIO -->
 <audio id="audio" preload="none">
-  <source src="https://stream-02.surfernetwork.com/yy0d3w86zxhvv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJ5eTBkM3c4Nnp4aHZ2IiwiaG9zdCI6InN0cmVhbS0wMi5zdXJmZXJuZXR3b3JrLmNvbSIsInJ0dGwiOjUsImp0aSI6IjZpUUV6QS1QU0ppTXo4TndQU2xVTXciLCJpYXQiOjE3ODE2NTk0MDgsImV4cCI6MTc4MTY1OTQ2OH0.NYufZCc9oMLBIxCNekWEJ36jHNteLzCOIxhUkjUXKgc" type="audio/mpeg">
+  <source src="https://stream-02.surfernetwork.com/yy0d3w86zxhvv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJ5eTBkM3c4Nnp4aHZ2IiwiaG9zdCI6InN0cmVhbS0wMi5zdXJmZXJuZXR3b3JrLmNvbSIsInJ0dGwiOjUsImp0aSI6IjZpUUV6QS1QU0ppTXo4TndQU2xVTXciLCJpYXQiOjE3ODE2NTk0MDgsImV4cCI6MTc4MTY1OTQ2OH0.NYufZCc9oMLBIxCNekWEJ36jHNteLzCOIxhUkjUXKgc">
 </audio>
 
 <!-- MAIN -->
 <div class="main">
 
   <div class="section active" id="live">
-
     <div class="card">
-      <h3>Now Playing</h3>
+      <h2>Now Playing</h2>
       <p>DXSJ Infinite Radio Surigao</p>
 
       <div class="controls">
         <button class="btn"><i class="ti ti-heart"></i></button>
-
-        <button class="play" id="playBtn">
-          <i class="ti ti-player-play"></i>
-        </button>
-
+        <button class="play" id="playBtn"><i class="ti ti-player-play"></i></button>
         <button class="btn"><i class="ti ti-volume"></i></button>
       </div>
     </div>
-
   </div>
 
-  <!-- SCHEDULE -->
   <div class="section" id="schedule">
     <div class="card">
-      <p><b>MON-SAT:</b> RATSADA BALITA (6AM-8AM)</p>
-      <p><b>TUES:</b> AN SANGGUNIAN (8AM-8:40AM)</p>
-      <p><b>MON-FRI:</b> SABI MO, SABI KO (9AM-11AM)</p>
-      <p><b>MON-FRI:</b> ISUMBONG SA BARANGAY (12NN-1PM)</p>
-      <p><b>MON-FRI:</b> AFTERNOON DELIGHT (3PM-5PM)</p>
-      <p><b>MON-FRI:</b> INFINITE ROCK (5:30PM-7PM)</p>
-      <p><b>SAT:</b> WEEKEND COUNTDOWN (10AM-12NN)</p>
+      <p>MON–SAT: RATSADA BALITA (6AM–8AM)</p>
+      <p>TUES: AN SANGGUNIAN (8AM–8:40AM)</p>
+      <p>MON–FRI: SABI MO, SABI KO (9AM–11AM)</p>
+      <p>MON–FRI: ISUMBONG SA BARANGAY (12NN–1PM)</p>
+      <p>MON–FRI: AFTERNOON DELIGHT (3PM–5PM)</p>
+      <p>MON–FRI: INFINITE ROCK (5:30PM–7PM)</p>
+      <p>SAT: WEEKEND COUNTDOWN (10AM–12NN)</p>
     </div>
   </div>
 
-  <!-- ABOUT -->
   <div class="section" id="about">
     <div class="card">
-      <p><b>DXSJ 93.3 Infinite Radio</b></p>
-      <p>Surigao City, Philippines</p>
-      <br>
+      <h3>DXSJ 93.3 Infinite Radio</h3>
+      <p>Surigao City • Philippines</p><br>
       <p>Your Kind of Song, Your Kind of Radio</p>
     </div>
   </div>
@@ -258,20 +341,20 @@ body{
     <div class="mini-disc spin"></div>
     <div>
       <b>Infinite Radio</b><br>
-      <small>Live</small>
+      <small>Live Stream</small>
     </div>
   </div>
 
-  <button class="btn" id="miniPlay">
+  <button class="btn" id="miniBtn">
     <i class="ti ti-player-play"></i>
   </button>
 </div>
 
 <!-- TABS -->
 <div class="tabs">
-  <div class="tab active" onclick="switchTab('live')">Live</div>
-  <div class="tab" onclick="switchTab('schedule')">Schedule</div>
-  <div class="tab" onclick="switchTab('about')">About</div>
+  <div class="tab active" onclick="switchTab('live',event)">Live</div>
+  <div class="tab" onclick="switchTab('schedule',event)">Schedule</div>
+  <div class="tab" onclick="switchTab('about',event)">About</div>
 </div>
 
 </div>
@@ -282,32 +365,30 @@ const audio = document.getElementById("audio");
 const playBtn = document.getElementById("playBtn");
 const mini = document.getElementById("mini");
 const header = document.getElementById("header");
+const wave = document.getElementById("wave");
 
 let playing = false;
 
-/* PLAY FUNCTION */
 async function togglePlay(){
 
   if(!playing){
-    try{
-      await audio.play();
-      playing = true;
-      playBtn.innerHTML = '<i class="ti ti-player-pause"></i>';
-    }catch(e){
-      alert("Autoplay blocked. Tap again.");
-    }
+    await audio.play();
+    playing = true;
+    playBtn.innerHTML = '<i class="ti ti-player-pause"></i>';
+    wave.classList.add("playing");
   }else{
     audio.pause();
     playing = false;
     playBtn.innerHTML = '<i class="ti ti-player-play"></i>';
+    wave.classList.remove("playing");
   }
 }
 
-playBtn.addEventListener("click", togglePlay);
-document.getElementById("miniPlay").addEventListener("click", togglePlay);
+playBtn.onclick = togglePlay;
+document.getElementById("miniBtn").onclick = togglePlay;
 
-/* SCROLL MINI PLAYER EFFECT */
-window.addEventListener("scroll", () => {
+/* SCROLL EFFECT */
+window.addEventListener("scroll",()=>{
   if(window.scrollY > 80){
     header.classList.add("shrink");
     mini.classList.remove("hide");
@@ -318,13 +399,13 @@ window.addEventListener("scroll", () => {
 });
 
 /* TABS */
-function switchTab(id){
+function switchTab(id,e){
 
   document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
 
   document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-  event.target.classList.add("active");
+  e.target.classList.add("active");
 }
 
 </script>
