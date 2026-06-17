@@ -2,60 +2,54 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DXSJ Infinite Radio</title>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;
+}
 
 body{
-  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-  background:#0b1220;
-  color:#fff;
+  background:linear-gradient(180deg,#eef3ff,#f7f9ff);
   overflow-x:hidden;
 }
 
 /* APP */
 .app{
-  width:100%;
   max-width:430px;
-  margin:0 auto;
-  min-height:200vh; /* allow scroll demo */
+  margin:auto;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
   position:relative;
 }
 
-/* =========================
-   HERO PLAYER (FULLSCREEN)
-========================= */
-.hero{
-  position:sticky;
-  top:0;
-  z-index:100;
-  height:420px;
-  background:linear-gradient(135deg,#0f2a6b,#1a3a8f);
-  border-bottom-left-radius:30px;
-  border-bottom-right-radius:30px;
-  overflow:hidden;
-  transition:all .5s ease;
+/* HEADER (FULL PLAYER) */
+.header{
+  padding:50px 20px 30px;
+  background:linear-gradient(135deg,#1a3a8f,#2b59ff);
+  color:white;
+  border-bottom-left-radius:35px;
+  border-bottom-right-radius:35px;
+  transition:all .4s ease;
 }
 
-/* COLLAPSED STATE (Spotify-like mini player) */
-.hero.mini{
-  height:78px;
-  border-radius:0;
-  display:flex;
-  align-items:center;
-  padding:10px 14px;
+.header.shrink{
+  transform:translateY(-120px);
+  opacity:0;
+  pointer-events:none;
 }
 
-/* TOP BAR */
-.top{
+.topbar{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding:18px;
 }
 
 .title{
@@ -64,149 +58,172 @@ body{
   letter-spacing:.5px;
 }
 
-.icon-btn{
-  width:38px;height:38px;
+.iconbtn{
+  width:38px;
+  height:38px;
   border-radius:50%;
   border:none;
-  background:rgba(255,255,255,.12);
-  color:#fff;
-}
-
-/* CENTER CONTENT */
-.center{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  height:100%;
-  transition:.4s;
-}
-
-/* hide center when mini */
-.hero.mini .center{
-  flex-direction:row;
-  justify-content:flex-start;
-  gap:12px;
-  height:auto;
+  background:rgba(255,255,255,.15);
+  color:white;
 }
 
 /* DISC */
 .disc{
-  width:160px;
-  height:160px;
+  width:170px;
+  height:170px;
+  margin:30px auto 0;
   border-radius:50%;
-  background:#fff;
-  border:6px solid #ff2d55;
+  background:white;
   display:flex;
   align-items:center;
   justify-content:center;
-  transition:.5s;
+  border:5px solid #ff2d55;
+  box-shadow:0 10px 30px rgba(0,0,0,.2);
+  position:relative;
 }
 
-.hero.mini .disc{
+.spin{
+  animation:spin 4s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* MAIN */
+.main{
+  flex:1;
+  padding:20px;
+}
+
+/* CARD */
+.card{
+  background:white;
+  padding:16px;
+  border-radius:20px;
+  margin-bottom:15px;
+  box-shadow:0 8px 20px rgba(0,0,0,.06);
+}
+
+/* BUTTONS */
+.controls{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:20px;
+}
+
+.btn{
   width:48px;
   height:48px;
-  border-width:3px;
-}
-
-/* pulse */
-.ring{
-  position:absolute;
-  width:160px;height:160px;
   border-radius:50%;
-  border:2px solid rgba(255,45,85,.4);
-  animation:pulse 2s infinite;
+  border:none;
+  background:#eef2ff;
 }
 
-@keyframes pulse{
-  0%{transform:scale(1);opacity:.7}
-  100%{transform:scale(1.6);opacity:0}
-}
-
-/* TEXT */
-.meta{
-  text-align:center;
-  margin-top:16px;
-  transition:.4s;
-}
-
-.hero.mini .meta{
-  margin-top:0;
-  text-align:left;
-}
-
-.meta h1{
-  font-size:20px;
-}
-
-.hero.mini .meta h1{
-  font-size:14px;
-}
-
-.meta p{
-  font-size:12px;
-  opacity:.7;
-}
-
-/* =========================
-   PLAYER CONTROLS
-========================= */
-.controls{
-  margin-top:18px;
-  display:flex;
-  gap:18px;
-  justify-content:center;
-}
-
-.hero.mini .controls{
-  margin-left:auto;
-}
-
-/* PLAY */
 .play{
-  width:68px;
-  height:68px;
+  width:70px;
+  height:70px;
   border-radius:50%;
   border:none;
   background:#ff2d55;
-  color:#fff;
+  color:white;
   font-size:26px;
-  box-shadow:0 10px 30px rgba(255,45,85,.35);
+  box-shadow:0 10px 25px rgba(255,45,85,.3);
 }
 
-/* MINI MODE PLAY */
-.hero.mini .play{
-  width:44px;height:44px;
-  font-size:18px;
-}
-
-/* LIKE */
-.btn{
-  width:48px;height:48px;
-  border-radius:50%;
-  border:none;
-  background:rgba(255,255,255,.12);
-  color:#fff;
-}
-
-/* =========================
-   CONTENT BELOW
-========================= */
-.content{
-  padding:20px;
-  color:#222;
-}
-
-.card{
-  background:#fff;
+/* MINI PLAYER (BOTTOM) */
+.miniplayer{
+  position:fixed;
+  bottom:70px;
+  left:50%;
+  transform:translateX(-50%);
+  width:92%;
+  max-width:420px;
+  background:white;
   border-radius:18px;
-  padding:16px;
-  margin-bottom:12px;
+  padding:10px 14px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  box-shadow:0 10px 30px rgba(0,0,0,.12);
+  transition:.3s ease;
 }
 
-/* sticky mini shadow */
-.hero.mini{
-  box-shadow:0 10px 30px rgba(0,0,0,.3);
+.miniplayer.hide{
+  opacity:0;
+  transform:translate(-50%,40px);
+  pointer-events:none;
+}
+
+.mini-left{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.mini-disc{
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#ff2d55,#ff8a00);
+}
+
+.mini-text{
+  font-size:12px;
+}
+
+.mini-title{
+  font-weight:700;
+  font-size:13px;
+}
+
+/* TABS */
+.tabs{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  background:white;
+  display:flex;
+  justify-content:space-around;
+  padding:10px 0;
+  border-top:1px solid #eee;
+}
+
+.tab{
+  font-size:11px;
+  text-align:center;
+  color:#888;
+}
+
+.tab.active{
+  color:#ff2d55;
+}
+
+/* CONTENT SECTIONS */
+.section{
+  display:none;
+}
+
+.section.active{
+  display:block;
+}
+
+/* SCHEDULE */
+.schedule p{
+  margin:10px 0;
+  font-size:13px;
+  line-height:1.4;
+}
+
+/* ABOUT */
+.about{
+  font-size:13px;
+  line-height:1.6;
+  color:#333;
+}
+
+/* HIDE ON SCROLL */
+.hidden{
+  display:none;
 }
 </style>
 </head>
@@ -215,68 +232,136 @@ body{
 
 <div class="app">
 
-  <!-- HERO PLAYER -->
-  <div class="hero" id="hero">
+<!-- HEADER -->
+<div class="header" id="header">
 
-    <div class="top">
-      <button class="icon-btn"><i class="ti ti-menu-2"></i></button>
-      <div class="title">DXSJ Infinite Radio</div>
-      <button class="icon-btn"><i class="ti ti-share"></i></button>
-    </div>
-
-    <div class="center">
-
-      <div style="position:relative">
-        <div class="ring"></div>
-        <div class="disc">
-          <i class="ti ti-radio" style="font-size:34px;color:#1a3a8f;"></i>
-        </div>
-      </div>
-
-      <div class="meta">
-        <h1>DXSJ Infinite Radio</h1>
-        <p>Surigao City • Live Stream</p>
-
-        <div class="controls">
-          <button class="btn"><i class="ti ti-heart"></i></button>
-          <button class="play" id="playBtn"><i class="ti ti-player-play"></i></button>
-          <button class="btn"><i class="ti ti-volume"></i></button>
-        </div>
-      </div>
-
-    </div>
+  <div class="topbar">
+    <button class="iconbtn"><i class="ti ti-menu-2"></i></button>
+    <div class="title">DXSJ Infinite Radio</div>
+    <button class="iconbtn"><i class="ti ti-share"></i></button>
   </div>
 
-  <!-- CONTENT -->
-  <div class="content">
+  <div class="disc spin"></div>
+
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- LIVE -->
+  <div class="section active" id="live">
 
     <div class="card">
-      <b>Now Playing</b><br>
-      Smooth Radio Mix
+      <h3>Now Playing</h3>
+      <p>DXSJ Infinite Radio Surigao</p>
+
+      <div class="controls" style="margin-top:15px;">
+        <button class="btn"><i class="ti ti-heart"></i></button>
+        <button class="play" id="playBtn"><i class="ti ti-player-play"></i></button>
+        <button class="btn"><i class="ti ti-volume"></i></button>
+      </div>
     </div>
 
-    <div class="card">
-      Scroll down → player collapses like Spotify
+  </div>
+
+  <!-- SCHEDULE -->
+  <div class="section" id="schedule">
+
+    <div class="card schedule">
+      <p><b>MONDAY - SATURDAY:</b> RATSADA BALITA (6:00AM - 8:00AM)</p>
+      <p><b>TUESDAY:</b> AN SANGGUNIAN (8:00AM - 8:40AM)</p>
+      <p><b>MON - FRI:</b> SABI MO, SABI KO (9:00AM - 11:00AM)</p>
+      <p><b>MON - FRI:</b> ISUMBONG SA BARANGAY (12:00NN - 1:00PM)</p>
+      <p><b>MON - FRI:</b> AFTERNOON DELIGHT (3:00PM - 5:00PM)</p>
+      <p><b>MON - FRI:</b> INFINITE ROCK (5:30PM - 7:00PM)</p>
+      <p><b>SATURDAY:</b> WEEKEND COUNTDOWN (10:00AM - 12:00NN)</p>
     </div>
 
-    <div class="card" style="height:600px">
-      More content...
+  </div>
+
+  <!-- ABOUT -->
+  <div class="section" id="about">
+
+    <div class="card about">
+      <b>DXSJ 93.3 Infinite Radio Surigao</b><br><br>
+
+      Leading FM station serving Surigao City and nearby communities.
+      Delivering news, entertainment, and public service programs.<br><br>
+
+      <b>Frequency:</b> 93.3 FM<br>
+      <b>Call Sign:</b> DXSJ<br>
+      <b>Location:</b> Surigao City, Philippines<br>
+      <b>Slogan:</b> Your Kind of Song, Your Kind of Radio<br><br>
+
+      <b>Mission:</b> Reliable information and quality entertainment.<br>
+      <b>Vision:</b> Trusted multimedia station in Caraga Region.<br><br>
+
+      📞 0905-827-8704<br>
+      📍 Surigao City
     </div>
 
   </div>
 
 </div>
 
+<!-- MINI PLAYER -->
+<div class="miniplayer" id="mini">
+  <div class="mini-left">
+    <div class="mini-disc spin"></div>
+    <div>
+      <div class="mini-title">Infinite Radio</div>
+      <div class="mini-text">Live Stream</div>
+    </div>
+  </div>
+
+  <button class="btn"><i class="ti ti-player-play"></i></button>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('live')">Live</div>
+  <div class="tab" onclick="switchTab('schedule')">Schedule</div>
+  <div class="tab" onclick="switchTab('about')">About</div>
+</div>
+
+</div>
+
 <script>
-const hero = document.getElementById("hero");
+
+let lastScroll = 0;
+const header = document.getElementById("header");
+const mini = document.getElementById("mini");
 
 window.addEventListener("scroll", () => {
-  if(window.scrollY > 120){
-    hero.classList.add("mini");
-  } else {
-    hero.classList.remove("mini");
+  let current = window.scrollY;
+
+  if(current > 80){
+    header.classList.add("shrink");
+    mini.classList.remove("hide");
+  }else{
+    header.classList.remove("shrink");
+    mini.classList.add("hide");
   }
+
+  lastScroll = current;
 });
+
+/* TABS */
+function switchTab(id){
+
+  document.querySelectorAll(".section").forEach(s=>{
+    s.classList.remove("active");
+  });
+
+  document.getElementById(id).classList.add("active");
+
+  document.querySelectorAll(".tab").forEach(t=>{
+    t.classList.remove("active");
+  });
+
+  event.target.classList.add("active");
+}
+
 </script>
 
 </body>
