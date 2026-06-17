@@ -368,7 +368,9 @@ z-index:999;
 border-radius:40px 40px 0 0;
 transform:translateY(100%);
 transition:transform .45s cubic-bezier(.22,1,.36,1);
-overflow:hidden;
+overflow-y:auto;
+overflow-x:hidden;
+-webkit-overflow-scrolling:touch;
 padding:20px 24px 140px;
 }
 
@@ -1080,6 +1082,7 @@ function switchTab(tab) {
 navBtns.forEach(btn => {
   btn.addEventListener("click", () => {
     switchTab(btn.dataset.tab);
+    playerSheet.classList.remove("show");
   });
 });
 
