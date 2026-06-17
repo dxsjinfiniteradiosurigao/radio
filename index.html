@@ -12,7 +12,7 @@
   margin:0;
   padding:0;
   box-sizing:border-box;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif;
+  font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;
 }
 
 body{
@@ -32,19 +32,17 @@ body{
 
 /* HEADER */
 .header{
-  padding:30px 20px 10px;
+  padding:28px 20px 10px;
   text-align:center;
 }
+.logo{font-size:20px;font-weight:800;}
+.sub{font-size:12px;opacity:.7;}
 
-.logo{
-  font-size:20px;
-  font-weight:800;
-  letter-spacing:1px;
-}
-
-.sub{
-  font-size:12px;
-  opacity:.7;
+/* CONTENT */
+.content{
+  flex:1;
+  overflow:auto;
+  padding-bottom:110px;
 }
 
 /* CARD */
@@ -55,15 +53,14 @@ body{
   border:1px solid rgba(255,255,255,0.1);
   border-radius:20px;
   padding:16px;
-  animation: fade .5s ease;
+  animation:fade .4s ease;
 }
-
 @keyframes fade{
-  from{opacity:0; transform:translateY(10px);}
-  to{opacity:1; transform:translateY(0);}
+  from{opacity:0;transform:translateY(10px);}
+  to{opacity:1;transform:translateY(0);}
 }
 
-/* ALBUM */
+/* PLAYER */
 .circle{
   width:140px;
   height:140px;
@@ -75,10 +72,7 @@ body{
   justify-content:center;
   animation:spin 6s linear infinite;
 }
-
-@keyframes spin{
-  to{transform:rotate(360deg);}
-}
+@keyframes spin{to{transform:rotate(360deg);}}
 
 .inner{
   width:110px;
@@ -91,7 +85,6 @@ body{
   font-size:30px;
 }
 
-/* STATUS */
 .status{
   text-align:center;
   margin-top:10px;
@@ -102,16 +95,12 @@ body{
   color:#00ff99;
   animation:blink 1.2s infinite;
 }
-
-@keyframes blink{
-  50%{opacity:.4;}
-}
+@keyframes blink{50%{opacity:.4;}}
 
 /* BUTTONS */
 .controls{
   display:flex;
   justify-content:center;
-  align-items:center;
   gap:18px;
   margin-top:15px;
 }
@@ -135,25 +124,27 @@ body{
   box-shadow:0 10px 30px rgba(255,45,85,.3);
 }
 
-/* MINI PLAYER (Spotify style) */
+/* MINI PLAYER FIX */
 .mini{
   position:fixed;
   bottom:0;
   left:0;
   right:0;
-  background:rgba(10,15,30,0.9);
-  backdrop-filter: blur(12px);
+  background:rgba(10,15,30,0.92);
+  backdrop-filter: blur(14px);
   border-top:1px solid rgba(255,255,255,0.1);
   display:flex;
   align-items:center;
   justify-content:space-between;
   padding:10px 15px;
-  transform:translateY(0);
-  transition:.3s;
+
+  transform:translateY(120%);
+  transition:0.35s cubic-bezier(.4,0,.2,1);
+  z-index:999;
 }
 
-.mini.hide{
-  transform:translateY(120%);
+.mini.show{
+  transform:translateY(0);
 }
 
 .mini-left{
@@ -173,9 +164,11 @@ body{
 /* TABS */
 .tabs{
   display:flex;
-  justify-content:space-around;
-  margin-top:10px;
-  border-top:1px solid rgba(255,255,255,0.1);
+  position:sticky;
+  top:0;
+  background:rgba(10,15,30,0.6);
+  backdrop-filter: blur(10px);
+  z-index:10;
 }
 
 .tab{
@@ -192,20 +185,9 @@ body{
   border-bottom:2px solid #ff2d55;
 }
 
-/* CONTENT */
-.content{
-  flex:1;
-  overflow:auto;
-  padding-bottom:80px;
-}
-
-.section{
-  display:none;
-}
-
-.section.active{
-  display:block;
-}
+/* SECTIONS */
+.section{display:none;}
+.section.active{display:block;}
 
 /* SCHEDULE */
 .schedule-item{
@@ -217,14 +199,8 @@ body{
 /* ABOUT */
 .about{
   font-size:13px;
-  line-height:1.5;
-  opacity:.85;
-}
-
-/* SCROLL EFFECT */
-.scroll-area{
-  height:100vh;
-  overflow:auto;
+  line-height:1.6;
+  opacity:.9;
 }
 </style>
 </head>
@@ -238,11 +214,17 @@ body{
     <div class="sub">Surigao City</div>
   </div>
 
-  <!-- LIVE SECTION -->
-  <div class="content scroll-area" id="scrollArea">
+  <!-- TABS -->
+  <div class="tabs">
+    <div class="tab active" data-tab="live">Live</div>
+    <div class="tab" data-tab="schedule">Schedule</div>
+    <div class="tab" data-tab="about">About</div>
+  </div>
 
+  <div class="content" id="scrollArea">
+
+    <!-- LIVE -->
     <div id="live" class="section active">
-
       <div class="card">
         <div class="circle">
           <div class="inner"><i class="ti ti-radio"></i></div>
@@ -252,21 +234,15 @@ body{
 
         <div class="controls">
           <button class="btn"><i class="ti ti-heart"></i></button>
-
-          <button class="btn play" id="playBtn">
-            <i class="ti ti-player-play"></i>
-          </button>
-
+          <button class="btn play" id="playBtn"><i class="ti ti-player-play"></i></button>
           <button class="btn"><i class="ti ti-volume"></i></button>
         </div>
       </div>
-
     </div>
 
     <!-- SCHEDULE -->
     <div id="schedule" class="section">
       <div class="card">
-
         <div class="schedule-item">MON-SAT: RATSADA BALITA — 6:00AM - 8:00AM</div>
         <div class="schedule-item">TUE: AN SANGGUNIAN — 8:00AM - 8:40AM</div>
         <div class="schedule-item">MON-FRI: SABI MO, SABI KO — 9:00AM - 11:00AM</div>
@@ -274,7 +250,6 @@ body{
         <div class="schedule-item">MON-FRI: AFTERNOON DELIGHT — 3:00PM - 5:00PM</div>
         <div class="schedule-item">MON-FRI: INFINITE ROCK — 5:30PM - 7:00PM</div>
         <div class="schedule-item">SAT: WEEKEND COUNTDOWN — 10:00AM - 12:00NN</div>
-
       </div>
     </div>
 
@@ -282,11 +257,15 @@ body{
     <div id="about" class="section">
       <div class="card about">
 
-DXSJ 93.3 Infinite Radio Surigao is a leading FM radio station serving Surigao City and neighboring communities. It delivers entertainment, news, public affairs, and community-centered programming trusted by thousands of listeners.
+DXSJ 93.3 Infinite Radio Surigao is a leading FM radio station serving Surigao City and neighboring communities.
 
 <br><br>
 
-As part of the Infinite Radio Network, it combines modern broadcasting with strong public service commitment.
+It delivers entertainment, news, public affairs, and community-centered programming trusted by thousands of listeners.
+
+<br><br>
+
+As part of Infinite Radio Network, it upholds responsible broadcasting and public service.
 
 <br><br>
 
@@ -296,17 +275,15 @@ Station: Infinite Radio Surigao<br>
 Location: Surigao City, Philippines<br>
 Slogan: Your Kind of Song, Your Kind of Radio<br><br>
 
-Mission: Reliable information and quality entertainment.<br>
-Vision: Most trusted multimedia station in the Philippines.<br><br>
+Mission: Reliable information and entertainment.<br>
+Vision: Most trusted station in the Philippines.<br><br>
 
-Contact: 0905-827-8704<br>
-Facebook: DXSJ 93.3 Infinite Radio Surigao
+Contact: 0905-827-8704
 
       </div>
     </div>
 
   </div>
-
 </div>
 
 <!-- MINI PLAYER -->
@@ -328,14 +305,13 @@ Facebook: DXSJ 93.3 Infinite Radio Surigao
 const STREAM = "https://stream-02.surfernetwork.com/yy0d3w86zxhvv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJ5eTBkM3c4Nnp4aHZ2IiwiaG9zdCI6InN0cmVhbS0wMi5zdXJmZXJuZXR3b3JrLmNvbSIsInJ0dGwiOjUsImp0aSI6IjZpUUV6QS1QU0ppTXo4TndQU2xVTXciLCJpYXQiOjE3ODE2NTk0MDgsImV4cCI6MTc4MTY1OTQ2OH0.NYufZCc9oMLBIxCNekWEJ36jHNteLzCOIxhUkjUXKgc";
 
 let audio = new Audio(STREAM);
-audio.crossOrigin = "anonymous";
-
 let playing = false;
 
 const playBtn = document.getElementById("playBtn");
+const miniBar = document.getElementById("miniBar");
 const miniPlay = document.getElementById("miniPlay");
 const status = document.getElementById("status");
-const miniBar = document.getElementById("miniBar");
+const scrollArea = document.getElementById("scrollArea");
 
 function playRadio(){
   audio.play();
@@ -354,22 +330,15 @@ function stopRadio(){
   miniPlay.innerHTML = "<i class='ti ti-player-play'></i>";
 }
 
-playBtn.onclick = ()=>{
-  playing ? stopRadio() : playRadio();
-};
+playBtn.onclick = ()=> playing ? stopRadio() : playRadio();
+miniPlay.onclick = ()=> playing ? stopRadio() : playRadio();
 
-miniPlay.onclick = ()=>{
-  playing ? stopRadio() : playRadio();
-};
-
-/* MINIMIZE EFFECT (Spotify style) */
-const scrollArea = document.getElementById("scrollArea");
-
+/* SHOW MINI PLAYER ONLY AFTER SCROLL */
 scrollArea.addEventListener("scroll", ()=>{
-  if(scrollArea.scrollTop > 80){
-    miniBar.classList.remove("hide");
+  if(scrollArea.scrollTop > 120){
+    miniBar.classList.add("show");
   }else{
-    miniBar.classList.add("hide");
+    miniBar.classList.remove("show");
   }
 });
 
