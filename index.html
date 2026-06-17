@@ -17,7 +17,6 @@
 
 body{
   background:linear-gradient(180deg,#eef3ff,#f7f9ff);
-  overflow-x:hidden;
 }
 
 /* APP */
@@ -25,23 +24,20 @@ body{
   max-width:430px;
   margin:auto;
   min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  position:relative;
 }
 
-/* HEADER (FULL PLAYER) */
+/* HEADER */
 .header{
-  padding:50px 20px 30px;
+  padding:55px 20px 35px;
   background:linear-gradient(135deg,#1a3a8f,#2b59ff);
   color:white;
   border-bottom-left-radius:35px;
   border-bottom-right-radius:35px;
-  transition:all .4s ease;
+  transition:.4s ease;
 }
 
 .header.shrink{
-  transform:translateY(-120px);
+  transform:translateY(-140px);
   opacity:0;
   pointer-events:none;
 }
@@ -50,12 +46,6 @@ body{
   display:flex;
   justify-content:space-between;
   align-items:center;
-}
-
-.title{
-  font-weight:700;
-  font-size:14px;
-  letter-spacing:.5px;
 }
 
 .iconbtn{
@@ -67,6 +57,11 @@ body{
   color:white;
 }
 
+.title{
+  font-weight:700;
+  font-size:14px;
+}
+
 /* DISC */
 .disc{
   width:170px;
@@ -74,12 +69,8 @@ body{
   margin:30px auto 0;
   border-radius:50%;
   background:white;
-  display:flex;
-  align-items:center;
-  justify-content:center;
   border:5px solid #ff2d55;
-  box-shadow:0 10px 30px rgba(0,0,0,.2);
-  position:relative;
+  box-shadow:0 10px 25px rgba(0,0,0,.2);
 }
 
 .spin{
@@ -89,7 +80,6 @@ body{
 
 /* MAIN */
 .main{
-  flex:1;
   padding:20px;
 }
 
@@ -97,17 +87,17 @@ body{
 .card{
   background:white;
   padding:16px;
-  border-radius:20px;
+  border-radius:18px;
   margin-bottom:15px;
   box-shadow:0 8px 20px rgba(0,0,0,.06);
 }
 
-/* BUTTONS */
+/* CONTROLS */
 .controls{
   display:flex;
   justify-content:center;
-  align-items:center;
   gap:20px;
+  margin-top:15px;
 }
 
 .btn{
@@ -125,11 +115,10 @@ body{
   border:none;
   background:#ff2d55;
   color:white;
-  font-size:26px;
-  box-shadow:0 10px 25px rgba(255,45,85,.3);
+  font-size:24px;
 }
 
-/* MINI PLAYER (BOTTOM) */
+/* MINI PLAYER */
 .miniplayer{
   position:fixed;
   bottom:70px;
@@ -141,8 +130,8 @@ body{
   border-radius:18px;
   padding:10px 14px;
   display:flex;
-  align-items:center;
   justify-content:space-between;
+  align-items:center;
   box-shadow:0 10px 30px rgba(0,0,0,.12);
   transition:.3s ease;
 }
@@ -166,15 +155,6 @@ body{
   background:linear-gradient(135deg,#ff2d55,#ff8a00);
 }
 
-.mini-text{
-  font-size:12px;
-}
-
-.mini-title{
-  font-weight:700;
-  font-size:13px;
-}
-
 /* TABS */
 .tabs{
   position:fixed;
@@ -190,7 +170,6 @@ body{
 
 .tab{
   font-size:11px;
-  text-align:center;
   color:#888;
 }
 
@@ -198,33 +177,9 @@ body{
   color:#ff2d55;
 }
 
-/* CONTENT SECTIONS */
-.section{
-  display:none;
-}
-
-.section.active{
-  display:block;
-}
-
-/* SCHEDULE */
-.schedule p{
-  margin:10px 0;
-  font-size:13px;
-  line-height:1.4;
-}
-
-/* ABOUT */
-.about{
-  font-size:13px;
-  line-height:1.6;
-  color:#333;
-}
-
-/* HIDE ON SCROLL */
-.hidden{
-  display:none;
-}
+/* SECTIONS */
+.section{display:none}
+.section.active{display:block}
 </style>
 </head>
 
@@ -245,19 +200,27 @@ body{
 
 </div>
 
+<!-- AUDIO PLAYER (REAL STREAM) -->
+<audio id="audio" preload="none">
+  <source src="https://stream-02.surfernetwork.com/yy0d3w86zxhvv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJ5eTBkM3c4Nnp4aHZ2IiwiaG9zdCI6InN0cmVhbS0wMi5zdXJmZXJuZXR3b3JrLmNvbSIsInJ0dGwiOjUsImp0aSI6IjZpUUV6QS1QU0ppTXo4TndQU2xVTXciLCJpYXQiOjE3ODE2NTk0MDgsImV4cCI6MTc4MTY1OTQ2OH0.NYufZCc9oMLBIxCNekWEJ36jHNteLzCOIxhUkjUXKgc" type="audio/mpeg">
+</audio>
+
 <!-- MAIN -->
 <div class="main">
 
-  <!-- LIVE -->
   <div class="section active" id="live">
 
     <div class="card">
       <h3>Now Playing</h3>
       <p>DXSJ Infinite Radio Surigao</p>
 
-      <div class="controls" style="margin-top:15px;">
+      <div class="controls">
         <button class="btn"><i class="ti ti-heart"></i></button>
-        <button class="play" id="playBtn"><i class="ti ti-player-play"></i></button>
+
+        <button class="play" id="playBtn">
+          <i class="ti ti-player-play"></i>
+        </button>
+
         <button class="btn"><i class="ti ti-volume"></i></button>
       </div>
     </div>
@@ -266,55 +229,42 @@ body{
 
   <!-- SCHEDULE -->
   <div class="section" id="schedule">
-
-    <div class="card schedule">
-      <p><b>MONDAY - SATURDAY:</b> RATSADA BALITA (6:00AM - 8:00AM)</p>
-      <p><b>TUESDAY:</b> AN SANGGUNIAN (8:00AM - 8:40AM)</p>
-      <p><b>MON - FRI:</b> SABI MO, SABI KO (9:00AM - 11:00AM)</p>
-      <p><b>MON - FRI:</b> ISUMBONG SA BARANGAY (12:00NN - 1:00PM)</p>
-      <p><b>MON - FRI:</b> AFTERNOON DELIGHT (3:00PM - 5:00PM)</p>
-      <p><b>MON - FRI:</b> INFINITE ROCK (5:30PM - 7:00PM)</p>
-      <p><b>SATURDAY:</b> WEEKEND COUNTDOWN (10:00AM - 12:00NN)</p>
+    <div class="card">
+      <p><b>MON-SAT:</b> RATSADA BALITA (6AM-8AM)</p>
+      <p><b>TUES:</b> AN SANGGUNIAN (8AM-8:40AM)</p>
+      <p><b>MON-FRI:</b> SABI MO, SABI KO (9AM-11AM)</p>
+      <p><b>MON-FRI:</b> ISUMBONG SA BARANGAY (12NN-1PM)</p>
+      <p><b>MON-FRI:</b> AFTERNOON DELIGHT (3PM-5PM)</p>
+      <p><b>MON-FRI:</b> INFINITE ROCK (5:30PM-7PM)</p>
+      <p><b>SAT:</b> WEEKEND COUNTDOWN (10AM-12NN)</p>
     </div>
-
   </div>
 
   <!-- ABOUT -->
   <div class="section" id="about">
-
-    <div class="card about">
-      <b>DXSJ 93.3 Infinite Radio Surigao</b><br><br>
-
-      Leading FM station serving Surigao City and nearby communities.
-      Delivering news, entertainment, and public service programs.<br><br>
-
-      <b>Frequency:</b> 93.3 FM<br>
-      <b>Call Sign:</b> DXSJ<br>
-      <b>Location:</b> Surigao City, Philippines<br>
-      <b>Slogan:</b> Your Kind of Song, Your Kind of Radio<br><br>
-
-      <b>Mission:</b> Reliable information and quality entertainment.<br>
-      <b>Vision:</b> Trusted multimedia station in Caraga Region.<br><br>
-
-      📞 0905-827-8704<br>
-      📍 Surigao City
+    <div class="card">
+      <p><b>DXSJ 93.3 Infinite Radio</b></p>
+      <p>Surigao City, Philippines</p>
+      <br>
+      <p>Your Kind of Song, Your Kind of Radio</p>
     </div>
-
   </div>
 
 </div>
 
 <!-- MINI PLAYER -->
-<div class="miniplayer" id="mini">
+<div class="miniplayer hide" id="mini">
   <div class="mini-left">
     <div class="mini-disc spin"></div>
     <div>
-      <div class="mini-title">Infinite Radio</div>
-      <div class="mini-text">Live Stream</div>
+      <b>Infinite Radio</b><br>
+      <small>Live</small>
     </div>
   </div>
 
-  <button class="btn"><i class="ti ti-player-play"></i></button>
+  <button class="btn" id="miniPlay">
+    <i class="ti ti-player-play"></i>
+  </button>
 </div>
 
 <!-- TABS -->
@@ -328,37 +278,52 @@ body{
 
 <script>
 
-let lastScroll = 0;
-const header = document.getElementById("header");
+const audio = document.getElementById("audio");
+const playBtn = document.getElementById("playBtn");
 const mini = document.getElementById("mini");
+const header = document.getElementById("header");
 
+let playing = false;
+
+/* PLAY FUNCTION */
+async function togglePlay(){
+
+  if(!playing){
+    try{
+      await audio.play();
+      playing = true;
+      playBtn.innerHTML = '<i class="ti ti-player-pause"></i>';
+    }catch(e){
+      alert("Autoplay blocked. Tap again.");
+    }
+  }else{
+    audio.pause();
+    playing = false;
+    playBtn.innerHTML = '<i class="ti ti-player-play"></i>';
+  }
+}
+
+playBtn.addEventListener("click", togglePlay);
+document.getElementById("miniPlay").addEventListener("click", togglePlay);
+
+/* SCROLL MINI PLAYER EFFECT */
 window.addEventListener("scroll", () => {
-  let current = window.scrollY;
-
-  if(current > 80){
+  if(window.scrollY > 80){
     header.classList.add("shrink");
     mini.classList.remove("hide");
   }else{
     header.classList.remove("shrink");
     mini.classList.add("hide");
   }
-
-  lastScroll = current;
 });
 
 /* TABS */
 function switchTab(id){
 
-  document.querySelectorAll(".section").forEach(s=>{
-    s.classList.remove("active");
-  });
-
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
 
-  document.querySelectorAll(".tab").forEach(t=>{
-    t.classList.remove("active");
-  });
-
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
   event.target.classList.add("active");
 }
 
