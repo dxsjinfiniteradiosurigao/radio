@@ -1,131 +1,2073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<title>DXSJ 93.3 Infinite Radio Surigao</title>
+
+<link rel="manifest" href="manifest.json">
+
+<meta name="theme-color" content="#070b1a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="DXSJ Radio">
+
+<link rel="stylesheet"
+href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-.phone{width:300px;margin:1rem auto;background:#050816;border-radius:36px;padding:8px;box-shadow:0 12px 40px rgba(0,0,0,0.35);}
-.screen{background:linear-gradient(160deg,#070b1a 0%,#0d1530 45%,#1a0d20 100%);border-radius:30px;overflow:hidden;min-height:600px;position:relative;padding:18px 18px 20px;}
-.blob{position:absolute;border-radius:50%;filter:blur(50px);opacity:0.55;pointer-events:none;}
-.blob1{width:160px;height:160px;background:#1a3a8f;top:-40px;left:-40px;}
-.blob2{width:140px;height:140px;background:#dc1e3c;top:120px;right:-50px;}
-.content{position:relative;z-index:1;}
-.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
-.live-pill{display:flex;align-items:center;gap:6px;background:rgba(220,30,60,0.15);border:1px solid rgba(220,30,60,0.3);color:#ff7286;font-size:10px;font-weight:700;letter-spacing:1.2px;padding:5px 11px;border-radius:20px;}
-.pulse-dot{width:6px;height:6px;border-radius:50%;background:#ff3355;position:relative;}
-.pulse-dot::after{content:'';position:absolute;inset:-3px;border-radius:50%;border:1px solid #ff3355;animation:pulseRing 1.6s ease-out infinite;}
-@keyframes pulseRing{0%{transform:scale(0.6);opacity:0.8;}100%{transform:scale(2.2);opacity:0;}}
-.icon-btn{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.08);border:none;color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer;}
-.hero{display:flex;flex-direction:column;align-items:center;margin:6px 0 18px;}
-.time{font-size:13px;color:#9aa4d8;margin-bottom:6px;}
-.logo-wrap{position:relative;width:148px;height:148px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;}
-.ring{position:absolute;border-radius:50%;border:1.5px solid rgba(255,255,255,0.18);}
-.ring1{width:148px;height:148px;animation:ringPulse 3.5s linear infinite;}
-.ring2{width:148px;height:148px;animation:ringPulse 3.5s linear infinite 1.2s;}
-@keyframes ringPulse{0%{transform:scale(0.82);opacity:0;}40%{opacity:0.8;}100%{transform:scale(1.18);opacity:0;}}
-.logo{width:108px;height:108px;border-radius:50%;background:linear-gradient(145deg,rgba(255,255,255,0.14),rgba(255,255,255,0.04));border:1px solid rgba(255,255,255,0.18);display:flex;align-items:center;justify-content:center;font-size:42px;color:#fff;position:relative;z-index:1;}
-.station-name{color:#fff;font-size:19px;font-weight:800;text-align:center;}
-.station-sub{color:#9aa4d8;font-size:12px;margin-top:2px;}
-.glass-card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:18px;padding:14px 16px;margin-bottom:12px;backdrop-filter:blur(6px);}
-.card-label{font-size:10px;font-weight:800;letter-spacing:1.5px;color:#ff7286;margin-bottom:6px;}
-.program-title{color:#fff;font-size:16px;font-weight:700;margin-bottom:4px;}
-.program-status{color:#ff8094;font-size:12px;}
-.eq-row{display:flex;align-items:flex-end;gap:3px;height:20px;margin-top:10px;}
-.eq-row span{width:3px;border-radius:2px;background:linear-gradient(180deg,#ff5671,#dc1e3c);animation:eqAnim 0.7s ease-in-out infinite alternate;}
-.eq-row span:nth-child(1){height:40%;animation-delay:0s;}
-.eq-row span:nth-child(2){height:90%;animation-delay:0.15s;}
-.eq-row span:nth-child(3){height:60%;animation-delay:0.3s;}
-.eq-row span:nth-child(4){height:100%;animation-delay:0.1s;}
-.eq-row span:nth-child(5){height:50%;animation-delay:0.22s;}
-.eq-row span:nth-child(6){height:75%;animation-delay:0.05s;}
-.eq-row span:nth-child(7){height:35%;animation-delay:0.28s;}
-@keyframes eqAnim{from{transform:scaleY(0.3);}to{transform:scaleY(1);}}
-.play-fab-wrap{position:relative;width:84px;height:84px;margin:8px auto 0;}
-.fab-ripple{position:absolute;inset:-6px;border-radius:50%;border:2px solid #dc1e3c;opacity:0;pointer-events:none;}
-.fab-ripple.go{animation:fabRipple 0.6s ease-out forwards;}
-@keyframes fabRipple{0%{transform:scale(0.8);opacity:0.8;}100%{transform:scale(1.5);opacity:0;}}
-.play-fab{width:84px;height:84px;border-radius:50%;background:linear-gradient(150deg,#ff5671,#dc1e3c);border:none;color:#fff;font-size:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;z-index:1;box-shadow:0 8px 28px rgba(220,30,60,0.45);transition:transform 0.15s;}
-.play-fab:hover{transform:scale(1.06);}
-.play-fab:active{transform:scale(0.92);}
-.play-fab.playing{animation:fabBeat 1.8s ease-in-out infinite;}
-@keyframes fabBeat{0%,100%{box-shadow:0 8px 28px rgba(220,30,60,0.45);}50%{box-shadow:0 8px 38px rgba(220,30,60,0.65);}}
-@keyframes spin{to{transform:rotate(360deg);}}
-.spin-icon{display:inline-block;animation:spin 0.8s linear infinite;}
-.nav{display:flex;justify-content:space-around;margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.08);}
-.nav-btn{display:flex;flex-direction:column;align-items:center;gap:4px;color:#5d6699;font-size:10px;font-weight:700;background:none;border:none;cursor:pointer;transition:color 0.2s,transform 0.2s;}
-.nav-btn i{font-size:21px;}
-.nav-btn.active{color:#fff;transform:translateY(-2px);}
-.nav-btn.active i{filter:drop-shadow(0 0 6px rgba(255,255,255,0.4));}
+
+:root{
+--bg:#070b1a;
+--surface:rgba(255,255,255,.07);
+--surface2:rgba(255,255,255,.12);
+
+--text:#ffffff;
+--text2:#aab2e0;
+--text3:#5d6699;
+
+--accent:#dc1e3c;
+--accent-glow:rgba(220,30,60,.45);
+--accent2:#1a3a8f;
+
+--glass:rgba(255,255,255,.06);
+--border:rgba(255,255,255,.1);
+
+--shadow:0 10px 36px rgba(0,0,0,.4);
+
+--radius:26px;
+--nav-height:78px;
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+-webkit-tap-highlight-color:transparent;
+-webkit-touch-callout:none;
+user-select:none;
+}
+
+html,body{
+width:100%;
+height:100%;
+overflow-x:hidden;
+font-family:'Inter',sans-serif;
+background:var(--bg);
+color:var(--text);
+}
+
+body{
+position:relative;
+}
+
+#app{
+position:relative;
+width:100%;
+max-width:500px;
+margin:auto;
+padding-bottom:170px;
+min-height:100vh;
+z-index:2;
+}
+
+#bgGradient{
+position:fixed;
+inset:0;
+background:radial-gradient(circle at 20% 0%,#0e2248 0%,#070b1a 55%),
+           radial-gradient(circle at 90% 30%,#2b0d2e 0%,transparent 55%);
+z-index:-20;
+}
+
+#bgBlur1,#bgBlur2{
+position:fixed;
+border-radius:50%;
+filter:blur(90px);
+opacity:.45;
+z-index:-10;
+will-change:transform;
+animation:floatBlob 24s ease-in-out infinite;
+}
+
+#bgBlur1{
+width:300px;
+height:300px;
+background:#1a3a8f;
+top:-100px;
+left:-80px;
+}
+
+#bgBlur2{
+width:260px;
+height:260px;
+background:#dc1e3c;
+right:-110px;
+top:20%;
+animation-duration:30s;
+}
+
+@keyframes floatBlob{
+0%{transform:translate(0,0);}
+50%{transform:translate(30px,60px);}
+100%{transform:translate(0,0);}
+}
+
+.tab-page{
+display:none;
+padding:max(env(safe-area-inset-top),20px) 20px 130px;
+animation:fadePage .3s ease;
+}
+
+.tab-page.active{
+display:block;
+}
+
+@keyframes fadePage{
+from{opacity:0;transform:translateY(10px);}
+to{opacity:1;transform:none;}
+}
+
+.glass-card{
+background:var(--glass);
+border:1px solid var(--border);
+border-radius:var(--radius);
+padding:20px;
+margin-bottom:16px;
+box-shadow:var(--shadow);
+}
+
+.hero-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:22px;
+}
+
+.icon-btn{
+width:42px;
+height:42px;
+border:none;
+cursor:pointer;
+background:var(--surface);
+border-radius:50%;
+color:#fff;
+font-size:19px;
+transition:background .2s, transform .15s;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+.icon-btn:hover{background:var(--surface2);transform:scale(1.07);}
+.icon-btn:active{transform:scale(.9);}
+
+#liveBadge{
+display:flex;
+align-items:center;
+gap:8px;
+padding:9px 16px;
+border-radius:999px;
+font-size:11px;
+font-weight:800;
+letter-spacing:1.3px;
+background:rgba(220,30,60,.14);
+border:1px solid rgba(220,30,60,.3);
+color:#ff7286;
+transition:.3s;
+}
+
+#liveBadge.offline{
+background:var(--surface);
+border:1px solid var(--border);
+color:var(--text3);
+}
+
+.pulse{
+width:7px;
+height:7px;
+border-radius:50%;
+background:#ff3355;
+position:relative;
+}
+
+.pulse::after{
+content:'';
+position:absolute;
+inset:-4px;
+border-radius:50%;
+border:1px solid #ff3355;
+animation:pulseRing 1.7s ease-out infinite;
+}
+
+#liveBadge.offline .pulse{background:var(--text3);}
+#liveBadge.offline .pulse::after{display:none;}
+
+@keyframes pulseRing{
+0%{transform:scale(.6);opacity:.8;}
+100%{transform:scale(2.6);opacity:0;}
+}
+
+.station-hero{
+display:flex;
+flex-direction:column;
+align-items:center;
+margin-top:8px;
+margin-bottom:26px;
+}
+
+#timeBlock{
+text-align:center;
+margin-bottom:24px;
+}
+
+#currentTime{
+font-size:46px;
+font-weight:800;
+letter-spacing:-2px;
+}
+
+#currentDate{
+font-size:13px;
+color:var(--text2);
+}
+
+.hero-logo{
+position:relative;
+margin-bottom:24px;
+width:180px;
+height:180px;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+.station-logo{
+width:170px;
+height:170px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:74px;
+background:linear-gradient(150deg,rgba(255,255,255,.13),rgba(255,255,255,.03));
+border:1px solid rgba(255,255,255,.16);
+position:relative;
+z-index:1;
+transition:transform .4s cubic-bezier(.34,1.56,.64,1), box-shadow .4s;
+}
+
+.station-logo.is-live{
+transform:scale(1.04);
+box-shadow:0 0 60px rgba(220,30,60,.35), 0 0 0 1px rgba(220,30,60,.2) inset;
+}
+
+.logo-ring{
+position:absolute;
+inset:0;
+border-radius:50%;
+border:1.5px solid rgba(255,255,255,.16);
+animation:ring 4s linear infinite;
+animation-play-state:paused;
+}
+
+.logo-ring.spin-on{animation-play-state:running;}
+.logo-ring.ring2{animation-delay:1.4s;}
+.logo-ring.ring3{animation-delay:2.8s;}
+
+@keyframes ring{
+0%{transform:scale(.86);opacity:0;}
+35%{opacity:.85;}
+100%{transform:scale(1.22);opacity:0;}
+}
+
+.eq-overlay{
+position:absolute;
+bottom:30px;
+left:50%;
+transform:translateX(-50%);
+display:flex;
+align-items:flex-end;
+gap:4px;
+height:26px;
+z-index:2;
+opacity:0;
+transition:opacity .3s;
+pointer-events:none;
+}
+
+.eq-overlay.show{opacity:1;}
+
+.eq-overlay span{
+width:3.5px;
+border-radius:3px;
+background:linear-gradient(180deg,#ff5671,#dc1e3c);
+animation:eqAnim .6s ease-in-out infinite alternate;
+animation-play-state:paused;
+}
+
+.eq-overlay.show span{animation-play-state:running;}
+
+.eq-overlay span:nth-child(1){height:45%;animation-delay:0s;}
+.eq-overlay span:nth-child(2){height:95%;animation-delay:.13s;}
+.eq-overlay span:nth-child(3){height:60%;animation-delay:.26s;}
+.eq-overlay span:nth-child(4){height:100%;animation-delay:.07s;}
+.eq-overlay span:nth-child(5){height:50%;animation-delay:.2s;}
+.eq-overlay span:nth-child(6){height:75%;animation-delay:.16s;}
+
+@keyframes eqAnim{
+from{transform:scaleY(.3);opacity:.8;}
+to{transform:scaleY(1);opacity:1;}
+}
+
+.station-hero h1{
+font-size:32px;
+font-weight:800;
+text-align:center;
+margin-bottom:6px;
+letter-spacing:-.5px;
+}
+
+.station-hero p{
+color:var(--text2);
+font-size:14px;
+}
+
+.card-label{
+font-size:11px;
+font-weight:800;
+letter-spacing:2px;
+color:#ff8094;
+margin-bottom:10px;
+display:flex;
+align-items:center;
+gap:6px;
+}
+
+.card-label i{font-size:13px;}
+
+#songTitle{
+font-size:21px;
+font-weight:800;
+margin-bottom:4px;
+}
+
+#songArtist{
+font-size:14px;
+color:var(--text2);
+}
+
+.section-title{
+font-size:12px;
+font-weight:800;
+letter-spacing:1.3px;
+margin-bottom:10px;
+color:#9eb5ff;
+display:flex;
+align-items:center;
+gap:6px;
+}
+
+.section-title i{font-size:14px;}
+
+#currentProgram{
+font-size:21px;
+font-weight:700;
+margin-bottom:6px;
+}
+
+#programStatus{
+color:#ff7286;
+font-size:13px;
+margin-bottom:10px;
+font-weight:600;
+}
+
+#nextProgram{
+font-size:13px;
+color:var(--text2);
+}
+
+#expandPlayerBtn{
+width:92px;
+height:92px;
+border:none;
+cursor:pointer;
+margin:30px auto 0;
+display:flex;
+align-items:center;
+justify-content:center;
+border-radius:50%;
+font-size:38px;
+color:white;
+background:linear-gradient(150deg,#ff5671,#dc1e3c);
+box-shadow:0 10px 32px var(--accent-glow);
+transition:transform .15s, box-shadow .4s;
+position:relative;
+}
+
+#expandPlayerBtn.is-live{
+animation:beat 2s ease-in-out infinite;
+}
+
+#expandPlayerBtn:active{
+transform:scale(.92);
+}
+
+@keyframes beat{
+0%,100%{box-shadow:0 10px 32px var(--accent-glow);}
+50%{box-shadow:0 10px 46px rgba(220,30,60,.65);}
+}
+
+@keyframes spin{
+to{transform:rotate(360deg);}
+}
+
+.spin-ic{
+display:inline-block;
+animation:spin .8s linear infinite;
+}
+
+#playerSheet{
+position:fixed;
+left:0;
+right:0;
+bottom:0;
+height:100vh;
+background:#070916;
+z-index:999;
+border-radius:36px 36px 0 0;
+transform:translateY(100%);
+transition:transform .4s cubic-bezier(.22,1,.36,1);
+overflow-y:auto;
+overflow-x:hidden;
+-webkit-overflow-scrolling:touch;
+padding:18px 24px 140px;
+}
+
+#playerSheet::before{
+content:'';
+position:absolute;
+inset:0;
+background:
+  radial-gradient(circle at 30% 10%, rgba(220,30,60,.18), transparent 50%),
+  radial-gradient(circle at 80% 70%, rgba(26,58,143,.22), transparent 55%);
+pointer-events:none;
+z-index:0;
+}
+
+#playerSheet > *{
+position:relative;
+z-index:1;
+}
+
+#playerSheet.show{
+transform:translateY(0);
+}
+
+#playerDragHandle{
+width:56px;
+height:5px;
+border-radius:999px;
+background:rgba(255,255,255,.18);
+margin:0 auto 18px;
+cursor:grab;
+touch-action:none;
+}
+
+.player-top{
+cursor:grab;
+touch-action:none;
+display:flex;
+align-items:center;
+justify-content:space-between;
+margin-bottom:14px;
+font-weight:700;
+font-size:14px;
+}
+
+.player-top button{
+background:var(--surface);
+border:none;
+color:#fff;
+font-size:19px;
+cursor:pointer;
+width:38px;
+height:38px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+.player-status-row{
+display:flex;
+justify-content:center;
+margin-bottom:8px;
+}
+
+.player-status-pill{
+display:flex;
+align-items:center;
+gap:7px;
+font-size:11px;
+font-weight:800;
+letter-spacing:1.4px;
+padding:6px 14px;
+border-radius:999px;
+background:rgba(220,30,60,.14);
+border:1px solid rgba(220,30,60,.3);
+color:#ff7286;
+transition:.3s;
+}
+
+.player-status-pill.offline{
+background:var(--surface);
+border-color:var(--border);
+color:var(--text3);
+}
+
+#artworkContainer{
+position:relative;
+display:flex;
+align-items:center;
+justify-content:center;
+margin:22px auto;
+width:240px;
+height:240px;
+}
+
+.art-ring{
+position:absolute;
+border-radius:50%;
+border:1px solid rgba(220,30,60,.3);
+animation:artRing 3s ease-out infinite;
+animation-play-state:paused;
+}
+
+.art-ring.on{animation-play-state:running;}
+.art-ring.r1{inset:-10px;}
+.art-ring.r2{inset:-10px;animation-delay:1s;}
+.art-ring.r3{inset:-10px;animation-delay:2s;}
+
+@keyframes artRing{
+0%{transform:scale(.92);opacity:0;}
+40%{opacity:.7;}
+100%{transform:scale(1.18);opacity:0;}
+}
+
+#vinylGlow{
+position:absolute;
+inset:-30px;
+border-radius:50%;
+background:radial-gradient(circle,var(--accent-glow),transparent 70%);
+filter:blur(22px);
+transition:opacity .4s;
+opacity:.4;
+}
+
+#playerSheet.playing #vinylGlow{
+opacity:1;
+}
+
+#albumArt{
+position:relative;
+width:240px;
+height:240px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+background:linear-gradient(150deg,#1a3a8f,#dc1e3c);
+box-shadow:0 0 60px rgba(0,0,0,.4);
+cursor:pointer;
+transition:transform .15s;
+}
+
+#albumArt:active{
+transform:scale(.97);
+}
+
+.vinyl-record{
+width:90%;
+height:90%;
+border-radius:50%;
+background:repeating-radial-gradient(circle,#0c0c14 0 4px,#1a1a26 4px 8px);
+display:flex;
+align-items:center;
+justify-content:center;
+animation:spinVinyl 6s linear infinite paused;
+}
+
+#playerSheet.playing .vinyl-record{
+animation-play-state:running;
+}
+
+@keyframes spinVinyl{
+from{transform:rotate(0deg);}
+to{transform:rotate(360deg);}
+}
+
+.vinyl-center{
+width:30%;
+height:30%;
+border-radius:50%;
+background:#dc1e3c;
+box-shadow:0 0 16px rgba(220,30,60,.6);
+display:flex;
+align-items:center;
+justify-content:center;
+color:#fff;
+font-size:18px;
+}
+
+#playerMeta{
+text-align:center;
+margin-bottom:18px;
+}
+
+#playerSongTitle{
+font-size:21px;
+font-weight:800;
+margin-bottom:6px;
+}
+
+#playerSongArtist{
+font-size:14px;
+color:var(--text2);
+}
+
+#visualizerWrap{
+width:100%;
+height:100px;
+margin-bottom:20px;
+border-radius:16px;
+overflow:hidden;
+background:rgba(255,255,255,.04);
+border:1px solid var(--border);
+position:relative;
+}
+
+#spectrum{
+width:100%;
+height:100px;
+display:block;
+}
+
+.viz-idle-label{
+position:absolute;
+inset:0;
+display:flex;
+align-items:center;
+justify-content:center;
+color:var(--text3);
+font-size:12px;
+font-weight:600;
+letter-spacing:.5px;
+transition:opacity .3s;
+}
+
+#playerSheet.playing .viz-idle-label{opacity:0;}
+
+.extra-controls-row{
+display:flex;
+justify-content:center;
+gap:10px;
+margin-bottom:18px;
+}
+
+.chip-btn{
+display:flex;
+align-items:center;
+gap:6px;
+background:var(--surface);
+border:1px solid var(--border);
+color:var(--text2);
+font-size:11px;
+font-weight:700;
+padding:8px 14px;
+border-radius:999px;
+cursor:pointer;
+transition:.2s;
+}
+
+.chip-btn:active{transform:scale(.93);}
+.chip-btn.on{
+background:rgba(220,30,60,.16);
+border-color:rgba(220,30,60,.35);
+color:#ff8094;
+}
+
+.chip-btn i{font-size:14px;}
+
+#playerControls{
+display:flex;
+align-items:center;
+justify-content:space-around;
+margin-bottom:24px;
+}
+
+#playerControls button{
+background:var(--surface);
+border:1px solid var(--border);
+color:#fff;
+width:60px;
+height:60px;
+border-radius:50%;
+font-size:23px;
+cursor:pointer;
+transition:transform .15s, background .2s;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+#playerControls button:active{
+transform:scale(.9);
+}
+
+#playerControls button.liked{
+color:#ff7286;
+background:rgba(220,30,60,.14);
+border-color:rgba(220,30,60,.3);
+}
+
+#playBtn{
+width:76px;
+height:76px;
+font-size:30px;
+background:linear-gradient(150deg,#ff5671,#dc1e3c);
+border:none;
+box-shadow:0 8px 26px var(--accent-glow);
+}
+
+#playBtn.is-live{
+animation:playBeat 2s ease-in-out infinite;
+}
+
+@keyframes playBeat{
+0%,100%{box-shadow:0 8px 26px var(--accent-glow);}
+50%{box-shadow:0 8px 38px rgba(220,30,60,.65);}
+}
+
+.volume-wrap{
+display:flex;
+align-items:center;
+gap:12px;
+color:var(--text2);
+font-size:18px;
+}
+
+.volume-wrap input[type="range"]{
+flex:1;
+-webkit-appearance:none;
+appearance:none;
+height:5px;
+border-radius:5px;
+background:rgba(255,255,255,.14);
+outline:none;
+}
+
+.volume-wrap input[type="range"]::-webkit-slider-thumb{
+-webkit-appearance:none;
+width:18px;
+height:18px;
+border-radius:50%;
+background:#fff;
+border:3px solid #dc1e3c;
+cursor:pointer;
+box-shadow:0 2px 8px rgba(220,30,60,.4);
+}
+
+#miniPlayer{
+position:fixed;
+left:12px;
+right:12px;
+bottom:96px;
+height:70px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:10px 14px;
+border-radius:20px;
+background:rgba(255,255,255,.08);
+border:1px solid var(--border);
+z-index:500;
+box-shadow:var(--shadow);
+transition:border-color .3s;
+}
+
+#miniPlayer.playing{
+border-color:rgba(220,30,60,.35);
+}
+
+.mini-left{
+display:flex;
+align-items:center;
+gap:12px;
+overflow:hidden;
+}
+
+.mini-cover{
+width:44px;
+height:44px;
+border-radius:12px;
+display:flex;
+align-items:center;
+justify-content:center;
+background:linear-gradient(150deg,#1a3a8f,#dc1e3c);
+flex-shrink:0;
+position:relative;
+overflow:hidden;
+}
+
+.mini-cover i{
+font-size:17px;
+color:#fff;
+z-index:1;
+}
+
+.mini-eq{
+position:absolute;
+inset:0;
+display:none;
+align-items:flex-end;
+justify-content:center;
+gap:2px;
+}
+
+#miniPlayer.playing .mini-eq{display:flex;}
+#miniPlayer.playing .mini-cover i{display:none;}
+
+.mini-eq span{
+width:2.5px;
+background:#fff;
+border-radius:2px;
+animation:eqAnim .6s ease-in-out infinite alternate;
+}
+.mini-eq span:nth-child(1){height:30%;animation-delay:0s;}
+.mini-eq span:nth-child(2){height:80%;animation-delay:.15s;}
+.mini-eq span:nth-child(3){height:50%;animation-delay:.3s;}
+
+#miniTitle{
+font-weight:700;
+font-size:13px;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+}
+
+#miniSubtitle{
+font-size:11px;
+color:var(--text2);
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+}
+
+#miniPlay{
+background:var(--surface);
+border:none;
+color:#fff;
+width:42px;
+height:42px;
+border-radius:50%;
+font-size:16px;
+cursor:pointer;
+flex-shrink:0;
+display:flex;
+align-items:center;
+justify-content:center;
+transition:transform .15s;
+}
+
+#miniPlay:active{transform:scale(.88);}
+
+#bottomNav{
+position:fixed;
+left:8px;
+right:8px;
+bottom:8px;
+height:var(--nav-height);
+display:flex;
+justify-content:space-around;
+align-items:center;
+background:rgba(10,13,28,.92);
+border:1px solid var(--border);
+border-radius:22px;
+z-index:1000;
+box-shadow:0 -4px 24px rgba(0,0,0,.35);
+}
+
+.nav-btn{
+background:none;
+border:none;
+color:var(--text3);
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+gap:3px;
+font-size:9.5px;
+font-weight:700;
+cursor:pointer;
+position:relative;
+flex:1;
+height:100%;
+transition:color .2s;
+}
+
+.nav-btn-inner{
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:4px;
+padding:6px 10px;
+border-radius:14px;
+transition:background .25s, transform .2s;
+}
+
+.nav-btn i{
+font-size:19px;
+transition:transform .25s;
+}
+
+.nav-btn:active .nav-btn-inner{
+transform:scale(.9);
+}
+
+.nav-btn.active{
+color:#fff;
+}
+
+.nav-btn.active .nav-btn-inner{
+background:rgba(220,30,60,.16);
+}
+
+.nav-btn.active i{
+transform:translateY(-1px);
+color:#ff7286;
+}
+
+.page-header{
+margin-bottom:20px;
+}
+
+.page-header h2{
+font-size:29px;
+font-weight:800;
+letter-spacing:-.5px;
+}
+
+.placeholder-block{
+text-align:center;
+padding:60px 20px;
+}
+
+.placeholder-block i{
+font-size:64px;
+margin-bottom:18px;
+color:#ff7286;
+}
+
+.placeholder-block h3{
+margin-bottom:10px;
+font-weight:700;
+}
+
+.news-item{
+display:flex;
+gap:12px;
+padding:14px 0;
+border-bottom:1px solid var(--border);
+}
+
+.news-item:last-child{border-bottom:none;}
+
+.news-icon{
+width:38px;
+height:38px;
+border-radius:12px;
+background:rgba(220,30,60,.14);
+color:#ff7286;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:17px;
+flex-shrink:0;
+}
+
+.news-text h4{
+font-size:14px;
+font-weight:700;
+margin-bottom:3px;
+}
+
+.news-text p{
+font-size:12px;
+color:var(--text2);
+}
+
+.schedule-item{
+display:flex;
+justify-content:space-between;
+align-items:flex-start;
+padding:16px 12px;
+margin:0 -12px;
+border-bottom:1px solid var(--border);
+border-radius:16px;
+transition:.25s;
+gap:12px;
+}
+
+.schedule-item:last-child{
+border-bottom:none;
+}
+
+.schedule-item-now{
+background:rgba(220,30,60,.12);
+border:1px solid rgba(220,30,60,.3);
+border-bottom:1px solid rgba(220,30,60,.3);
+box-shadow:0 0 28px rgba(220,30,60,.18);
+}
+
+.schedule-time{
+font-size:13px;
+color:var(--text2);
+min-width:90px;
+padding-top:2px;
+font-weight:500;
+}
+
+.schedule-item-now .schedule-time{
+color:#ff8094;
+font-weight:700;
+}
+
+.schedule-main{
+flex:1;
+display:flex;
+flex-direction:column;
+align-items:flex-end;
+gap:8px;
+}
+
+.schedule-title{
+font-weight:700;
+text-align:right;
+display:flex;
+align-items:center;
+justify-content:flex-end;
+gap:8px;
+}
+
+.schedule-now-badge{
+font-size:10px;
+font-weight:800;
+letter-spacing:.5px;
+color:#fff;
+background:linear-gradient(135deg,#dc1e3c,#ff5671);
+padding:3px 8px;
+border-radius:999px;
+white-space:nowrap;
+}
+
+.host-chip-row{
+display:flex;
+flex-wrap:wrap;
+justify-content:flex-end;
+gap:8px;
+}
+
+.host-chip{
+display:flex;
+align-items:center;
+gap:6px;
+background:var(--surface);
+border:1px solid var(--border);
+border-radius:999px;
+padding:4px 10px 4px 4px;
+}
+
+.host-chip img{
+width:22px;
+height:22px;
+border-radius:50%;
+object-fit:cover;
+display:block;
+}
+
+.host-chip span{
+font-size:11px;
+font-weight:600;
+color:var(--text2);
+}
+
+#currentHost.host-chip-row{
+justify-content:flex-start;
+margin-top:10px;
+display:none;
+}
+
+@media(max-width:420px){
+.station-logo{width:150px;height:150px;font-size:64px;}
+.hero-logo{width:160px;height:160px;}
+.station-hero h1{font-size:27px;}
+#currentTime{font-size:40px;}
+}
+
 </style>
+</head>
+<body oncontextmenu="return false;">
 
-<h2 class="sr-only">DXSJ Infinite Radio improved dark glassmorphism interface preview with animated play button, equalizer and pulse rings</h2>
+<div id="bgGradient"></div>
+<div id="bgBlur1"></div>
+<div id="bgBlur2"></div>
 
-<div class="phone">
-  <div class="screen">
-    <div class="blob blob1"></div>
-    <div class="blob blob2"></div>
+<div id="app">
 
-    <div class="content">
-      <div class="topbar">
-        <div class="live-pill"><div class="pulse-dot"></div>LIVE</div>
-        <button class="icon-btn" aria-label="Share"><i class="ti ti-share"></i></button>
-      </div>
+<section id="homeTab" class="tab-page active">
 
-      <div class="hero">
-        <div class="time">10:42 AM &bull; Thursday</div>
-        <div class="logo-wrap">
-          <div class="ring ring1"></div>
-          <div class="ring ring2"></div>
-          <div class="logo"><i class="ti ti-broadcast" aria-hidden="true"></i></div>
+    <header class="hero-header">
+        <div class="header-left">
+            <div id="liveBadge">
+                <span class="pulse"></span>
+                LIVE
+            </div>
         </div>
-        <div class="station-name">93.3 Infinite Radio</div>
-        <div class="station-sub">Surigao City</div>
-      </div>
-
-      <div class="glass-card">
-        <div class="card-label">NOW PLAYING</div>
-        <div class="program-title">Afternoon Delight</div>
-        <div class="program-status">with DJ Vee &bull; on air now</div>
-        <div class="eq-row" id="eqRow">
-          <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        <div class="header-right">
+            <button id="shareBtn" class="icon-btn" aria-label="Share">
+                <i class="ti ti-share"></i>
+            </button>
         </div>
-      </div>
+    </header>
 
-      <div class="play-fab-wrap">
-        <div class="fab-ripple" id="fabRipple"></div>
-        <button class="play-fab playing" id="fabBtn" aria-label="Play or pause stream">
-          <i class="ti ti-player-pause-filled" id="fabIcon"></i>
-        </button>
-      </div>
+    <div class="station-hero">
+        <div id="timeBlock">
+            <div id="currentTime">00:00</div>
+            <div id="currentDate">Loading Date...</div>
+        </div>
 
-      <div class="nav">
-        <button class="nav-btn active" aria-label="Home"><i class="ti ti-home"></i>Home</button>
-        <button class="nav-btn" aria-label="Live"><i class="ti ti-broadcast"></i>Live</button>
-        <button class="nav-btn" aria-label="Schedule"><i class="ti ti-calendar-event"></i>Schedule</button>
-        <button class="nav-btn" aria-label="About"><i class="ti ti-info-circle"></i>About</button>
-      </div>
+        <div class="hero-logo">
+            <div class="logo-ring ring1"></div>
+            <div class="logo-ring ring2"></div>
+            <div class="logo-ring ring3"></div>
+            <div class="station-logo" id="heroLogo">
+                <i class="ti ti-broadcast" aria-hidden="true"></i>
+                <div class="eq-overlay" id="heroEq">
+                    <span></span><span></span><span></span><span></span><span></span><span></span>
+                </div>
+            </div>
+        </div>
+
+        <h1>93.3 Infinite Radio Surigao</h1>
+        <p>Surigao City &bull; 93.3 FM</p>
     </div>
-  </div>
+
+    <div class="glass-card">
+        <div class="card-label"><i class="ti ti-disc" aria-hidden="true"></i>NOW PLAYING</div>
+        <div id="songTitle">93.3 Infinite Radio Surigao</div>
+        <div id="songArtist">Live Broadcast</div>
+    </div>
+
+    <div class="glass-card">
+        <div class="section-title"><i class="ti ti-calendar-time" aria-hidden="true"></i>CURRENT PROGRAM</div>
+        <div id="currentProgram">Loading...</div>
+        <div id="programStatus">Checking Schedule...</div>
+        <div id="currentHost" class="host-chip-row"></div>
+        <div id="nextProgram">Loading...</div>
+    </div>
+
+    <button id="expandPlayerBtn" aria-label="Open player">
+        <i class="ti ti-player-play-filled" id="expandPlayIcon"></i>
+    </button>
+
+</section>
+
+<section id="listenTab" class="tab-page">
+    <div class="page-header">
+        <h2>Listen</h2>
+    </div>
+    <div class="glass-card">
+        <div class="section-title"><i class="ti ti-calendar-time" aria-hidden="true"></i>CURRENT PROGRAM</div>
+        <div id="currentProgram2">Loading...</div>
+        <div id="programStatus2">Checking Schedule...</div>
+        <div id="currentHost2" class="host-chip-row"></div>
+    </div>
+    <div class="glass-card placeholder-block">
+        <i class="ti ti-headphones" aria-hidden="true"></i>
+        <h3>Tap play to listen</h3>
+        <p style="color:var(--text2);">Open the full player from the home tab.</p>
+    </div>
+</section>
+
+<section id="watchTab" class="tab-page">
+    <div class="page-header">
+        <h2>Watch Live</h2>
+    </div>
+    <div class="glass-card placeholder-block">
+        <i class="ti ti-video" aria-hidden="true"></i>
+        <h3>Livestream Coming Soon</h3>
+        <p style="color:var(--text2);">Video streaming will be available here.</p>
+    </div>
+</section>
+
+<section id="newsTab" class="tab-page">
+    <div class="page-header">
+        <h2>News</h2>
+    </div>
+    <div class="glass-card" id="newsContainer">
+        <div class="news-item">
+            <div class="news-icon"><i class="ti ti-news" aria-hidden="true"></i></div>
+            <div class="news-text">
+                <h4>Stay tuned</h4>
+                <p>Local news updates will appear here soon.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="aboutTab" class="tab-page">
+    <div class="page-header">
+        <h2>About DXSJ</h2>
+    </div>
+    <div class="glass-card" id="aboutContainer">
+        <p style="color:var(--text2); line-height:1.7;">
+            DXSJ 93.3 Infinite Radio is a local FM station broadcasting live from Surigao City,
+            bringing you news, music, and community programs around the clock.
+        </p>
+    </div>
+    <div class="glass-card">
+        <div class="section-title"><i class="ti ti-calendar-event" aria-hidden="true"></i>TODAY'S SCHEDULE</div>
+        <div id="scheduleContainer"></div>
+    </div>
+</section>
+
 </div>
 
+<div id="playerSheet">
+
+    <div id="playerDragHandle"></div>
+
+    <div class="player-top">
+        <button id="closePlayer" aria-label="Close player">
+            <i class="ti ti-chevron-down"></i>
+        </button>
+        <span>93.3 Infinite Radio Surigao</span>
+        <button id="playerMenu" aria-label="More options">
+            <i class="ti ti-dots"></i>
+        </button>
+    </div>
+
+    <div class="player-status-row">
+        <div class="player-status-pill offline" id="playerStatusPill">
+            <span class="pulse" id="playerStatusDot" style="display:none;"></span>
+            <span id="playerStatusText">OFFLINE</span>
+        </div>
+    </div>
+
+    <div id="artworkContainer">
+        <div class="art-ring r1" id="artRing1"></div>
+        <div class="art-ring r2" id="artRing2"></div>
+        <div class="art-ring r3" id="artRing3"></div>
+        <div id="vinylGlow"></div>
+        <div id="albumArt" aria-label="Tap to play or pause">
+            <div class="vinyl-record">
+                <div class="vinyl-center"><i class="ti ti-broadcast" aria-hidden="true"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="playerMeta">
+        <div id="playerSongTitle">93.3 Infinite Radio Surigao</div>
+        <div id="playerSongArtist">Surigao City</div>
+    </div>
+
+    <div id="visualizerWrap">
+        <canvas id="spectrum"></canvas>
+        <div class="viz-idle-label" id="vizIdleLabel">Visualizer appears while playing</div>
+    </div>
+
+    <div class="extra-controls-row">
+        <button class="chip-btn" id="sleepBtnChip" aria-label="Sleep timer">
+            <i class="ti ti-moon" aria-hidden="true"></i>Sleep
+        </button>
+        <button class="chip-btn" id="shareBtnChip" aria-label="Share station">
+            <i class="ti ti-share" aria-hidden="true"></i>Share
+        </button>
+        <button class="chip-btn" id="notifBtnChip" aria-label="Toggle notifications">
+            <i class="ti ti-bell" aria-hidden="true"></i>Alerts
+        </button>
+    </div>
+
+    <div id="playerControls">
+        <button id="heartBtn" aria-label="Favorite">
+            <i class="ti ti-heart"></i>
+        </button>
+        <button id="playBtn" aria-label="Play or pause">
+            <i class="ti ti-player-play-filled"></i>
+        </button>
+        <button id="refreshBtn" aria-label="Reconnect stream">
+            <i class="ti ti-refresh"></i>
+        </button>
+    </div>
+
+    <div class="volume-wrap">
+        <i class="ti ti-volume-3" aria-hidden="true"></i>
+        <input type="range" id="volumeSlider" min="0" max="100" value="80" aria-label="Volume">
+        <i class="ti ti-volume" aria-hidden="true"></i>
+    </div>
+
+</div>
+
+<div id="miniPlayer">
+    <div class="mini-left">
+        <div class="mini-cover">
+            <i class="ti ti-broadcast" aria-hidden="true"></i>
+            <div class="mini-eq"><span></span><span></span><span></span></div>
+        </div>
+        <div>
+            <div id="miniTitle">93.3 Infinite Radio Surigao</div>
+            <div id="miniSubtitle">Connecting...</div>
+        </div>
+    </div>
+    <button id="miniPlay" aria-label="Play or pause">
+        <i class="ti ti-player-pause-filled"></i>
+    </button>
+</div>
+
+<nav id="bottomNav">
+    <button class="nav-btn active" data-tab="home" aria-label="Home">
+        <div class="nav-btn-inner">
+            <i class="ti ti-home-filled"></i>
+            <span>Home</span>
+        </div>
+    </button>
+    <button class="nav-btn" data-tab="listen" aria-label="Listen">
+        <div class="nav-btn-inner">
+            <i class="ti ti-headphones"></i>
+            <span>Listen</span>
+        </div>
+    </button>
+    <button class="nav-btn" data-tab="watch" aria-label="Watch live">
+        <div class="nav-btn-inner">
+            <i class="ti ti-video"></i>
+            <span>Watch</span>
+        </div>
+    </button>
+    <button class="nav-btn" data-tab="news" aria-label="News">
+        <div class="nav-btn-inner">
+            <i class="ti ti-news"></i>
+            <span>News</span>
+        </div>
+    </button>
+    <button class="nav-btn" data-tab="about" aria-label="About">
+        <div class="nav-btn-inner">
+            <i class="ti ti-info-circle"></i>
+            <span>About</span>
+        </div>
+    </button>
+</nav>
+
+<audio id="audio" crossorigin="anonymous" preload="none"></audio>
+
 <script>
-var playing = true;
-var fabBtn = document.getElementById('fabBtn');
-var fabIcon = document.getElementById('fabIcon');
-var fabRipple = document.getElementById('fabRipple');
-var eqRow = document.getElementById('eqRow');
 
-fabBtn.addEventListener('click', function(){
-  fabRipple.classList.remove('go');
-  void fabRipple.offsetWidth;
-  fabRipple.classList.add('go');
+const hostPhotos = {
+  djVee: "REPLACE_WITH_YOUR_DJVEE_BASE64",
+  djAndy: "REPLACE_WITH_YOUR_DJANDY_BASE64",
+  ateJo: "REPLACE_WITH_YOUR_ATEJO_BASE64",
+  lito: "REPLACE_WITH_YOUR_LITO_BASE64",
+  geomar: "REPLACE_WITH_YOUR_GEOMAR_BASE64",
+  sangguniangLogo: "REPLACE_WITH_YOUR_SANGGUNIAN_BASE64"
+};
 
-  playing = !playing;
-  if(playing){
-    fabBtn.classList.add('playing');
-    fabIcon.className = 'ti ti-player-pause-filled';
-    eqRow.style.opacity = '1';
-  } else {
-    fabBtn.classList.remove('playing');
-    fabIcon.className = 'ti ti-player-play-filled';
-    eqRow.style.opacity = '0.25';
+const schedule = [
+  { days:[1,2,3,4,5,6], start:"06:00", end:"08:00", title:"RATSADA BALITA", hosts:[
+      { name:"Lito Gibertas", photo: hostPhotos.lito },
+      { name:"Geomar Macsabejon", photo: hostPhotos.geomar }
+  ]},
+  { days:[2], start:"08:00", end:"08:40", title:"AN SANGGUNIAN", hosts:[
+      { name:"An Sanggunian", photo: hostPhotos.sangguniangLogo }
+  ]},
+  { days:[1,2,3,4,5], start:"09:00", end:"11:00", title:"SABI MO, SABI KO", hosts:[
+      { name:"DJ Andy", photo: hostPhotos.djAndy },
+      { name:"Ate Jo", photo: hostPhotos.ateJo }
+  ]},
+  { days:[1,2,3,4,5], start:"12:00", end:"13:00", title:"ISUMBONG SA BARANGAY", hosts:[
+      { name:"Lito Gibertas", photo: hostPhotos.lito }
+  ]},
+  { days:[1,2,3,4,5], start:"15:00", end:"17:00", title:"AFTERNOON DELIGHT", hosts:[
+      { name:"DJ Vee", photo: hostPhotos.djVee }
+  ]},
+  { days:[1,2,3,4,5], start:"17:30", end:"19:00", title:"INFINITE ROCK", hosts:[
+      { name:"DJ Andy", photo: hostPhotos.djAndy }
+  ]},
+  { days:[6], start:"10:00", end:"12:00", title:"WEEKEND COUNTDOWN & REQUEST SHOW", hosts:[
+      { name:"DJ Andy", photo: hostPhotos.djAndy }
+  ]}
+];
+
+function toMinutes(t){
+  let [h,m] = t.split(":").map(Number);
+  return h*60 + m;
+}
+
+function getCurrentProgram(){
+  const now = new Date();
+  const day = now.getDay();
+  const mins = now.getHours()*60 + now.getMinutes();
+
+  let current = null;
+  let next = null;
+
+  for(let i=0;i<schedule.length;i++){
+    let s = schedule[i];
+    if(!s.days.includes(day)) continue;
+
+    let start = toMinutes(s.start);
+    let end = toMinutes(s.end);
+
+    if(mins >= start && mins < end){
+      current = s;
+      next = schedule[i+1] || null;
+      break;
+    }
+
+    if(mins < start && !next){
+      next = s;
+    }
   }
+
+  return {current,next};
+}
+
+function updateScheduleUI(){
+  const {current,next} = getCurrentProgram();
+
+  const curEl = document.getElementById("currentProgram");
+  const statEl = document.getElementById("programStatus");
+  const nextEl = document.getElementById("nextProgram");
+  const hostEl = document.getElementById("currentHost");
+
+  const curEl2 = document.getElementById("currentProgram2");
+  const statEl2 = document.getElementById("programStatus2");
+  const hostEl2 = document.getElementById("currentHost2");
+
+  function buildHostsHTML(hosts){
+    return hosts.map(h => `
+      <div class="host-chip">
+        <img src="${h.photo}" alt="${h.name}">
+        <span>${h.name}</span>
+      </div>
+    `).join("");
+  }
+
+  if(current){
+    const title = current.title;
+    const status = "NOW ON AIR";
+    const hostsHTML = (current.hosts && current.hosts.length) ? buildHostsHTML(current.hosts) : "";
+
+    if(curEl) curEl.textContent = title;
+    if(statEl) statEl.textContent = status;
+    if(hostEl){
+      if(hostsHTML){ hostEl.innerHTML = hostsHTML; hostEl.style.display = "flex"; }
+      else { hostEl.style.display = "none"; hostEl.innerHTML = ""; }
+    }
+
+    if(curEl2) curEl2.textContent = title;
+    if(statEl2) statEl2.textContent = status;
+    if(hostEl2){
+      if(hostsHTML){ hostEl2.innerHTML = hostsHTML; hostEl2.style.display = "flex"; }
+      else { hostEl2.style.display = "none"; hostEl2.innerHTML = ""; }
+    }
+
+  } else {
+    if(curEl) curEl.textContent = "Music Automation";
+    if(statEl) statEl.textContent = "No live show";
+    if(hostEl){ hostEl.style.display = "none"; hostEl.innerHTML = ""; }
+
+    if(curEl2) curEl2.textContent = "Music Automation";
+    if(statEl2) statEl2.textContent = "No live show";
+    if(hostEl2){ hostEl2.style.display = "none"; hostEl2.innerHTML = ""; }
+  }
+
+  if(nextEl){
+    nextEl.textContent = next ? ("Next: " + next.title) : "Stay tuned for updates";
+  }
+}
+
+function renderScheduleList(){
+  const container = document.getElementById("scheduleContainer");
+  if(!container) return;
+
+  const now = new Date();
+  const today = now.getDay();
+  const mins = now.getHours()*60 + now.getMinutes();
+
+  const todays = schedule
+    .filter(s => s.days.includes(today))
+    .slice()
+    .sort((a,b) => toMinutes(a.start) - toMinutes(b.start));
+
+  if(todays.length === 0){
+    container.innerHTML = `
+      <div class="schedule-item">
+        <div class="schedule-title" style="text-align:left;">No scheduled programs today. Enjoy our music automation!</div>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = todays.map(s => {
+    const start = toMinutes(s.start);
+    const end = toMinutes(s.end);
+    const isNow = mins >= start && mins < end;
+
+    const hostsHTML = (s.hosts && s.hosts.length) ? `
+      <div class="host-chip-row">
+        ${s.hosts.map(h => `
+          <div class="host-chip">
+            <img src="${h.photo}" alt="${h.name}">
+            <span>${h.name}</span>
+          </div>
+        `).join("")}
+      </div>
+    ` : "";
+
+    return `
+      <div class="schedule-item${isNow ? ' schedule-item-now' : ''}">
+        <div class="schedule-time">${s.start} - ${s.end}</div>
+        <div class="schedule-main">
+          <div class="schedule-title">
+            ${s.title}
+            ${isNow ? '<span class="schedule-now-badge">NOW</span>' : ''}
+          </div>
+          ${hostsHTML}
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+let notified = {};
+let notifsEnabled = false;
+
+function requestNotifPermission(){
+  if("Notification" in window){
+    Notification.requestPermission();
+  }
+}
+
+function notify(title){
+  if(!notifsEnabled) return;
+  if(!("Notification" in window)) return;
+  if(Notification.permission !== "granted") return;
+
+  new Notification("DXSJ 93.3 FM", {
+    body: title + " is now live",
+    icon: ""
+  });
+}
+
+function checkProgramAlerts(){
+  const {current} = getCurrentProgram();
+
+  if(current && !notified[current.title]){
+    notified[current.title] = true;
+    notify(current.title);
+  }
+}
+
+function resizeCanvas(){
+  const c = document.getElementById("spectrum");
+  if(!c) return;
+
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  c.width = c.clientWidth * dpr;
+  c.height = 100 * dpr;
+  const ctx = c.getContext("2d");
+  ctx.scale(dpr, dpr);
+}
+
+window.addEventListener("resize", resizeCanvas);
+
+const STREAM_URL =
+"https://stream-02.surfernetwork.com/yy0d3w86zxhvv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJ5eTBkM3c4Nnp4aHZ2IiwiaG9zdCI6InN0cmVhbS0wMi5zdXJmZXJuZXR3b3JrLmNvbSIsInJ0dGwiOjUsImp0aSI6IkE2cEVTYm5fU25HbThuWm9EanNfMnciLCJpYXQiOjE3ODE2NjE2NzMsImV4cCI6MTc4MTY2MTczM30.6Tn_3u43yGL4md_7fNktLhT3ZH-n2icVwyeM7oq0kXE";
+
+const audio = document.getElementById("audio");
+
+const playBtn = document.getElementById("playBtn");
+const miniPlay = document.getElementById("miniPlay");
+const miniPlayer = document.getElementById("miniPlayer");
+const miniSubtitle = document.getElementById("miniSubtitle");
+const playerSheet = document.getElementById("playerSheet");
+const expandPlayerBtn = document.getElementById("expandPlayerBtn");
+const closePlayerBtn = document.getElementById("closePlayer");
+const volumeSlider = document.getElementById("volumeSlider");
+const heroLogo = document.getElementById("heroLogo");
+const heroEq = document.getElementById("heroEq");
+const liveBadge = document.getElementById("liveBadge");
+const heartBtn = document.getElementById("heartBtn");
+const albumArt = document.getElementById("albumArt");
+const playerStatusPill = document.getElementById("playerStatusPill");
+const playerStatusDot = document.getElementById("playerStatusDot");
+const playerStatusText = document.getElementById("playerStatusText");
+const vizIdleLabel = document.getElementById("vizIdleLabel");
+const ring1 = document.getElementById("ring1") || document.querySelector(".logo-ring.ring1");
+const ring2 = document.querySelector(".logo-ring.ring2");
+const ring3 = document.querySelector(".logo-ring.ring3");
+const artRing1 = document.getElementById("artRing1");
+const artRing2 = document.getElementById("artRing2");
+const artRing3 = document.getElementById("artRing3");
+
+const navBtns = document.querySelectorAll(".nav-btn");
+const tabs = {
+  home: document.getElementById("homeTab"),
+  listen: document.getElementById("listenTab"),
+  watch: document.getElementById("watchTab"),
+  news: document.getElementById("newsTab"),
+  about: document.getElementById("aboutTab")
+};
+
+let isPlaying = false;
+let liked = false;
+let audioCtx, analyser, source, dataArray;
+let reconnectInterval;
+let currentTab = "home";
+let vizStarted = false;
+
+function switchTab(tab) {
+  currentTab = tab;
+
+  Object.keys(tabs).forEach(t => {
+    if(tabs[t]) tabs[t].classList.remove("active");
+  });
+
+  if(tabs[tab]) tabs[tab].classList.add("active");
+
+  navBtns.forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.tab === tab);
+  });
+}
+
+navBtns.forEach(btn => {
+  btn.addEventListener("click", () => {
+    switchTab(btn.dataset.tab);
+    playerSheet.classList.remove("show");
+  });
 });
+
+expandPlayerBtn.addEventListener("click", () => {
+  playerSheet.classList.add("show");
+});
+
+albumArt.addEventListener("click", () => {
+  if (!isPlaying) startStream();
+  else stopStream();
+});
+
+closePlayerBtn.addEventListener("click", () => {
+  playerSheet.classList.remove("show");
+});
+
+const playerDragHandle = document.getElementById("playerDragHandle");
+const playerTop = document.querySelector(".player-top");
+
+let sheetStartY = 0;
+let sheetCurrentY = 0;
+let sheetDragging = false;
+
+function sheetDragStart(y) {
+  sheetDragging = true;
+  sheetStartY = y;
+  sheetCurrentY = y;
+  playerSheet.style.transition = "none";
+}
+
+function sheetDragMove(y) {
+  if (!sheetDragging) return;
+
+  sheetCurrentY = y;
+  const diff = sheetCurrentY - sheetStartY;
+
+  if (diff > 0) {
+    playerSheet.style.transform = `translateY(${diff}px)`;
+  }
+}
+
+function sheetDragEnd() {
+  if (!sheetDragging) return;
+  sheetDragging = false;
+
+  playerSheet.style.transition = "";
+  playerSheet.style.transform = "";
+
+  const diff = sheetCurrentY - sheetStartY;
+
+  if (diff > 120) {
+    playerSheet.classList.remove("show");
+  }
+}
+
+[playerDragHandle, playerTop].forEach(el => {
+  if (!el) return;
+
+  el.addEventListener("touchstart", e => {
+    sheetDragStart(e.touches[0].clientY);
+  }, {passive:true});
+
+  el.addEventListener("touchmove", e => {
+    sheetDragMove(e.touches[0].clientY);
+  }, {passive:true});
+
+  el.addEventListener("touchend", sheetDragEnd);
+});
+
+let streamRetries = 0;
+
+async function startStream() {
+  try {
+    audio.crossOrigin = "anonymous";
+    audio.src = STREAM_URL;
+    setMiniStatus("Connecting...");
+    setPlayerStatus("connecting");
+    await audio.play();
+
+    setupAudioGraph();
+    isPlaying = true;
+    streamRetries = 0;
+
+    updateUIPlaying(true);
+    setupMediaSession();
+
+  } catch (e) {
+    retryStream();
+  }
+}
+
+function retryStream() {
+  clearInterval(reconnectInterval);
+  setMiniStatus("Reconnecting...");
+  setPlayerStatus("connecting");
+
+  reconnectInterval = setInterval(() => {
+    streamRetries++;
+    audio.src = STREAM_URL;
+    audio.play().then(() => {
+      clearInterval(reconnectInterval);
+      isPlaying = true;
+      setupAudioGraph();
+      updateUIPlaying(true);
+      setupMediaSession();
+    }).catch(() => {});
+  }, 3000);
+}
+
+function stopStream() {
+  audio.pause();
+  audio.src = "";
+  isPlaying = false;
+
+  clearInterval(reconnectInterval);
+  updateUIPlaying(false);
+  setMiniStatus("Paused");
+  setPlayerStatus("offline");
+}
+
+audio.addEventListener("stalled", retryStream);
+audio.addEventListener("error", () => { if (isPlaying) retryStream(); });
+audio.addEventListener("ended", () => { if (isPlaying) retryStream(); });
+audio.addEventListener("waiting", () => { setMiniStatus("Buffering..."); });
+audio.addEventListener("playing", () => { setMiniStatus("Live Stream"); setPlayerStatus("live"); });
+
+function setMiniStatus(text){
+  if (miniSubtitle) miniSubtitle.textContent = text;
+}
+
+function setPlayerStatus(state){
+  if (!playerStatusPill) return;
+  if (state === "live") {
+    playerStatusPill.classList.remove("offline");
+    playerStatusDot.style.display = "inline-block";
+    playerStatusText.textContent = "LIVE";
+  } else if (state === "connecting") {
+    playerStatusPill.classList.add("offline");
+    playerStatusDot.style.display = "none";
+    playerStatusText.textContent = "CONNECTING";
+  } else {
+    playerStatusPill.classList.add("offline");
+    playerStatusDot.style.display = "none";
+    playerStatusText.textContent = "OFFLINE";
+  }
+}
+
+function setupAudioGraph() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+
+  if (audioCtx.state === "suspended") {
+    audioCtx.resume();
+  }
+
+  if (!source) {
+    source = audioCtx.createMediaElementSource(audio);
+    analyser = audioCtx.createAnalyser();
+
+    analyser.fftSize = 128;
+    const bufferLength = analyser.frequencyBinCount;
+    dataArray = new Uint8Array(bufferLength);
+
+    source.connect(analyser);
+    analyser.connect(audioCtx.destination);
+  }
+
+  if (!vizStarted) {
+    vizStarted = true;
+    drawSpectrum();
+  }
+}
+
+function drawSpectrum() {
+  const canvas = document.getElementById("spectrum");
+  const ctx = canvas.getContext("2d");
+
+  function render() {
+    requestAnimationFrame(render);
+    if (!analyser || !isPlaying) return;
+
+    analyser.getByteFrequencyData(dataArray);
+    const w = canvas.clientWidth;
+    const h = 100;
+    ctx.clearRect(0, 0, w, h);
+
+    const barWidth = (w / dataArray.length) * 1.5;
+    let x = 0;
+
+    for (let i = 0; i < dataArray.length; i++) {
+      let v = dataArray[i];
+      let barH = v / 255 * h;
+
+      const grad = ctx.createLinearGradient(0, h - barH, 0, h);
+      grad.addColorStop(0, "rgb(255,86,113)");
+      grad.addColorStop(1, "rgb(220,30,60)");
+      ctx.fillStyle = grad;
+      ctx.fillRect(x, h - barH, barWidth, barH);
+
+      x += barWidth + 1;
+    }
+  }
+
+  render();
+}
+
+function setupMediaSession() {
+  if (!("mediaSession" in navigator)) return;
+
+  navigator.mediaSession.metadata = new MediaMetadata({
+    title: "93.3 Infinite Radio Surigao",
+    artist: "Surigao City",
+    album: "Live Broadcast",
+    artwork: []
+  });
+
+  navigator.mediaSession.setActionHandler("play", () => {
+    startStream();
+  });
+
+  navigator.mediaSession.setActionHandler("pause", () => {
+    stopStream();
+  });
+}
+
+function updateUIPlaying(state) {
+  const icon = playBtn.querySelector("i");
+  const miniIcon = miniPlay.querySelector("i");
+  const expandIcon = document.getElementById("expandPlayIcon");
+
+  if (state) {
+    icon.className = "ti ti-player-pause-filled";
+    miniIcon.className = "ti ti-player-pause-filled";
+    expandIcon.className = "ti ti-player-pause-filled";
+
+    playerSheet.classList.add("playing");
+    miniPlayer.classList.add("playing");
+    heroLogo.classList.add("is-live");
+    heroEq.classList.add("show");
+    expandPlayerBtn.classList.add("is-live");
+    playBtn.classList.add("is-live");
+    liveBadge.classList.remove("offline");
+
+    [ring1, ring2, ring3].forEach(r => r && r.classList.add("spin-on"));
+    [artRing1, artRing2, artRing3].forEach(r => r && r.classList.add("on"));
+
+    if (vizIdleLabel) vizIdleLabel.style.opacity = "0";
+    setPlayerStatus("live");
+
+  } else {
+    icon.className = "ti ti-player-play-filled";
+    miniIcon.className = "ti ti-player-play-filled";
+    expandIcon.className = "ti ti-player-play-filled";
+
+    playerSheet.classList.remove("playing");
+    miniPlayer.classList.remove("playing");
+    heroLogo.classList.remove("is-live");
+    heroEq.classList.remove("show");
+    expandPlayerBtn.classList.remove("is-live");
+    playBtn.classList.remove("is-live");
+
+    [ring1, ring2, ring3].forEach(r => r && r.classList.remove("spin-on"));
+    [artRing1, artRing2, artRing3].forEach(r => r && r.classList.remove("on"));
+  }
+}
+
+playBtn.addEventListener("click", () => {
+  if (!isPlaying) startStream();
+  else stopStream();
+});
+
+miniPlay.addEventListener("click", () => {
+  if (!isPlaying) startStream();
+  else stopStream();
+});
+
+document.getElementById("refreshBtn").addEventListener("click", () => {
+  const icon = document.querySelector("#refreshBtn i");
+  icon.classList.add("spin-ic");
+  setTimeout(() => icon.classList.remove("spin-ic"), 800);
+  stopStream();
+  setTimeout(startStream, 300);
+});
+
+heartBtn.addEventListener("click", () => {
+  liked = !liked;
+  heartBtn.classList.toggle("liked", liked);
+  heartBtn.querySelector("i").className = liked ? "ti ti-heart-filled" : "ti ti-heart";
+  heartBtn.style.transform = "scale(1.25)";
+  setTimeout(() => { heartBtn.style.transform = ""; }, 200);
+});
+
+document.getElementById("sleepBtnChip").addEventListener("click", function(){
+  this.classList.toggle("on");
+});
+
+document.getElementById("notifBtnChip").addEventListener("click", function(){
+  notifsEnabled = !notifsEnabled;
+  this.classList.toggle("on", notifsEnabled);
+  if (notifsEnabled) requestNotifPermission();
+});
+
+volumeSlider.addEventListener("input", () => {
+  audio.volume = volumeSlider.value / 100;
+});
+audio.volume = volumeSlider.value / 100;
+
+let startY = 0;
+let currentY = 0;
+let dragging = false;
+
+miniPlayer.addEventListener("touchstart", e => {
+  dragging = true;
+  startY = e.touches[0].clientY;
+}, {passive:true});
+
+miniPlayer.addEventListener("touchmove", e => {
+  if (!dragging) return;
+  currentY = e.touches[0].clientY;
+  let diff = currentY - startY;
+  miniPlayer.style.transform = `translateY(${diff}px)`;
+}, {passive:true});
+
+miniPlayer.addEventListener("touchend", () => {
+  dragging = false;
+  miniPlayer.style.transform = "";
+});
+
+miniPlayer.addEventListener("click", (e) => {
+  if (e.target.closest("#miniPlay")) return;
+  playerSheet.classList.add("show");
+});
+
+function doShare(){
+  if (navigator.share) {
+    navigator.share({
+      title: "93.3 Infinite Radio Surigao",
+      text: "Listen to DXSJ 93.3 Infinite Radio live from Surigao City!",
+      url: window.location.href
+    }).catch(() => {});
+  } else {
+    navigator.clipboard.writeText(window.location.href);
+    alert("Link copied to clipboard!");
+  }
+}
+
+document.getElementById("shareBtn").addEventListener("click", doShare);
+document.getElementById("shareBtnChip").addEventListener("click", doShare);
+
+function updateTime() {
+  const now = new Date();
+
+  const time = now.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+
+  const date = now.toDateString();
+
+  const t = document.getElementById("currentTime");
+  const d = document.getElementById("currentDate");
+
+  if (t) t.textContent = time;
+  if (d) d.textContent = date;
+}
+
+document.addEventListener("contextmenu", e => e.preventDefault());
+document.addEventListener("dragstart", e => e.preventDefault());
+
+let touchTimer;
+document.addEventListener("touchstart", () => {
+  touchTimer = setTimeout(() => {}, 0);
+}, {passive:true});
+
+resizeCanvas();
+switchTab("home");
+renderScheduleList();
+updateScheduleUI();
+updateTime();
+
+setInterval(updateTime, 1000);
+setInterval(() => {
+  updateScheduleUI();
+  renderScheduleList();
+}, 15000);
+setInterval(checkProgramAlerts, 60000);
+
+function tryAutoplay(){
+  startStream().catch(() => {});
+}
+
+window.addEventListener("load", () => {
+  tryAutoplay();
+
+  document.addEventListener("click", function unlockAudio(){
+    if (!isPlaying) startStream();
+    document.removeEventListener("click", unlockAudio);
+  }, { once: true, capture: true });
+});
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js")
+      .then(() => {})
+      .catch(() => {});
+  });
+}
+
 </script>
+
+</body>
+</html>
