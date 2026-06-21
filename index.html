@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 
 <title>DXSJ 93.3 Infinite Radio Surigao</title>
 
@@ -86,16 +86,21 @@ inset:0;
 background:radial-gradient(circle at 20% 0%,#0e2248 0%,#070b1a 55%),
            radial-gradient(circle at 90% 30%,#2b0d2e 0%,transparent 55%);
 z-index:-20;
+animation:gradientShift 18s ease-in-out infinite;
 }
 
-#bgBlur1,#bgBlur2{
+@keyframes gradientShift{
+0%,100%{filter:brightness(1) saturate(1);}
+50%{filter:brightness(1.08) saturate(1.15);}
+}
+
+#bgBlur1,#bgBlur2,#bgBlur3{
 position:fixed;
 border-radius:50%;
-filter:blur(90px);
-opacity:.45;
+filter:blur(85px);
+opacity:.4;
 z-index:-10;
 will-change:transform;
-animation:floatBlob 24s ease-in-out infinite;
 }
 
 #bgBlur1{
@@ -104,6 +109,7 @@ height:300px;
 background:#3a5fd9;
 top:-100px;
 left:-80px;
+animation:floatBlob1 22s ease-in-out infinite;
 }
 
 #bgBlur2{
@@ -112,13 +118,36 @@ height:260px;
 background:#dc1e3c;
 right:-110px;
 top:20%;
-animation-duration:30s;
+animation:floatBlob2 27s ease-in-out infinite;
 }
 
-@keyframes floatBlob{
-0%{transform:translate(0,0);}
-50%{transform:translate(30px,60px);}
-100%{transform:translate(0,0);}
+#bgBlur3{
+width:220px;
+height:220px;
+background:#7a4dff;
+left:10%;
+bottom:-90px;
+opacity:.3;
+animation:floatBlob3 32s ease-in-out infinite;
+}
+
+@keyframes floatBlob1{
+0%,100%{transform:translate(0,0) scale(1);}
+25%{transform:translate(40px,50px) scale(1.08);}
+50%{transform:translate(20px,90px) scale(.95);}
+75%{transform:translate(-20px,40px) scale(1.04);}
+}
+
+@keyframes floatBlob2{
+0%,100%{transform:translate(0,0) scale(1);}
+30%{transform:translate(-35px,55px) scale(1.1);}
+60%{transform:translate(-60px,-20px) scale(.92);}
+}
+
+@keyframes floatBlob3{
+0%,100%{transform:translate(0,0) scale(1);}
+40%{transform:translate(50px,-40px) scale(1.12);}
+70%{transform:translate(-30px,-20px) scale(.96);}
 }
 
 .tab-page{
@@ -401,6 +430,38 @@ font-size:14px;
 color:var(--text2);
 }
 
+.now-playing-tap{
+cursor:pointer;
+transition:transform .15s, border-color .25s;
+}
+
+.now-playing-tap:active{
+transform:scale(.98);
+}
+
+.now-playing-tap:hover{
+border-color:rgba(255,90,110,.3);
+}
+
+.now-playing-row{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:12px;
+}
+
+.now-playing-chevron{
+font-size:20px;
+color:var(--text3);
+flex-shrink:0;
+transition:transform .2s, color .2s;
+}
+
+.now-playing-tap:hover .now-playing-chevron{
+color:#ff8fa3;
+transform:translateX(3px);
+}
+
 .section-title{
 font-size:12px;
 font-weight:800;
@@ -430,32 +491,6 @@ font-weight:600;
 #nextProgram{
 font-size:13px;
 color:var(--text2);
-}
-
-#expandPlayerBtn{
-width:92px;
-height:92px;
-border:none;
-cursor:pointer;
-margin:30px auto 0;
-display:flex;
-align-items:center;
-justify-content:center;
-border-radius:50%;
-font-size:38px;
-color:white;
-background:linear-gradient(150deg,#4d7dff,#dc1e3c);
-box-shadow:0 10px 32px rgba(220,30,60,.35), 0 0 0 1px rgba(255,255,255,.08) inset;
-transition:transform .15s, box-shadow .4s;
-position:relative;
-}
-
-#expandPlayerBtn.is-live{
-animation:beat 2s ease-in-out infinite;
-}
-
-#expandPlayerBtn:active{
-transform:scale(.92);
 }
 
 @keyframes beat{
@@ -1018,6 +1053,119 @@ margin-bottom:10px;
 font-weight:700;
 }
 
+.station-list-title{
+margin-top:6px;
+}
+
+.station-list{
+display:flex;
+flex-direction:column;
+gap:10px;
+}
+
+.station-row{
+display:flex;
+align-items:center;
+gap:14px;
+background:var(--glass);
+backdrop-filter:blur(20px);
+border:1px solid var(--border);
+border-radius:18px;
+padding:13px 14px;
+transition:transform .15s, border-color .25s, background .25s;
+cursor:pointer;
+}
+
+.station-row.active{
+border-color:rgba(255,90,110,.35);
+background:linear-gradient(135deg,rgba(220,30,60,.1),rgba(77,125,255,.07));
+}
+
+.station-row.active:active{
+transform:scale(.98);
+}
+
+.station-row.disabled{
+opacity:.55;
+cursor:default;
+}
+
+.station-icon{
+width:42px;
+height:42px;
+border-radius:50%;
+background:linear-gradient(150deg,#4d7dff,#dc1e3c);
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:18px;
+color:#fff;
+flex-shrink:0;
+}
+
+.station-icon.muted{
+background:var(--surface2);
+color:var(--text3);
+}
+
+.station-info{
+flex:1;
+min-width:0;
+}
+
+.station-name-row{
+display:flex;
+align-items:center;
+gap:6px;
+}
+
+.station-name-text{
+font-size:14px;
+font-weight:700;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+}
+
+.station-sub-text{
+font-size:12px;
+color:var(--text2);
+margin-top:1px;
+}
+
+.station-status{
+font-size:9px;
+font-weight:800;
+letter-spacing:.8px;
+padding:5px 10px;
+border-radius:999px;
+flex-shrink:0;
+white-space:nowrap;
+}
+
+.station-status.live{
+background:rgba(220,30,60,.16);
+color:#ff8fa3;
+border:1px solid rgba(255,90,110,.3);
+position:relative;
+}
+
+.station-status.live::before{
+content:'';
+display:inline-block;
+width:5px;
+height:5px;
+border-radius:50%;
+background:#ff3d5e;
+margin-right:5px;
+animation:blink 1.2s ease-in-out infinite;
+}
+
+.station-status.soon{
+background:var(--surface2);
+color:var(--text3);
+}
+
 .news-item{
 display:flex;
 gap:12px;
@@ -1125,23 +1273,24 @@ gap:8px;
 .host-chip{
 display:flex;
 align-items:center;
-gap:6px;
+gap:8px;
 background:var(--surface);
 border:1px solid var(--border);
 border-radius:999px;
-padding:4px 10px 4px 4px;
+padding:5px 14px 5px 5px;
 }
 
 .host-chip img{
-width:22px;
-height:22px;
+width:36px;
+height:36px;
 border-radius:50%;
 object-fit:cover;
 display:block;
+border:1.5px solid rgba(255,255,255,.15);
 }
 
 .host-chip span{
-font-size:11px;
+font-size:12px;
 font-weight:600;
 color:var(--text2);
 }
@@ -1166,6 +1315,7 @@ display:none;
 <div id="bgGradient"></div>
 <div id="bgBlur1"></div>
 <div id="bgBlur2"></div>
+<div id="bgBlur3"></div>
 
 <div id="app">
 
@@ -1208,10 +1358,15 @@ display:none;
         <p>Surigao City &bull; 93.3 FM</p>
     </div>
 
-    <div class="glass-card">
+    <div class="glass-card now-playing-tap" id="nowPlayingCard" role="button" tabindex="0" aria-label="Open player">
         <div class="card-label"><i class="ti ti-disc" aria-hidden="true"></i>NOW PLAYING</div>
-        <div id="songTitle">93.3 Infinite Radio Surigao</div>
-        <div id="songArtist">Live Broadcast</div>
+        <div class="now-playing-row">
+            <div>
+                <div id="songTitle">93.3 Infinite Radio Surigao</div>
+                <div id="songArtist">Live Broadcast</div>
+            </div>
+            <i class="ti ti-chevron-right now-playing-chevron" aria-hidden="true"></i>
+        </div>
     </div>
 
     <div class="glass-card">
@@ -1222,26 +1377,66 @@ display:none;
         <div id="nextProgram">Loading...</div>
     </div>
 
-    <button id="expandPlayerBtn" aria-label="Open player">
-        <i class="ti ti-player-play-filled" id="expandPlayIcon"></i>
-    </button>
-
 </section>
 
 <section id="listenTab" class="tab-page">
     <div class="page-header">
         <h2>Listen</h2>
     </div>
+
     <div class="glass-card">
         <div class="section-title"><i class="ti ti-calendar-time" aria-hidden="true"></i>CURRENT PROGRAM</div>
         <div id="currentProgram2">Loading...</div>
         <div id="programStatus2">Checking Schedule...</div>
         <div id="currentHost2" class="host-chip-row"></div>
     </div>
-    <div class="glass-card placeholder-block">
-        <i class="ti ti-headphones" aria-hidden="true"></i>
-        <h3>Tap play to listen</h3>
-        <p style="color:var(--text2);">Open the full player from the home tab.</p>
+
+    <div class="section-title station-list-title"><i class="ti ti-list" aria-hidden="true"></i>INFINITE RADIO NETWORK</div>
+
+    <div class="station-list">
+        <div class="station-row active" id="stationDXSJ">
+            <div class="station-icon"><i class="ti ti-broadcast" aria-hidden="true"></i></div>
+            <div class="station-info">
+                <div class="station-name-row">
+                    <span class="station-name-text">93.3 Infinite Radio Surigao</span>
+                </div>
+                <div class="station-sub-text">Surigao City</div>
+            </div>
+            <div class="station-status live">LIVE</div>
+        </div>
+
+        <div class="station-row disabled">
+            <div class="station-icon muted"><i class="ti ti-broadcast" aria-hidden="true"></i></div>
+            <div class="station-info">
+                <div class="station-name-row">
+                    <span class="station-name-text">Infinite Radio Manila</span>
+                </div>
+                <div class="station-sub-text">Metro Manila</div>
+            </div>
+            <div class="station-status soon">COMING SOON</div>
+        </div>
+
+        <div class="station-row disabled">
+            <div class="station-icon muted"><i class="ti ti-broadcast" aria-hidden="true"></i></div>
+            <div class="station-info">
+                <div class="station-name-row">
+                    <span class="station-name-text">Infinite Radio Cebu</span>
+                </div>
+                <div class="station-sub-text">Cebu City</div>
+            </div>
+            <div class="station-status soon">COMING SOON</div>
+        </div>
+
+        <div class="station-row disabled">
+            <div class="station-icon muted"><i class="ti ti-broadcast" aria-hidden="true"></i></div>
+            <div class="station-info">
+                <div class="station-name-row">
+                    <span class="station-name-text">Infinite Radio Davao</span>
+                </div>
+                <div class="station-sub-text">Davao City</div>
+            </div>
+            <div class="station-status soon">COMING SOON</div>
+        </div>
     </div>
 </section>
 
@@ -1383,7 +1578,7 @@ display:none;
 <nav id="bottomNav">
     <button class="nav-btn active" data-tab="home" aria-label="Home">
         <div class="nav-btn-inner">
-            <i class="ti ti-home-filled"></i>
+            <i class="ti ti-home"></i>
             <span>Home</span>
         </div>
     </button>
@@ -1646,7 +1841,7 @@ const miniPlay = document.getElementById("miniPlay");
 const miniPlayer = document.getElementById("miniPlayer");
 const miniSubtitle = document.getElementById("miniSubtitle");
 const playerSheet = document.getElementById("playerSheet");
-const expandPlayerBtn = document.getElementById("expandPlayerBtn");
+const nowPlayingCard = document.getElementById("nowPlayingCard");
 const closePlayerBtn = document.getElementById("closePlayer");
 const volumeSlider = document.getElementById("volumeSlider");
 const heroLogo = document.getElementById("heroLogo");
@@ -1700,9 +1895,23 @@ navBtns.forEach(btn => {
   });
 });
 
-expandPlayerBtn.addEventListener("click", () => {
+nowPlayingCard.addEventListener("click", () => {
   playerSheet.classList.add("show");
 });
+
+nowPlayingCard.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" || e.key === " ") {
+    e.preventDefault();
+    playerSheet.classList.add("show");
+  }
+});
+
+const stationDXSJ = document.getElementById("stationDXSJ");
+if (stationDXSJ) {
+  stationDXSJ.addEventListener("click", () => {
+    playerSheet.classList.add("show");
+  });
+}
 
 albumArt.addEventListener("click", () => {
   if (!isPlaying) startStream();
@@ -1926,18 +2135,15 @@ function setupMediaSession() {
 function updateUIPlaying(state) {
   const icon = playBtn.querySelector("i");
   const miniIcon = miniPlay.querySelector("i");
-  const expandIcon = document.getElementById("expandPlayIcon");
 
   if (state) {
     icon.className = "ti ti-player-pause-filled";
     miniIcon.className = "ti ti-player-pause-filled";
-    expandIcon.className = "ti ti-player-pause-filled";
 
     playerSheet.classList.add("playing");
     miniPlayer.classList.add("playing");
     heroLogo.classList.add("is-live");
     heroEq.classList.add("show");
-    expandPlayerBtn.classList.add("is-live");
     playBtn.classList.add("is-live");
     liveBadge.classList.remove("offline");
 
@@ -1950,13 +2156,11 @@ function updateUIPlaying(state) {
   } else {
     icon.className = "ti ti-player-play-filled";
     miniIcon.className = "ti ti-player-play-filled";
-    expandIcon.className = "ti ti-player-play-filled";
 
     playerSheet.classList.remove("playing");
     miniPlayer.classList.remove("playing");
     heroLogo.classList.remove("is-live");
     heroEq.classList.remove("show");
-    expandPlayerBtn.classList.remove("is-live");
     playBtn.classList.remove("is-live");
 
     if (discRing) discRing.classList.remove("spin-on");
@@ -2051,8 +2255,9 @@ function updateTime() {
   const now = new Date();
 
   const time = now.toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit"
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true
   });
 
   const date = now.toDateString();
@@ -2065,6 +2270,21 @@ function updateTime() {
 }
 
 document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("gesturestart", e => e.preventDefault());
+document.addEventListener("gesturechange", e => e.preventDefault());
+document.addEventListener("gestureend", e => e.preventDefault());
+
+document.addEventListener("touchmove", e => {
+  if (e.touches.length > 1) e.preventDefault();
+}, { passive: false });
+
+let lastTouchEnd = 0;
+document.addEventListener("touchend", e => {
+  const now = Date.now();
+  if (now - lastTouchEnd <= 300) e.preventDefault();
+  lastTouchEnd = now;
+}, { passive: false });
 document.addEventListener("dragstart", e => e.preventDefault());
 
 let touchTimer;
