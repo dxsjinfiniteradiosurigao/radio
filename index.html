@@ -1072,45 +1072,76 @@ backdrop-filter:blur(20px);
 border:1px solid var(--border);
 border-radius:18px;
 padding:13px 14px;
-transition:transform .15s, border-color .25s, background .25s;
+transition:transform .15s, border-color .25s, background .3s, box-shadow .3s;
 cursor:pointer;
+position:relative;
+overflow:hidden;
 }
 
-.station-row.active{
-border-color:rgba(255,90,110,.35);
-background:linear-gradient(135deg,rgba(220,30,60,.1),rgba(77,125,255,.07));
+.station-row::after{
+content:'';
+position:absolute;
+inset:0;
+border-radius:18px;
+background:linear-gradient(135deg,rgba(220,30,60,.16),rgba(77,125,255,.12));
+opacity:0;
+transition:opacity .3s;
+pointer-events:none;
 }
 
-.station-row.active:active{
-transform:scale(.98);
+.station-row:active{
+transform:scale(.97);
 }
 
-.station-row.disabled{
-opacity:.55;
-cursor:default;
+.station-row.selected{
+border-color:rgba(255,90,110,.4);
+box-shadow:0 0 0 1px rgba(255,90,110,.15), 0 6px 20px rgba(220,30,60,.18);
+}
+
+.station-row.selected::after{
+opacity:1;
+}
+
+.station-row.selected .station-icon{
+animation:stationIconPulse .5s ease;
+}
+
+@keyframes stationIconPulse{
+0%{transform:scale(1);}
+40%{transform:scale(1.15);}
+100%{transform:scale(1);}
+}
+
+.station-row.is-live{
+border-color:rgba(255,90,110,.25);
 }
 
 .station-icon{
 width:42px;
 height:42px;
 border-radius:50%;
-background:linear-gradient(150deg,#4d7dff,#dc1e3c);
+background:var(--surface2);
 display:flex;
 align-items:center;
 justify-content:center;
 font-size:18px;
-color:#fff;
+color:var(--text3);
 flex-shrink:0;
+position:relative;
+z-index:1;
+transition:background .3s, color .3s;
 }
 
-.station-icon.muted{
-background:var(--surface2);
-color:var(--text3);
+.station-row.is-live .station-icon{
+background:linear-gradient(150deg,#4d7dff,#dc1e3c);
+color:#fff;
 }
 
 .station-info{
 flex:1;
 min-width:0;
+position:relative;
+z-index:1;
 }
 
 .station-name-row{
@@ -1141,13 +1172,14 @@ padding:5px 10px;
 border-radius:999px;
 flex-shrink:0;
 white-space:nowrap;
+position:relative;
+z-index:1;
 }
 
 .station-status.live{
 background:rgba(220,30,60,.16);
 color:#ff8fa3;
 border:1px solid rgba(255,90,110,.3);
-position:relative;
 }
 
 .station-status.live::before{
@@ -1164,6 +1196,32 @@ animation:blink 1.2s ease-in-out infinite;
 .station-status.soon{
 background:var(--surface2);
 color:var(--text3);
+}
+
+.station-coming-soon{
+text-align:center;
+padding:30px 10px 16px;
+}
+
+.station-coming-soon i{
+font-size:40px;
+color:var(--text3);
+margin-bottom:12px;
+}
+
+.station-coming-soon h3{
+font-weight:700;
+margin-bottom:8px;
+font-size:16px;
+}
+
+#stationScheduleCard{
+animation:scheduleSwap .35s ease;
+}
+
+@keyframes scheduleSwap{
+from{opacity:0;transform:translateY(6px);}
+to{opacity:1;transform:none;}
 }
 
 .news-item{
@@ -1384,60 +1442,24 @@ display:none;
         <h2>Listen</h2>
     </div>
 
-    <div class="glass-card">
-        <div class="section-title"><i class="ti ti-calendar-time" aria-hidden="true"></i>CURRENT PROGRAM</div>
-        <div id="currentProgram2">Loading...</div>
-        <div id="programStatus2">Checking Schedule...</div>
-        <div id="currentHost2" class="host-chip-row"></div>
+    <div class="glass-card" id="stationScheduleCard">
+        <div class="section-title" id="stationScheduleLabel"><i class="ti ti-calendar-time" aria-hidden="true"></i>TODAY'S SCHEDULE</div>
+        <div id="stationScheduleBody">
+            <div id="currentProgram2">Loading...</div>
+            <div id="programStatus2">Checking Schedule...</div>
+            <div id="currentHost2" class="host-chip-row"></div>
+            <div id="stationScheduleList2"></div>
+        </div>
+        <div id="stationComingSoonBody" class="station-coming-soon" style="display:none;">
+            <i class="ti ti-clock" aria-hidden="true"></i>
+            <h3 id="stationComingSoonName">Coming Soon</h3>
+            <p style="color:var(--text2);">This station's live stream and schedule will be available soon.</p>
+        </div>
     </div>
 
     <div class="section-title station-list-title"><i class="ti ti-list" aria-hidden="true"></i>INFINITE RADIO NETWORK</div>
 
-    <div class="station-list">
-        <div class="station-row active" id="stationDXSJ">
-            <div class="station-icon"><i class="ti ti-broadcast" aria-hidden="true"></i></div>
-            <div class="station-info">
-                <div class="station-name-row">
-                    <span class="station-name-text">93.3 Infinite Radio Surigao</span>
-                </div>
-                <div class="station-sub-text">Surigao City</div>
-            </div>
-            <div class="station-status live">LIVE</div>
-        </div>
-
-        <div class="station-row disabled">
-            <div class="station-icon muted"><i class="ti ti-broadcast" aria-hidden="true"></i></div>
-            <div class="station-info">
-                <div class="station-name-row">
-                    <span class="station-name-text">Infinite Radio Manila</span>
-                </div>
-                <div class="station-sub-text">Metro Manila</div>
-            </div>
-            <div class="station-status soon">COMING SOON</div>
-        </div>
-
-        <div class="station-row disabled">
-            <div class="station-icon muted"><i class="ti ti-broadcast" aria-hidden="true"></i></div>
-            <div class="station-info">
-                <div class="station-name-row">
-                    <span class="station-name-text">Infinite Radio Cebu</span>
-                </div>
-                <div class="station-sub-text">Cebu City</div>
-            </div>
-            <div class="station-status soon">COMING SOON</div>
-        </div>
-
-        <div class="station-row disabled">
-            <div class="station-icon muted"><i class="ti ti-broadcast" aria-hidden="true"></i></div>
-            <div class="station-info">
-                <div class="station-name-row">
-                    <span class="station-name-text">Infinite Radio Davao</span>
-                </div>
-                <div class="station-sub-text">Davao City</div>
-            </div>
-            <div class="station-status soon">COMING SOON</div>
-        </div>
-    </div>
+    <div class="station-list" id="stationList"></div>
 </section>
 
 <section id="watchTab" class="tab-page">
@@ -1681,6 +1703,165 @@ function getCurrentProgram(){
   return {current,next};
 }
 
+const networkStations = [
+  { id:"aurora", name:"88.1 AIMCOOP INFINITE RADIO", location:"Aurora", live:false },
+  { id:"bislig", name:"100.1 INFINITE RADIO", location:"Bislig", live:false },
+  { id:"bukidnon", name:"94.5 PARTNER RADIO", location:"Bukidnon", live:false },
+  { id:"butuan", name:"90.1 NONGLADING INFINITE RADIO", location:"Butuan", live:false },
+  { id:"calbayog", name:"92.1 Infinite Radio", location:"Calbayog", live:false },
+  { id:"claver", name:"99.3 INFINITE RADIO", location:"Claver", live:false },
+  { id:"gensan", name:"96.7 INFINITE RADIO", location:"Gensan", live:false },
+  { id:"isulan", name:"93.3 INFINITE RADIO", location:"Isulan", live:false },
+  { id:"jagna", name:"92.9 INFINITE RADIO", location:"Jagna", live:false },
+  { id:"lipa", name:"INFINITE RADIO 102.3", location:"Lipa Batangas", live:false },
+  { id:"mati", name:"107.9 INFINITE RADIO", location:"Mati", live:false },
+  { id:"oroquieta", name:"94.5 PARTNER RADIO", location:"Oroquieta", live:false },
+  { id:"panabo", name:"96.1 INFINITE RADIO", location:"Panabo", live:false },
+  { id:"sanfrancisco", name:"100.1 NONGLADING INFINITE RADIO", location:"San Francisco", live:false },
+  { id:"sugbongcogon", name:"100.3 INFINITE RADIO", location:"Sugbongcogon", live:false },
+  { id:"surigao", name:"93.3 Infinite Radio", location:"Surigao City", live:true },
+  { id:"tandag", name:"90.1 INFINITE RADIO", location:"Tandag", live:false },
+  { id:"valencia", name:"91.3 NONGLADING INFINITE RADIO", location:"Valencia", live:false },
+  { id:"villaba", name:"94.9 INFINITE RADIO", location:"Villaba", live:false },
+  { id:"partnerfm", name:"94.3 PARTNER RADIO FM", location:"", live:false }
+];
+
+let selectedStationId = "surigao";
+
+function renderStationList(){
+  const container = document.getElementById("stationList");
+  if(!container) return;
+
+  container.innerHTML = networkStations.map(s => {
+    const isSelected = s.id === selectedStationId;
+    const isLive = s.live;
+    const rowClasses = ["station-row"];
+    if(isSelected) rowClasses.push("selected");
+    if(isLive) rowClasses.push("is-live");
+
+    return `
+      <div class="${rowClasses.join(' ')}" data-station-id="${s.id}" role="button" tabindex="0">
+        <div class="station-icon"><i class="ti ti-broadcast" aria-hidden="true"></i></div>
+        <div class="station-info">
+          <div class="station-name-row">
+            <span class="station-name-text">${s.name}</span>
+          </div>
+          <div class="station-sub-text">${s.location || "Infinite Radio Network"}</div>
+        </div>
+        <div class="station-status ${isLive ? 'live' : 'soon'}">${isLive ? 'LIVE' : 'COMING SOON'}</div>
+      </div>
+    `;
+  }).join("");
+
+  container.querySelectorAll(".station-row").forEach(row => {
+    row.addEventListener("click", () => selectStation(row.dataset.stationId));
+    row.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        selectStation(row.dataset.stationId);
+      }
+    });
+  });
+}
+
+function selectStation(stationId){
+  const wasAlreadySelected = stationId === selectedStationId;
+  const station = networkStations.find(s => s.id === stationId);
+
+  selectedStationId = stationId;
+  renderStationList();
+  renderStationSchedulePanel();
+
+  if(wasAlreadySelected && station && station.live){
+    playerSheet.classList.add("show");
+  }
+}
+
+function renderStationSchedulePanel(){
+  const station = networkStations.find(s => s.id === selectedStationId);
+  if(!station) return;
+
+  const label = document.getElementById("stationScheduleLabel");
+  const scheduleBody = document.getElementById("stationScheduleBody");
+  const comingSoonBody = document.getElementById("stationComingSoonBody");
+  const comingSoonName = document.getElementById("stationComingSoonName");
+  const card = document.getElementById("stationScheduleCard");
+
+  if(card){
+    card.classList.remove("schedule-swap-replay");
+    void card.offsetWidth;
+    card.style.animation = "none";
+    void card.offsetWidth;
+    card.style.animation = "";
+  }
+
+  if(station.live){
+    label.innerHTML = `<i class="ti ti-calendar-time" aria-hidden="true"></i>TODAY'S SCHEDULE`;
+    scheduleBody.style.display = "";
+    comingSoonBody.style.display = "none";
+    updateScheduleUI();
+    renderScheduleList2();
+  } else {
+    label.innerHTML = `<i class="ti ti-broadcast" aria-hidden="true"></i>${station.name}`;
+    scheduleBody.style.display = "none";
+    comingSoonBody.style.display = "";
+    comingSoonName.textContent = station.location ? `${station.name} \u2013 ${station.location}` : station.name;
+  }
+}
+
+function renderScheduleList2(){
+  const container = document.getElementById("stationScheduleList2");
+  if(!container) return;
+
+  const now = new Date();
+  const today = now.getDay();
+  const mins = now.getHours()*60 + now.getMinutes();
+
+  const todays = schedule
+    .filter(s => s.days.includes(today))
+    .slice()
+    .sort((a,b) => toMinutes(a.start) - toMinutes(b.start));
+
+  if(todays.length === 0){
+    container.innerHTML = `
+      <div class="schedule-item">
+        <div class="schedule-title" style="text-align:left;">No scheduled programs today. Enjoy our music automation!</div>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = todays.map(s => {
+    const start = toMinutes(s.start);
+    const end = toMinutes(s.end);
+    const isNow = mins >= start && mins < end;
+
+    const hostsHTML = (s.hosts && s.hosts.length) ? `
+      <div class="host-chip-row">
+        ${s.hosts.map(h => `
+          <div class="host-chip">
+            <img src="${h.photo}" alt="${h.name}">
+            <span>${h.name}</span>
+          </div>
+        `).join("")}
+      </div>
+    ` : "";
+
+    return `
+      <div class="schedule-item${isNow ? ' schedule-item-now' : ''}">
+        <div class="schedule-time">${s.start} - ${s.end}</div>
+        <div class="schedule-main">
+          <div class="schedule-title">
+            ${s.title}
+            ${isNow ? '<span class="schedule-now-badge">NOW</span>' : ''}
+          </div>
+          ${hostsHTML}
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
 function updateScheduleUI(){
   const {current,next} = getCurrentProgram();
 
@@ -1905,13 +2086,6 @@ nowPlayingCard.addEventListener("keydown", (e) => {
     playerSheet.classList.add("show");
   }
 });
-
-const stationDXSJ = document.getElementById("stationDXSJ");
-if (stationDXSJ) {
-  stationDXSJ.addEventListener("click", () => {
-    playerSheet.classList.add("show");
-  });
-}
 
 albumArt.addEventListener("click", () => {
   if (!isPlaying) startStream();
@@ -2296,12 +2470,17 @@ resizeCanvas();
 switchTab("home");
 renderScheduleList();
 updateScheduleUI();
+renderStationList();
+renderStationSchedulePanel();
 updateTime();
 
 setInterval(updateTime, 1000);
 setInterval(() => {
   updateScheduleUI();
   renderScheduleList();
+  if(document.getElementById("stationScheduleBody") && document.getElementById("stationScheduleBody").style.display !== "none"){
+    renderScheduleList2();
+  }
 }, 15000);
 setInterval(checkProgramAlerts, 60000);
 
