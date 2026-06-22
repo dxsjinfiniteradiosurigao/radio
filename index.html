@@ -582,6 +582,103 @@ color:#ff8fa3;
 transform:translateX(3px);
 }
 
+.yt-live-banner{
+display:flex;
+align-items:center;
+gap:12px;
+cursor:pointer;
+transition:transform .15s, border-color .25s;
+border-color:rgba(255,90,110,.3);
+background:linear-gradient(135deg,rgba(220,30,60,.1),rgba(77,125,255,.06));
+animation:ytBannerIn .4s cubic-bezier(.22,1,.36,1);
+}
+
+@keyframes ytBannerIn{
+from{opacity:0;transform:translateY(-8px) scaleY(.94);}
+to{opacity:1;transform:none;}
+}
+
+.yt-live-banner:active{transform:scale(.98);}
+.yt-live-banner:hover{border-color:rgba(255,90,110,.5);}
+
+.yt-banner-preview{
+width:72px;
+height:72px;
+border-radius:14px;
+overflow:hidden;
+flex-shrink:0;
+background:#000;
+position:relative;
+}
+
+.yt-banner-preview iframe{
+position:absolute;
+top:50%;
+left:50%;
+width:260%;
+height:260%;
+transform:translate(-50%,-50%);
+pointer-events:none;
+}
+
+.yt-banner-info{flex:1;min-width:0;}
+
+.yt-banner-badge{
+display:inline-flex;
+align-items:center;
+gap:6px;
+font-size:10px;
+font-weight:800;
+letter-spacing:1px;
+color:#ff8fa3;
+margin-bottom:4px;
+}
+
+.yt-banner-title{
+font-size:14px;
+font-weight:700;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+}
+
+.yt-video-wrap{
+position:relative;
+width:100%;
+padding-top:56.25%;
+border-radius:var(--radius);
+overflow:hidden;
+margin-bottom:16px;
+background:#000;
+box-shadow:var(--shadow);
+}
+
+.yt-video-wrap iframe{
+position:absolute;
+inset:0;
+width:100%;
+height:100%;
+border:none;
+}
+
+.yt-chat-card{
+padding:16px 0 0;
+overflow:hidden;
+}
+
+.yt-chat-card .section-title{padding:0 18px;}
+
+.yt-chat-wrap{
+width:100%;
+height:420px;
+}
+
+.yt-chat-wrap iframe{
+width:100%;
+height:100%;
+border:none;
+}
+
 .section-title{
 font-size:12px;
 font-weight:800;
@@ -1640,6 +1737,17 @@ display:none;
         <p>Surigao City &bull; 93.3 FM</p>
     </div>
 
+    <div class="glass-card yt-live-banner" id="ytLiveBanner" role="button" tabindex="0" aria-label="Watch live now" style="display:none;">
+        <div class="yt-banner-preview">
+            <iframe id="ytBannerFrame" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen tabindex="-1"></iframe>
+        </div>
+        <div class="yt-banner-info">
+            <div class="yt-banner-badge"><span class="pulse"></span>LIVE NOW</div>
+            <div class="yt-banner-title">Watch the livestream</div>
+        </div>
+        <i class="ti ti-chevron-right now-playing-chevron" aria-hidden="true"></i>
+    </div>
+
     <div class="glass-card now-playing-tap" id="nowPlayingCard" role="button" tabindex="0" aria-label="Open player">
         <div class="card-label"><i class="ti ti-disc" aria-hidden="true"></i>NOW PLAYING</div>
         <div class="now-playing-row">
@@ -1672,10 +1780,23 @@ display:none;
     <div class="page-header">
         <h2>Watch Live</h2>
     </div>
-    <div class="glass-card placeholder-block">
+
+    <div id="watchLiveContent" style="display:none;">
+        <div class="yt-video-wrap">
+            <iframe id="ytWatchFrame" src="" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+        <div class="glass-card yt-chat-card">
+            <div class="section-title"><i class="ti ti-message-circle" aria-hidden="true"></i>LIVE CHAT</div>
+            <div class="yt-chat-wrap">
+                <iframe id="ytChatFrame" src="" frameborder="0"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <div class="glass-card placeholder-block" id="watchOfflinePlaceholder">
         <i class="ti ti-video" aria-hidden="true"></i>
-        <h3>Livestream Coming Soon</h3>
-        <p style="color:var(--text2);">Video streaming will be available here.</p>
+        <h3>Livestream Offline</h3>
+        <p style="color:var(--text2);">We're not live on YouTube right now. Check back soon!</p>
     </div>
 </section>
 
@@ -1919,18 +2040,18 @@ const networkStations = [
   { id:"bislig", name:"100.1 INFINITE RADIO", location:"Bislig", live:false },
   { id:"bukidnon", name:"94.5 PARTNER RADIO", location:"Bukidnon", live:false },
   { id:"butuan", name:"90.1 NONGLADING INFINITE RADIO", location:"Butuan", live:false },
-  { id:"calbayog", name:"92.1 INFINITE RADIO", location:"Calbayog", live:false },
+  { id:"calbayog", name:"92.1 Infinite Radio", location:"Calbayog", live:false },
   { id:"claver", name:"99.3 INFINITE RADIO", location:"Claver", live:false },
   { id:"gensan", name:"96.7 INFINITE RADIO", location:"Gensan", live:false },
   { id:"isulan", name:"93.3 INFINITE RADIO", location:"Isulan", live:false },
   { id:"jagna", name:"92.9 INFINITE RADIO", location:"Jagna", live:false },
-  { id:"lipa", name:"102.3 INFINITE RADIO", location:"Lipa", live:false },
+  { id:"lipa", name:"INFINITE RADIO 102.3", location:"Lipa Batangas", live:false },
   { id:"mati", name:"107.9 INFINITE RADIO", location:"Mati", live:false },
   { id:"oroquieta", name:"94.5 PARTNER RADIO", location:"Oroquieta", live:false },
   { id:"panabo", name:"96.1 INFINITE RADIO", location:"Panabo", live:false },
   { id:"sanfrancisco", name:"100.1 NONGLADING INFINITE RADIO", location:"San Francisco", live:false },
   { id:"sugbongcogon", name:"100.3 INFINITE RADIO", location:"Sugbongcogon", live:false },
-  { id:"surigao", name:"93.3 INFINITE RADIO", location:"Surigao", live:true },
+  { id:"surigao", name:"93.3 Infinite Radio", location:"Surigao City", live:true },
   { id:"tandag", name:"90.1 INFINITE RADIO", location:"Tandag", live:false },
   { id:"valencia", name:"91.3 NONGLADING INFINITE RADIO", location:"Valencia", live:false },
   { id:"villaba", name:"94.9 INFINITE RADIO", location:"Villaba", live:false },
@@ -2195,6 +2316,98 @@ window.addEventListener("resize", resizeCanvas);
 
 const STREAM_URL =
 "https://stream-02.surfernetwork.com/yy0d3w86zxhvv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJ5eTBkM3c4Nnp4aHZ2IiwiaG9zdCI6InN0cmVhbS0wMi5zdXJmZXJuZXR3b3JrLmNvbSIsInJ0dGwiOjUsImp0aSI6IkE2cEVTYm5fU25HbThuWm9EanNfMnciLCJpYXQiOjE3ODE2NjE2NzMsImV4cCI6MTc4MTY2MTczM30.6Tn_3u43yGL4md_7fNktLhT3ZH-n2icVwyeM7oq0kXE";
+
+const YT_API_KEY = "AIzaSyDyDPFf592sReUiXF5B_re0iBzLEL0qi74";
+const YT_CHANNEL_ID = "UCw-3ZPyFuyVEK7p72f1RcGw";
+let ytLiveVideoId = null;
+let ytIsLive = false;
+
+async function checkYouTubeLive(){
+  try {
+    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${YT_CHANNEL_ID}&eventType=live&type=video&key=${YT_API_KEY}`;
+    const res = await fetch(url);
+    const data = await res.json();
+
+    if (data.items && data.items.length > 0) {
+      const videoId = data.items[0].id.videoId;
+      setYouTubeLive(videoId);
+    } else {
+      setYouTubeOffline();
+    }
+  } catch (e) {
+    console.log("YouTube live check failed", e);
+  }
+}
+
+function setYouTubeLive(videoId){
+  const wasAlreadyLive = ytIsLive && ytLiveVideoId === videoId;
+  ytIsLive = true;
+  ytLiveVideoId = videoId;
+
+  if (wasAlreadyLive) return;
+
+  const banner = document.getElementById("ytLiveBanner");
+  const bannerFrame = document.getElementById("ytBannerFrame");
+  if (banner && bannerFrame) {
+    bannerFrame.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&modestbranding=1&playsinline=1`;
+    banner.style.display = "flex";
+  }
+
+  const watchContent = document.getElementById("watchLiveContent");
+  const watchFrame = document.getElementById("ytWatchFrame");
+  const chatFrame = document.getElementById("ytChatFrame");
+  const offlinePlaceholder = document.getElementById("watchOfflinePlaceholder");
+
+  if (watchContent && watchFrame && chatFrame && offlinePlaceholder) {
+    const embedHost = window.location.hostname || "localhost";
+    watchFrame.src = `https://www.youtube.com/embed/${videoId}?autoplay=0&modestbranding=1&playsinline=1`;
+    chatFrame.src = `https://www.youtube.com/live_chat?v=${videoId}&embed_domain=${embedHost}`;
+    watchContent.style.display = "block";
+    offlinePlaceholder.style.display = "none";
+  }
+}
+
+function setYouTubeOffline(){
+  const wasAlreadyOffline = !ytIsLive;
+  ytIsLive = false;
+  ytLiveVideoId = null;
+
+  if (wasAlreadyOffline) return;
+
+  const banner = document.getElementById("ytLiveBanner");
+  const bannerFrame = document.getElementById("ytBannerFrame");
+  if (banner && bannerFrame) {
+    bannerFrame.src = "";
+    banner.style.display = "none";
+  }
+
+  const watchContent = document.getElementById("watchLiveContent");
+  const watchFrame = document.getElementById("ytWatchFrame");
+  const chatFrame = document.getElementById("ytChatFrame");
+  const offlinePlaceholder = document.getElementById("watchOfflinePlaceholder");
+
+  if (watchContent && watchFrame && chatFrame && offlinePlaceholder) {
+    watchFrame.src = "";
+    chatFrame.src = "";
+    watchContent.style.display = "none";
+    offlinePlaceholder.style.display = "block";
+  }
+}
+
+const ytLiveBanner = document.getElementById("ytLiveBanner");
+if (ytLiveBanner) {
+  ytLiveBanner.addEventListener("click", () => {
+    const watchNavBtn = document.querySelector('.nav-btn[data-tab="watch"]');
+    if (watchNavBtn) watchNavBtn.click();
+  });
+  ytLiveBanner.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      const watchNavBtn = document.querySelector('.nav-btn[data-tab="watch"]');
+      if (watchNavBtn) watchNavBtn.click();
+    }
+  });
+}
 
 const audio = document.getElementById("audio");
 
@@ -2799,6 +3012,7 @@ renderScheduleList();
 updateScheduleUI();
 renderStationList();
 updateTime();
+checkYouTubeLive();
 
 setInterval(updateTime, 1000);
 setInterval(() => {
@@ -2809,6 +3023,7 @@ setInterval(() => {
   }
 }, 15000);
 setInterval(checkProgramAlerts, 60000);
+setInterval(checkYouTubeLive, 900000);
 setInterval(() => {
   const locText = document.getElementById("locationText");
   if (locText && locText.dataset.lat && locText.dataset.lon) {
