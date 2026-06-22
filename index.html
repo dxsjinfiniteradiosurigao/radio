@@ -94,7 +94,18 @@ animation:gradientShift 18s ease-in-out infinite;
 50%{filter:brightness(1.08) saturate(1.15);}
 }
 
-#bgBlur1,#bgBlur2,#bgBlur3{
+#bgSweep{
+position:fixed;
+inset:-50%;
+z-index:-19;
+background:conic-gradient(from 0deg,transparent 0deg,rgba(58,95,217,.07) 90deg,transparent 180deg,rgba(220,30,60,.06) 270deg,transparent 360deg);
+animation:sweepRotate 40s linear infinite;
+will-change:transform;
+}
+
+@keyframes sweepRotate{to{transform:rotate(360deg);}}
+
+#bgBlur1,#bgBlur2,#bgBlur3,#bgBlur4{
 position:fixed;
 border-radius:50%;
 filter:blur(85px);
@@ -131,6 +142,16 @@ opacity:.3;
 animation:floatBlob3 32s ease-in-out infinite;
 }
 
+#bgBlur4{
+width:180px;
+height:180px;
+background:#ff4d7a;
+right:8%;
+bottom:8%;
+opacity:.22;
+animation:floatBlob4 36s ease-in-out infinite;
+}
+
 @keyframes floatBlob1{
 0%,100%{transform:translate(0,0) scale(1);}
 25%{transform:translate(40px,50px) scale(1.08);}
@@ -148,6 +169,12 @@ animation:floatBlob3 32s ease-in-out infinite;
 0%,100%{transform:translate(0,0) scale(1);}
 40%{transform:translate(50px,-40px) scale(1.12);}
 70%{transform:translate(-30px,-20px) scale(.96);}
+}
+
+@keyframes floatBlob4{
+0%,100%{transform:translate(0,0) scale(1);}
+35%{transform:translate(-40px,-50px) scale(1.15);}
+65%{transform:translate(30px,-20px) scale(.9);}
 }
 
 .tab-page{
@@ -275,11 +302,11 @@ margin-bottom:26px;
 
 #timeBlock{
 text-align:center;
-margin-bottom:24px;
+margin-bottom:14px;
 }
 
 #currentTime{
-font-size:46px;
+font-size:44px;
 font-weight:800;
 letter-spacing:-2px;
 }
@@ -287,6 +314,48 @@ letter-spacing:-2px;
 #currentDate{
 font-size:13px;
 color:var(--text2);
+}
+
+.location-weather-row{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:6px;
+background:var(--surface);
+border:1px solid var(--border);
+border-radius:999px;
+padding:7px 16px;
+margin-bottom:20px;
+font-size:12px;
+font-weight:600;
+color:var(--text2);
+cursor:pointer;
+transition:background .2s, border-color .2s, transform .15s;
+max-width:100%;
+}
+
+.location-weather-row i{font-size:14px;color:var(--text3);flex-shrink:0;}
+
+.location-weather-row:hover{background:var(--surface2);}
+.location-weather-row:active{transform:scale(.97);}
+
+.location-weather-row.has-weather{
+border-color:rgba(255,90,110,.25);
+color:var(--text);
+}
+
+.location-weather-row.has-weather i{color:#ff8fa3;}
+
+.weather-divider{
+color:var(--text3);
+font-size:10px;
+}
+
+#locationText,#weatherText{
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+max-width:160px;
 }
 
 .hero-logo{
@@ -356,13 +425,13 @@ box-shadow:0 0 32px rgba(220,30,60,.6);
 
 .eq-overlay{
 position:absolute;
-bottom:26px;
+bottom:28px;
 left:50%;
 transform:translateX(-50%);
 display:flex;
 align-items:flex-end;
-gap:4px;
-height:22px;
+gap:3px;
+height:16px;
 z-index:2;
 opacity:0;
 transition:opacity .3s;
@@ -372,8 +441,8 @@ pointer-events:none;
 .eq-overlay.show{opacity:1;}
 
 .eq-overlay span{
-width:3.5px;
-border-radius:3px;
+width:2.5px;
+border-radius:2px;
 background:linear-gradient(180deg,#fff,#ff7a90);
 animation:eqAnim .6s ease-in-out infinite alternate;
 animation-play-state:paused;
@@ -381,12 +450,11 @@ animation-play-state:paused;
 
 .eq-overlay.show span{animation-play-state:running;}
 
-.eq-overlay span:nth-child(1){height:45%;animation-delay:0s;}
-.eq-overlay span:nth-child(2){height:95%;animation-delay:.13s;}
+.eq-overlay span:nth-child(1){height:40%;animation-delay:0s;}
+.eq-overlay span:nth-child(2){height:90%;animation-delay:.13s;}
 .eq-overlay span:nth-child(3){height:60%;animation-delay:.26s;}
 .eq-overlay span:nth-child(4){height:100%;animation-delay:.07s;}
 .eq-overlay span:nth-child(5){height:50%;animation-delay:.2s;}
-.eq-overlay span:nth-child(6){height:75%;animation-delay:.16s;}
 
 @keyframes eqAnim{
 from{transform:scaleY(.3);opacity:.8;}
@@ -1371,9 +1439,11 @@ display:none;
 <body oncontextmenu="return false;">
 
 <div id="bgGradient"></div>
+<div id="bgSweep"></div>
 <div id="bgBlur1"></div>
 <div id="bgBlur2"></div>
 <div id="bgBlur3"></div>
+<div id="bgBlur4"></div>
 
 <div id="app">
 
@@ -1400,6 +1470,13 @@ display:none;
             <div id="currentDate">Loading Date...</div>
         </div>
 
+        <button id="locationWeatherRow" class="location-weather-row" aria-label="Enable location for local weather">
+            <i class="ti ti-map-pin" aria-hidden="true"></i>
+            <span id="locationText">Tap to enable location</span>
+            <span class="weather-divider" id="weatherDivider" style="display:none;">&bull;</span>
+            <span id="weatherText"></span>
+        </button>
+
         <div class="hero-logo">
             <div class="disc-ring" id="discRing"></div>
             <div class="station-logo" id="heroLogo">
@@ -1407,7 +1484,7 @@ display:none;
                     <i class="ti ti-broadcast" aria-hidden="true"></i>
                 </div>
                 <div class="eq-overlay" id="heroEq">
-                    <span></span><span></span><span></span><span></span><span></span><span></span>
+                    <span></span><span></span><span></span><span></span><span></span>
                 </div>
             </div>
         </div>
@@ -1428,11 +1505,8 @@ display:none;
     </div>
 
     <div class="glass-card">
-        <div class="section-title"><i class="ti ti-calendar-time" aria-hidden="true"></i>CURRENT PROGRAM</div>
-        <div id="currentProgram">Loading...</div>
-        <div id="programStatus">Checking Schedule...</div>
-        <div id="currentHost" class="host-chip-row"></div>
-        <div id="nextProgram">Loading...</div>
+        <div class="section-title"><i class="ti ti-calendar-event" aria-hidden="true"></i>TODAY'S SCHEDULE</div>
+        <div id="scheduleContainer"></div>
     </div>
 
 </section>
@@ -1497,10 +1571,6 @@ display:none;
             DXSJ 93.3 Infinite Radio is a local FM station broadcasting live from Surigao City,
             bringing you news, music, and community programs around the clock.
         </p>
-    </div>
-    <div class="glass-card">
-        <div class="section-title"><i class="ti ti-calendar-event" aria-hidden="true"></i>TODAY'S SCHEDULE</div>
-        <div id="scheduleContainer"></div>
     </div>
 </section>
 
@@ -2443,6 +2513,103 @@ function updateTime() {
   if (d) d.textContent = date;
 }
 
+const weatherCodeMap = {
+  0: { label: "Clear sky", icon: "ti-sun" },
+  1: { label: "Mostly clear", icon: "ti-sun" },
+  2: { label: "Partly cloudy", icon: "ti-cloud" },
+  3: { label: "Overcast", icon: "ti-cloud" },
+  45: { label: "Foggy", icon: "ti-haze" },
+  48: { label: "Foggy", icon: "ti-haze" },
+  51: { label: "Light drizzle", icon: "ti-droplet" },
+  53: { label: "Drizzle", icon: "ti-droplet" },
+  55: { label: "Heavy drizzle", icon: "ti-droplet" },
+  61: { label: "Light rain", icon: "ti-cloud-rain" },
+  63: { label: "Rain", icon: "ti-cloud-rain" },
+  65: { label: "Heavy rain", icon: "ti-cloud-rain" },
+  71: { label: "Light snow", icon: "ti-snowflake" },
+  73: { label: "Snow", icon: "ti-snowflake" },
+  75: { label: "Heavy snow", icon: "ti-snowflake" },
+  80: { label: "Rain showers", icon: "ti-cloud-rain" },
+  81: { label: "Rain showers", icon: "ti-cloud-rain" },
+  82: { label: "Heavy showers", icon: "ti-cloud-rain" },
+  95: { label: "Thunderstorm", icon: "ti-bolt" },
+  96: { label: "Thunderstorm", icon: "ti-bolt" },
+  99: { label: "Thunderstorm", icon: "ti-bolt" }
+};
+
+function setLocationRowState(iconClass, text, hasWeather){
+  const row = document.getElementById("locationWeatherRow");
+  const icon = row ? row.querySelector("i") : null;
+  if (icon) icon.className = "ti " + iconClass;
+  const locText = document.getElementById("locationText");
+  if (locText) locText.textContent = text;
+  if (row) row.classList.toggle("has-weather", !!hasWeather);
+}
+
+async function fetchWeather(lat, lon){
+  try {
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&timezone=auto`;
+    const res = await fetch(url);
+    const data = await res.json();
+
+    const temp = Math.round(data.current.temperature_2m);
+    const code = data.current.weather_code;
+    const info = weatherCodeMap[code] || { label: "", icon: "ti-cloud" };
+
+    const weatherText = document.getElementById("weatherText");
+    const weatherDivider = document.getElementById("weatherDivider");
+    if (weatherText) weatherText.textContent = `${temp}\u00B0C \u2013 ${info.label}`;
+    if (weatherDivider) weatherDivider.style.display = "";
+
+    setLocationRowState(info.icon, document.getElementById("locationText").dataset.place || "Current location", true);
+  } catch (e) {
+    console.log("Weather fetch failed", e);
+  }
+}
+
+async function reverseGeocode(lat, lon){
+  try {
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&timezone=auto`;
+    const res = await fetch(url);
+    const data = await res.json();
+    return data.timezone ? data.timezone.split("/").pop().replace(/_/g, " ") : "Current location";
+  } catch (e) {
+    return "Current location";
+  }
+}
+
+function requestLocationWeather(){
+  if (!("geolocation" in navigator)) {
+    setLocationRowState("ti-map-pin-off", "Location not supported", false);
+    return;
+  }
+
+  setLocationRowState("ti-loader-2", "Locating...", false);
+
+  navigator.geolocation.getCurrentPosition(
+    async (pos) => {
+      const { latitude, longitude } = pos.coords;
+      const placeName = await reverseGeocode(latitude, longitude);
+
+      const locText = document.getElementById("locationText");
+      if (locText) locText.dataset.place = placeName;
+
+      setLocationRowState("ti-map-pin", placeName, false);
+      fetchWeather(latitude, longitude);
+    },
+    (err) => {
+      console.log("Geolocation denied or failed", err);
+      setLocationRowState("ti-map-pin-off", "Tap to enable location", false);
+    },
+    { enableHighAccuracy: false, timeout: 10000, maximumAge: 600000 }
+  );
+}
+
+const locationWeatherRow = document.getElementById("locationWeatherRow");
+if (locationWeatherRow) {
+  locationWeatherRow.addEventListener("click", requestLocationWeather);
+}
+
 document.addEventListener("contextmenu", e => e.preventDefault());
 
 document.addEventListener("gesturestart", e => e.preventDefault());
@@ -2473,6 +2640,7 @@ updateScheduleUI();
 renderStationList();
 renderStationSchedulePanel();
 updateTime();
+requestLocationWeather();
 
 setInterval(updateTime, 1000);
 setInterval(() => {
@@ -2483,6 +2651,16 @@ setInterval(() => {
   }
 }, 15000);
 setInterval(checkProgramAlerts, 60000);
+setInterval(() => {
+  const locText = document.getElementById("locationText");
+  if (locText && locText.dataset.place) {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => fetchWeather(pos.coords.latitude, pos.coords.longitude),
+      () => {},
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 600000 }
+    );
+  }
+}, 600000);
 
 function tryAutoplay(){
   startStream().catch(() => {});
