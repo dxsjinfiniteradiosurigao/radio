@@ -1874,6 +1874,15 @@ function toMinutes(t){
   return h*60 + m;
 }
 
+function formatTime12(t){
+  let [h,m] = t.split(":").map(Number);
+  const period = h >= 12 ? "PM" : "AM";
+  let h12 = h % 12;
+  if (h12 === 0) h12 = 12;
+  const mStr = m < 10 ? "0" + m : String(m);
+  return `${h12}:${mStr} ${period}`;
+}
+
 function getCurrentProgram(){
   const now = new Date();
   const day = now.getDay();
@@ -1974,6 +1983,11 @@ function selectStation(stationId){
 
   if(wasAlreadySelected && station && station.live){
     playerSheet.classList.add("show");
+  } else {
+    const card = document.getElementById("stationScheduleCard");
+    if(card){
+      card.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   }
 }
 
@@ -2101,7 +2115,7 @@ function renderScheduleList(){
 
     return `
       <div class="schedule-item${isNow ? ' schedule-item-now' : ''}">
-        <div class="schedule-time">${s.start} - ${s.end}</div>
+        <div class="schedule-time">${formatTime12(s.start)} - ${formatTime12(s.end)}</div>
         <div class="schedule-main">
           <div class="schedule-title">
             ${s.title}
@@ -2763,7 +2777,6 @@ updateScheduleUI();
 renderStationList();
 renderStationSchedulePanel();
 updateTime();
-requestLocationWeather();
 
 setInterval(updateTime, 1000);
 setInterval(() => {
@@ -2773,12 +2786,8 @@ setInterval(() => {
 setInterval(checkProgramAlerts, 60000);
 setInterval(() => {
   const locText = document.getElementById("locationText");
-  if (locText && locText.dataset.place) {
-    navigator.geolocation.getCurrentPosition(
-      (pos) => fetchWeather(pos.coords.latitude, pos.coords.longitude),
-      () => {},
-      { enableHighAccuracy: false, timeout: 10000, maximumAge: 600000 }
-    );
+  if (locText && locText.dataset.lat && locText.dataset.lon) {
+    fetchWeather(locText.dataset.lat, locText.dataset.lon, locText.dataset.place);
   }
 }, 600000);
 
