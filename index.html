@@ -1336,12 +1336,34 @@ font-size:16px;
 }
 
 #stationScheduleCard{
-animation:scheduleSwap .35s ease;
+animation:scheduleSwap .4s cubic-bezier(.22,1,.36,1);
 }
 
 @keyframes scheduleSwap{
-from{opacity:0;transform:translateY(6px);}
-to{opacity:1;transform:none;}
+from{opacity:0;transform:translateY(-8px) scaleY(.92);max-height:0;}
+to{opacity:1;transform:none;max-height:400px;}
+}
+
+.inline-station-panel{
+margin:-2px 0 0;
+border-top-left-radius:8px;
+border-top-right-radius:8px;
+position:relative;
+}
+
+.inline-station-panel::before{
+content:'';
+position:absolute;
+top:-9px;
+left:32px;
+width:14px;
+height:14px;
+background:inherit;
+border-left:1px solid var(--border);
+border-top:1px solid var(--border);
+transform:rotate(45deg);
+border-radius:3px 0 0 0;
+z-index:0;
 }
 
 .current-program-card{
@@ -1641,26 +1663,6 @@ display:none;
         <h2>Listen</h2>
     </div>
 
-    <div class="glass-card current-program-card" id="stationScheduleCard">
-        <div class="section-title" id="stationScheduleLabel"><i class="ti ti-broadcast" aria-hidden="true"></i>CURRENT PROGRAM</div>
-        <div id="stationScheduleBody">
-            <div class="current-program-glow"></div>
-            <div class="current-program-row">
-                <div class="current-program-pulse-dot"></div>
-                <div class="current-program-text">
-                    <div id="currentProgram2">Loading...</div>
-                    <div id="programStatus2">Checking Schedule...</div>
-                </div>
-            </div>
-            <div id="currentHost2" class="host-chip-row"></div>
-        </div>
-        <div id="stationComingSoonBody" class="station-coming-soon" style="display:none;">
-            <i class="ti ti-clock" aria-hidden="true"></i>
-            <h3 id="stationComingSoonName">Coming Soon</h3>
-            <p style="color:var(--text2);">This station's live stream and schedule will be available soon.</p>
-        </div>
-    </div>
-
     <div class="section-title station-list-title"><i class="ti ti-list" aria-hidden="true"></i>INFINITE RADIO NETWORK</div>
 
     <div class="station-list" id="stationList"></div>
@@ -1937,18 +1939,60 @@ const networkStations = [
 
 let selectedStationId = "surigao";
 
+function buildInlinePanelHTML(station){
+  if(station.live){
+    const { current } = getCurrentProgram();
+    const hostsHTML = (current && current.hosts && current.hosts.length) ? `
+      <div class="host-chip-row">
+        ${current.hosts.map(h => `
+          <div class="host-chip">
+            <img src="${h.photo}" alt="${h.name}">
+            <span>${h.name}</span>
+          </div>
+        `).join("")}
+      </div>
+    ` : "";
+
+    const title = current ? current.title : "Music Automation";
+    const status = current ? "NOW ON AIR" : "No live show";
+
+    return `
+      <div class="glass-card current-program-card inline-station-panel" id="stationScheduleCard">
+        <div class="section-title"><i class="ti ti-broadcast" aria-hidden="true"></i>CURRENT PROGRAM</div>
+        <div class="current-program-glow"></div>
+        <div class="current-program-row">
+          <div class="current-program-pulse-dot"></div>
+          <div class="current-program-text">
+            <div id="currentProgram2">${title}</div>
+            <div id="programStatus2">${status}</div>
+          </div>
+        </div>
+        ${hostsHTML}
+      </div>
+    `;
+  } else {
+    return `
+      <div class="glass-card current-program-card inline-station-panel station-coming-soon" id="stationScheduleCard">
+        <i class="ti ti-clock" aria-hidden="true"></i>
+        <h3>${station.name}</h3>
+        <p style="color:var(--text2);">${station.location ? station.location + " \u2013 " : ""}This station's live stream and schedule will be available soon.</p>
+      </div>
+    `;
+  }
+}
+
 function renderStationList(){
   const container = document.getElementById("stationList");
   if(!container) return;
 
-  container.innerHTML = networkStations.map(s => {
+  const html = networkStations.map(s => {
     const isSelected = s.id === selectedStationId;
     const isLive = s.live;
     const rowClasses = ["station-row"];
     if(isSelected) rowClasses.push("selected");
     if(isLive) rowClasses.push("is-live");
 
-    return `
+    const rowHTML = `
       <div class="${rowClasses.join(' ')}" data-station-id="${s.id}" role="button" tabindex="0">
         <div class="station-icon"><i class="ti ti-broadcast" aria-hidden="true"></i></div>
         <div class="station-info">
@@ -1960,7 +2004,14 @@ function renderStationList(){
         <div class="station-status ${isLive ? 'live' : 'soon'}">${isLive ? 'LIVE' : 'COMING SOON'}</div>
       </div>
     `;
+
+    if(isSelected){
+      return rowHTML + buildInlinePanelHTML(s);
+    }
+    return rowHTML;
   }).join("");
+
+  container.innerHTML = html;
 
   container.querySelectorAll(".station-row").forEach(row => {
     row.addEventListener("click", () => selectStation(row.dataset.stationId));
@@ -1979,44 +2030,16 @@ function selectStation(stationId){
 
   selectedStationId = stationId;
   renderStationList();
-  renderStationSchedulePanel();
 
   if(wasAlreadySelected && station && station.live){
     playerSheet.classList.add("show");
   } else {
-    const card = document.getElementById("stationScheduleCard");
-    if(card){
-      card.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  }
-}
-
-function renderStationSchedulePanel(){
-  const station = networkStations.find(s => s.id === selectedStationId);
-  if(!station) return;
-
-  const label = document.getElementById("stationScheduleLabel");
-  const scheduleBody = document.getElementById("stationScheduleBody");
-  const comingSoonBody = document.getElementById("stationComingSoonBody");
-  const comingSoonName = document.getElementById("stationComingSoonName");
-  const card = document.getElementById("stationScheduleCard");
-
-  if(card){
-    card.style.animation = "none";
-    void card.offsetWidth;
-    card.style.animation = "";
-  }
-
-  if(station.live){
-    label.innerHTML = `<i class="ti ti-broadcast" aria-hidden="true"></i>CURRENT PROGRAM`;
-    scheduleBody.style.display = "";
-    comingSoonBody.style.display = "none";
-    updateScheduleUI();
-  } else {
-    label.innerHTML = `<i class="ti ti-broadcast" aria-hidden="true"></i>${station.name}`;
-    scheduleBody.style.display = "none";
-    comingSoonBody.style.display = "";
-    comingSoonName.textContent = station.location ? `${station.name} \u2013 ${station.location}` : station.name;
+    requestAnimationFrame(() => {
+      const card = document.getElementById("stationScheduleCard");
+      if(card){
+        card.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    });
   }
 }
 
@@ -2775,13 +2798,15 @@ switchTab("home");
 renderScheduleList();
 updateScheduleUI();
 renderStationList();
-renderStationSchedulePanel();
 updateTime();
 
 setInterval(updateTime, 1000);
 setInterval(() => {
   updateScheduleUI();
   renderScheduleList();
+  if(currentTab === "listen"){
+    renderStationList();
+  }
 }, 15000);
 setInterval(checkProgramAlerts, 60000);
 setInterval(() => {
