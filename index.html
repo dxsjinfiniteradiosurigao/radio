@@ -358,6 +358,58 @@ text-overflow:ellipsis;
 max-width:160px;
 }
 
+.location-input-wrap{
+display:flex;
+align-items:center;
+gap:8px;
+background:var(--surface);
+border:1px solid rgba(255,90,110,.3);
+border-radius:999px;
+padding:6px 6px 6px 16px;
+margin-bottom:20px;
+max-width:280px;
+width:100%;
+animation:locationInputIn .25s ease;
+}
+
+@keyframes locationInputIn{
+from{opacity:0;transform:scale(.95);}
+to{opacity:1;transform:none;}
+}
+
+.location-input-field{
+flex:1;
+background:none;
+border:none;
+outline:none;
+color:var(--text);
+font-size:13px;
+font-family:'Inter',sans-serif;
+min-width:0;
+}
+
+.location-input-field::placeholder{
+color:var(--text3);
+}
+
+.location-input-submit{
+width:30px;
+height:30px;
+border-radius:50%;
+background:linear-gradient(150deg,#4d7dff,#dc1e3c);
+border:none;
+color:#fff;
+font-size:14px;
+display:flex;
+align-items:center;
+justify-content:center;
+cursor:pointer;
+flex-shrink:0;
+transition:transform .15s;
+}
+
+.location-input-submit:active{transform:scale(.88);}
+
 .hero-logo{
 position:relative;
 margin-bottom:22px;
@@ -1292,6 +1344,72 @@ from{opacity:0;transform:translateY(6px);}
 to{opacity:1;transform:none;}
 }
 
+.current-program-card{
+position:relative;
+overflow:hidden;
+}
+
+.current-program-glow{
+position:absolute;
+top:-40%;
+left:-20%;
+width:160%;
+height:160%;
+background:radial-gradient(circle,rgba(220,30,60,.16),transparent 60%);
+animation:programGlowDrift 6s ease-in-out infinite;
+pointer-events:none;
+z-index:0;
+}
+
+@keyframes programGlowDrift{
+0%,100%{transform:translate(0,0) scale(1);opacity:.7;}
+50%{transform:translate(20px,10px) scale(1.1);opacity:1;}
+}
+
+.current-program-row{
+display:flex;
+align-items:center;
+gap:14px;
+position:relative;
+z-index:1;
+}
+
+.current-program-pulse-dot{
+width:14px;
+height:14px;
+border-radius:50%;
+background:linear-gradient(150deg,#4d7dff,#dc1e3c);
+flex-shrink:0;
+position:relative;
+box-shadow:0 0 0 0 rgba(220,30,60,.5);
+animation:programDotPulse 1.8s ease-out infinite;
+}
+
+@keyframes programDotPulse{
+0%{box-shadow:0 0 0 0 rgba(220,30,60,.45);}
+70%{box-shadow:0 0 0 10px rgba(220,30,60,0);}
+100%{box-shadow:0 0 0 0 rgba(220,30,60,0);}
+}
+
+.current-program-text{
+flex:1;
+min-width:0;
+}
+
+#currentProgram2{
+font-size:19px;
+font-weight:800;
+margin-bottom:3px;
+transition:opacity .25s;
+}
+
+#programStatus2{
+font-size:13px;
+font-weight:600;
+color:#ff8fa3;
+transition:opacity .25s;
+}
+
 .news-item{
 display:flex;
 gap:12px;
@@ -1470,12 +1588,19 @@ display:none;
             <div id="currentDate">Loading Date...</div>
         </div>
 
-        <button id="locationWeatherRow" class="location-weather-row" aria-label="Enable location for local weather">
+        <button id="locationWeatherRow" class="location-weather-row" aria-label="Set your location">
             <i class="ti ti-map-pin" aria-hidden="true"></i>
-            <span id="locationText">Tap to enable location</span>
+            <span id="locationText">Tap to set location</span>
             <span class="weather-divider" id="weatherDivider" style="display:none;">&bull;</span>
             <span id="weatherText"></span>
         </button>
+
+        <div class="location-input-wrap" id="locationInputWrap" style="display:none;">
+            <input type="text" id="locationInputField" class="location-input-field" placeholder="Enter city name, e.g. Surigao City" autocomplete="off">
+            <button id="locationInputSubmit" class="location-input-submit" aria-label="Set location">
+                <i class="ti ti-check" aria-hidden="true"></i>
+            </button>
+        </div>
 
         <div class="hero-logo">
             <div class="disc-ring" id="discRing"></div>
@@ -1516,13 +1641,18 @@ display:none;
         <h2>Listen</h2>
     </div>
 
-    <div class="glass-card" id="stationScheduleCard">
-        <div class="section-title" id="stationScheduleLabel"><i class="ti ti-calendar-time" aria-hidden="true"></i>TODAY'S SCHEDULE</div>
+    <div class="glass-card current-program-card" id="stationScheduleCard">
+        <div class="section-title" id="stationScheduleLabel"><i class="ti ti-broadcast" aria-hidden="true"></i>CURRENT PROGRAM</div>
         <div id="stationScheduleBody">
-            <div id="currentProgram2">Loading...</div>
-            <div id="programStatus2">Checking Schedule...</div>
+            <div class="current-program-glow"></div>
+            <div class="current-program-row">
+                <div class="current-program-pulse-dot"></div>
+                <div class="current-program-text">
+                    <div id="currentProgram2">Loading...</div>
+                    <div id="programStatus2">Checking Schedule...</div>
+                </div>
+            </div>
             <div id="currentHost2" class="host-chip-row"></div>
-            <div id="stationScheduleList2"></div>
         </div>
         <div id="stationComingSoonBody" class="station-coming-soon" style="display:none;">
             <i class="ti ti-clock" aria-hidden="true"></i>
@@ -1778,7 +1908,7 @@ const networkStations = [
   { id:"bislig", name:"100.1 INFINITE RADIO", location:"Bislig", live:false },
   { id:"bukidnon", name:"94.5 PARTNER RADIO", location:"Bukidnon", live:false },
   { id:"butuan", name:"90.1 NONGLADING INFINITE RADIO", location:"Butuan", live:false },
-  { id:"calbayog", name:"92.1 INFINITE RADIO", location:"Calbayog", live:false },
+  { id:"calbayog", name:"92.1 Infinite Radio", location:"Calbayog", live:false },
   { id:"claver", name:"99.3 INFINITE RADIO", location:"Claver", live:false },
   { id:"gensan", name:"96.7 INFINITE RADIO", location:"Gensan", live:false },
   { id:"isulan", name:"93.3 INFINITE RADIO", location:"Isulan", live:false },
@@ -1789,7 +1919,7 @@ const networkStations = [
   { id:"panabo", name:"96.1 INFINITE RADIO", location:"Panabo", live:false },
   { id:"sanfrancisco", name:"100.1 NONGLADING INFINITE RADIO", location:"San Francisco", live:false },
   { id:"sugbongcogon", name:"100.3 INFINITE RADIO", location:"Sugbongcogon", live:false },
-  { id:"surigao", name:"93.3 INFINITE RADIO", location:"Surigao City", live:true },
+  { id:"surigao", name:"93.3 Infinite Radio", location:"Surigao City", live:true },
   { id:"tandag", name:"90.1 INFINITE RADIO", location:"Tandag", live:false },
   { id:"valencia", name:"91.3 NONGLADING INFINITE RADIO", location:"Valencia", live:false },
   { id:"villaba", name:"94.9 INFINITE RADIO", location:"Villaba", live:false },
@@ -1858,78 +1988,22 @@ function renderStationSchedulePanel(){
   const card = document.getElementById("stationScheduleCard");
 
   if(card){
-    card.classList.remove("schedule-swap-replay");
-    void card.offsetWidth;
     card.style.animation = "none";
     void card.offsetWidth;
     card.style.animation = "";
   }
 
   if(station.live){
-    label.innerHTML = `<i class="ti ti-calendar-time" aria-hidden="true"></i>TODAY'S SCHEDULE`;
+    label.innerHTML = `<i class="ti ti-broadcast" aria-hidden="true"></i>CURRENT PROGRAM`;
     scheduleBody.style.display = "";
     comingSoonBody.style.display = "none";
     updateScheduleUI();
-    renderScheduleList2();
   } else {
     label.innerHTML = `<i class="ti ti-broadcast" aria-hidden="true"></i>${station.name}`;
     scheduleBody.style.display = "none";
     comingSoonBody.style.display = "";
     comingSoonName.textContent = station.location ? `${station.name} \u2013 ${station.location}` : station.name;
   }
-}
-
-function renderScheduleList2(){
-  const container = document.getElementById("stationScheduleList2");
-  if(!container) return;
-
-  const now = new Date();
-  const today = now.getDay();
-  const mins = now.getHours()*60 + now.getMinutes();
-
-  const todays = schedule
-    .filter(s => s.days.includes(today))
-    .slice()
-    .sort((a,b) => toMinutes(a.start) - toMinutes(b.start));
-
-  if(todays.length === 0){
-    container.innerHTML = `
-      <div class="schedule-item">
-        <div class="schedule-title" style="text-align:left;">No scheduled programs today. Enjoy our music automation!</div>
-      </div>
-    `;
-    return;
-  }
-
-  container.innerHTML = todays.map(s => {
-    const start = toMinutes(s.start);
-    const end = toMinutes(s.end);
-    const isNow = mins >= start && mins < end;
-
-    const hostsHTML = (s.hosts && s.hosts.length) ? `
-      <div class="host-chip-row">
-        ${s.hosts.map(h => `
-          <div class="host-chip">
-            <img src="${h.photo}" alt="${h.name}">
-            <span>${h.name}</span>
-          </div>
-        `).join("")}
-      </div>
-    ` : "";
-
-    return `
-      <div class="schedule-item${isNow ? ' schedule-item-now' : ''}">
-        <div class="schedule-time">${s.start} - ${s.end}</div>
-        <div class="schedule-main">
-          <div class="schedule-title">
-            ${s.title}
-            ${isNow ? '<span class="schedule-now-badge">NOW</span>' : ''}
-          </div>
-          ${hostsHTML}
-        </div>
-      </div>
-    `;
-  }).join("");
 }
 
 function updateScheduleUI(){
@@ -2546,7 +2620,7 @@ function setLocationRowState(iconClass, text, hasWeather){
   if (row) row.classList.toggle("has-weather", !!hasWeather);
 }
 
-async function fetchWeather(lat, lon){
+async function fetchWeather(lat, lon, placeName){
   try {
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&timezone=auto`;
     const res = await fetch(url);
@@ -2561,53 +2635,102 @@ async function fetchWeather(lat, lon){
     if (weatherText) weatherText.textContent = `${temp}\u00B0C \u2013 ${info.label}`;
     if (weatherDivider) weatherDivider.style.display = "";
 
-    setLocationRowState(info.icon, document.getElementById("locationText").dataset.place || "Current location", true);
+    setLocationRowState(info.icon, placeName, true);
+
+    const locText = document.getElementById("locationText");
+    if (locText) {
+      locText.dataset.lat = lat;
+      locText.dataset.lon = lon;
+      locText.dataset.place = placeName;
+    }
   } catch (e) {
     console.log("Weather fetch failed", e);
+    setLocationRowState("ti-map-pin", placeName, false);
   }
 }
 
-async function reverseGeocode(lat, lon){
-  try {
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&timezone=auto`;
-    const res = await fetch(url);
-    const data = await res.json();
-    return data.timezone ? data.timezone.split("/").pop().replace(/_/g, " ") : "Current location";
-  } catch (e) {
-    return "Current location";
+async function geocodeCity(cityName){
+  const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cityName)}&count=1&language=en&format=json`;
+  const res = await fetch(url);
+  const data = await res.json();
+
+  if (data.results && data.results.length > 0) {
+    const r = data.results[0];
+    const parts = [r.name];
+    if (r.admin1 && r.admin1 !== r.name) parts.push(r.admin1);
+    return {
+      lat: r.latitude,
+      lon: r.longitude,
+      placeName: parts.join(", ")
+    };
+  }
+  return null;
+}
+
+function openLocationInput(){
+  const wrap = document.getElementById("locationInputWrap");
+  const row = document.getElementById("locationWeatherRow");
+  const field = document.getElementById("locationInputField");
+  if (wrap) wrap.style.display = "flex";
+  if (row) row.style.display = "none";
+  if (field) {
+    field.value = "";
+    field.focus();
   }
 }
 
-function requestLocationWeather(){
-  if (!("geolocation" in navigator)) {
-    setLocationRowState("ti-map-pin-off", "Location not supported", false);
+function closeLocationInput(){
+  const wrap = document.getElementById("locationInputWrap");
+  const row = document.getElementById("locationWeatherRow");
+  if (wrap) wrap.style.display = "none";
+  if (row) row.style.display = "flex";
+}
+
+async function submitLocationInput(){
+  const field = document.getElementById("locationInputField");
+  const cityName = field ? field.value.trim() : "";
+
+  if (!cityName) {
+    closeLocationInput();
     return;
   }
 
-  setLocationRowState("ti-loader-2", "Locating...", false);
+  setLocationRowState("ti-loader-2", "Searching...", false);
+  closeLocationInput();
 
-  navigator.geolocation.getCurrentPosition(
-    async (pos) => {
-      const { latitude, longitude } = pos.coords;
-      const placeName = await reverseGeocode(latitude, longitude);
-
-      const locText = document.getElementById("locationText");
-      if (locText) locText.dataset.place = placeName;
-
-      setLocationRowState("ti-map-pin", placeName, false);
-      fetchWeather(latitude, longitude);
-    },
-    (err) => {
-      console.log("Geolocation denied or failed", err);
-      setLocationRowState("ti-map-pin-off", "Tap to enable location", false);
-    },
-    { enableHighAccuracy: false, timeout: 10000, maximumAge: 600000 }
-  );
+  try {
+    const result = await geocodeCity(cityName);
+    if (result) {
+      fetchWeather(result.lat, result.lon, result.placeName);
+    } else {
+      setLocationRowState("ti-map-pin-off", "Location not found", false);
+    }
+  } catch (e) {
+    console.log("Geocoding failed", e);
+    setLocationRowState("ti-map-pin-off", "Tap to set location", false);
+  }
 }
 
 const locationWeatherRow = document.getElementById("locationWeatherRow");
 if (locationWeatherRow) {
-  locationWeatherRow.addEventListener("click", requestLocationWeather);
+  locationWeatherRow.addEventListener("click", openLocationInput);
+}
+
+const locationInputSubmit = document.getElementById("locationInputSubmit");
+if (locationInputSubmit) {
+  locationInputSubmit.addEventListener("click", submitLocationInput);
+}
+
+const locationInputField = document.getElementById("locationInputField");
+if (locationInputField) {
+  locationInputField.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      submitLocationInput();
+    } else if (e.key === "Escape") {
+      closeLocationInput();
+    }
+  });
 }
 
 document.addEventListener("contextmenu", e => e.preventDefault());
@@ -2646,9 +2769,6 @@ setInterval(updateTime, 1000);
 setInterval(() => {
   updateScheduleUI();
   renderScheduleList();
-  if(document.getElementById("stationScheduleBody") && document.getElementById("stationScheduleBody").style.display !== "none"){
-    renderScheduleList2();
-  }
 }, 15000);
 setInterval(checkProgramAlerts, 60000);
 setInterval(() => {
