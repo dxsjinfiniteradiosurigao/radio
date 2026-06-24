@@ -187,22 +187,6 @@ animation:fadePage .3s ease;
 display:block;
 }
 
-.watch-tab-page{
-padding-bottom:0;
-display:flex;
-flex-direction:column;
-height:100vh;
-box-sizing:border-box;
-}
-
-.watch-tab-page.active{
-display:flex;
-}
-
-.watch-tab-page .page-header{
-flex-shrink:0;
-}
-
 @keyframes fadePage{
 from{opacity:0;transform:translateY(10px);}
 to{opacity:1;transform:none;}
@@ -598,6 +582,102 @@ color:#ff8fa3;
 transform:translateX(3px);
 }
 
+.news-headlines-tap{
+cursor:pointer;
+transition:transform .15s, border-color .25s;
+}
+
+.news-headlines-tap:active{transform:scale(.98);}
+.news-headlines-tap:hover{border-color:rgba(255,90,110,.3);}
+
+.news-headlines-header{
+display:flex;
+align-items:center;
+justify-content:space-between;
+margin-bottom:10px;
+}
+
+.station-contact-card{}
+
+.contact-row{
+display:flex;
+align-items:center;
+gap:12px;
+padding:10px 0;
+border-bottom:1px solid var(--border);
+text-decoration:none;
+color:var(--text);
+transition:opacity .2s;
+background:none;
+border-top:none;
+border-left:none;
+border-right:none;
+width:100%;
+text-align:left;
+font-family:inherit;
+cursor:pointer;
+}
+
+.contact-row:last-of-type{border-bottom:none;}
+.contact-row:active{opacity:.7;}
+
+.contact-icon{
+width:38px;
+height:38px;
+border-radius:12px;
+background:rgba(220,30,60,.14);
+color:#ff7286;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:17px;
+flex-shrink:0;
+}
+
+.contact-label{
+font-size:11px;
+color:var(--text2);
+margin-bottom:2px;
+}
+
+.contact-value{
+font-size:14px;
+font-weight:700;
+}
+
+.social-icon-row{
+display:flex;
+gap:10px;
+margin-top:14px;
+justify-content:center;
+}
+
+.social-icon-btn{
+width:48px;
+height:48px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:20px;
+color:#fff;
+text-decoration:none;
+transition:transform .15s, box-shadow .25s;
+flex-shrink:0;
+border:none;
+cursor:pointer;
+padding:0;
+}
+
+.social-icon-btn:active{transform:scale(.9);}
+
+.social-fb{background:linear-gradient(150deg,#1877f2,#0d5dc7);}
+.social-yt{background:linear-gradient(150deg,#ff4d4d,#dc1e3c);}
+.social-tiktok{background:linear-gradient(150deg,#111,#333);}
+.social-zeno{background:linear-gradient(150deg,#4d7dff,#1a3a8f);}
+
+.social-icon-btn:hover{box-shadow:0 6px 18px rgba(0,0,0,.3);}
+
 .yt-live-banner{
 display:flex;
 align-items:center;
@@ -806,7 +886,7 @@ bottom:0;
 height:100vh;
 background:#070916;
 z-index:999;
-border-radius:36px 36px 0 0;
+border-radius:0;
 transform:translateY(100%);
 transition:transform .4s cubic-bezier(.22,1,.36,1);
 overflow-y:auto;
@@ -1718,36 +1798,100 @@ animation:blink 1.2s ease-in-out infinite;
 background:var(--text3);
 }
 
-.inline-watch-wrap{
-margin-top:16px;
-position:relative;
-z-index:1;
+#watchSheet{
+position:fixed;
+left:0;
+right:0;
+bottom:0;
+height:100vh;
+background:#070916;
+z-index:999;
+border-radius:0;
+transform:translateY(100%);
+transition:transform .4s cubic-bezier(.22,1,.36,1);
+overflow-y:auto;
+overflow-x:hidden;
+-webkit-overflow-scrolling:touch;
+display:flex;
+flex-direction:column;
+padding:18px 0 0;
 }
 
-.yt-video-sticky-inline{
-margin-bottom:14px;
+#watchSheet.show{
+transform:translateY(0);
 }
 
-.yt-chat-card-inline{
-background:rgba(0,0,0,.18);
-border-radius:16px;
-padding:14px 0 0;
+#watchDragHandle{
+width:56px;
+height:5px;
+border-radius:999px;
+background:rgba(255,255,255,.18);
+margin:0 auto 18px;
+cursor:grab;
+touch-action:none;
+flex-shrink:0;
+}
+
+#watchSheet .player-top{
+padding:0 24px;
+flex-shrink:0;
+}
+
+#watchSheet .player-top span{
+font-size:14px;
+font-weight:700;
+white-space:nowrap;
 overflow:hidden;
+text-overflow:ellipsis;
+max-width:55%;
 }
 
-.yt-chat-card-inline .yt-chat-header{
-padding:0 14px 12px;
+.watch-sheet-layout{
+display:flex;
+flex-direction:column;
+flex:1;
+min-height:0;
+margin-top:16px;
 }
 
-.yt-chat-card-inline .yt-chat-wrap{
-min-height:320px;
-height:320px;
+.watch-sheet-layout .yt-video-sticky{
+position:sticky;
+top:0;
+z-index:5;
+flex-shrink:0;
+background:#070916;
+padding:0 24px 12px;
+}
+
+.watch-sheet-layout .yt-video-wrap{
+border-radius:0;
+}
+
+.watch-sheet-layout .yt-chat-scroll-area{
+flex:1;
+overflow-y:auto;
+overflow-x:hidden;
+-webkit-overflow-scrolling:touch;
+min-height:0;
+padding:0 24px calc(var(--nav-height) + 24px);
+}
+
+.watch-sheet-layout .yt-chat-header{
+padding:14px 0 12px;
+}
+
+.watch-sheet-layout .yt-chat-wrap{
+min-height:380px;
+height:60vh;
+border-radius:14px;
+overflow:hidden;
+background:rgba(255,255,255,.03);
 }
 
 .watch-unavailable-block{
 margin-top:16px;
 text-align:center;
-padding:32px 10px 10px;
+padding:32px 24px 10px;
 position:relative;
 z-index:1;
 }
@@ -1795,6 +1939,14 @@ margin-bottom:3px;
 .news-text p{
 font-size:12px;
 color:var(--text2);
+}
+
+.news-time{
+display:inline-block;
+font-size:10px;
+color:var(--text3);
+font-weight:600;
+margin-top:4px;
 }
 
 .schedule-item{
@@ -1994,9 +2146,47 @@ display:none;
         </div>
     </div>
 
-    <div class="glass-card">
-        <div class="section-title"><i class="ti ti-calendar-event" aria-hidden="true"></i>TODAY'S SCHEDULE</div>
-        <div id="scheduleContainer"></div>
+    <div class="glass-card news-headlines-tap" id="newsHeadlinesCard" role="button" tabindex="0" aria-label="View all news">
+        <div class="news-headlines-header">
+            <div class="section-title" style="margin-bottom:0;"><i class="ti ti-news" aria-hidden="true"></i>LATEST HEADLINES</div>
+            <i class="ti ti-chevron-right now-playing-chevron" aria-hidden="true"></i>
+        </div>
+        <div id="homeNewsContainer"></div>
+    </div>
+
+    <div class="glass-card station-contact-card">
+        <div class="section-title"><i class="ti ti-phone" aria-hidden="true"></i>CONTACT &amp; SOCIALS</div>
+
+        <button class="contact-row" id="contactPhoneBtn">
+            <div class="contact-icon"><i class="ti ti-phone" aria-hidden="true"></i></div>
+            <div class="contact-text">
+                <div class="contact-label">Phone</div>
+                <div class="contact-value">0905 827 8704</div>
+            </div>
+        </button>
+
+        <button class="contact-row" id="contactWebsiteBtn">
+            <div class="contact-icon"><i class="ti ti-world" aria-hidden="true"></i></div>
+            <div class="contact-text">
+                <div class="contact-label">Website</div>
+                <div class="contact-value">sjtit.edu.ph</div>
+            </div>
+        </button>
+
+        <div class="social-icon-row">
+            <button class="social-icon-btn social-fb" id="socialFbBtn" aria-label="Facebook">
+                <i class="ti ti-brand-facebook" aria-hidden="true"></i>
+            </button>
+            <button class="social-icon-btn social-yt" id="socialYtBtn" aria-label="YouTube">
+                <i class="ti ti-brand-youtube" aria-hidden="true"></i>
+            </button>
+            <button class="social-icon-btn social-tiktok" id="socialTiktokBtn" aria-label="TikTok">
+                <i class="ti ti-brand-tiktok" aria-hidden="true"></i>
+            </button>
+            <button class="social-icon-btn social-zeno" id="socialZenoBtn" aria-label="Zeno FM">
+                <i class="ti ti-broadcast" aria-hidden="true"></i>
+            </button>
+        </div>
     </div>
 
 </section>
@@ -2015,15 +2205,7 @@ display:none;
     <div class="page-header">
         <h2>News</h2>
     </div>
-    <div class="glass-card" id="newsContainer">
-        <div class="news-item">
-            <div class="news-icon"><i class="ti ti-news" aria-hidden="true"></i></div>
-            <div class="news-text">
-                <h4>Stay tuned</h4>
-                <p>Local news updates will appear here soon.</p>
-            </div>
-        </div>
-    </div>
+    <div class="glass-card" id="newsContainer"></div>
 </section>
 
 <section id="aboutTab" class="tab-page">
@@ -2111,6 +2293,46 @@ display:none;
         <i class="ti ti-volume-3" aria-hidden="true"></i>
         <input type="range" id="volumeSlider" min="0" max="100" value="80" aria-label="Volume">
         <i class="ti ti-volume" aria-hidden="true"></i>
+    </div>
+
+</div>
+
+<div id="watchSheet">
+
+    <div id="watchDragHandle"></div>
+
+    <div class="player-top">
+        <button id="closeWatch" aria-label="Close livestream">
+            <i class="ti ti-chevron-down"></i>
+        </button>
+        <span id="watchSheetTitle">93.3 Infinite Radio Surigao</span>
+        <button class="yt-signin-btn" id="ytSigninBtn">
+            <i class="ti ti-brand-youtube" aria-hidden="true"></i>
+            Sign in
+        </button>
+    </div>
+
+    <div class="watch-sheet-layout">
+        <div class="yt-video-sticky">
+            <div class="yt-video-wrap">
+                <div id="ytWatchPlayerEl"></div>
+            </div>
+        </div>
+
+        <div class="yt-chat-scroll-area">
+            <div class="yt-chat-header">
+                <div class="section-title" style="margin-bottom:0;"><i class="ti ti-message-circle" aria-hidden="true"></i>LIVE CHAT</div>
+            </div>
+            <div class="yt-chat-wrap">
+                <iframe id="ytChatFrame" src="" frameborder="0"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <div class="watch-unavailable-block" id="watchUnavailableBlock" style="display:none;">
+        <i class="ti ti-video-off" aria-hidden="true"></i>
+        <h3>No livestream right now</h3>
+        <p style="color:var(--text2);">This station isn't streaming video at the moment. Check back soon, or switch to Listen for the audio stream.</p>
     </div>
 
 </div>
@@ -2240,6 +2462,58 @@ function getCurrentProgram(){
   return {current,next};
 }
 
+const newsHeadlines = [
+  {
+    title: "Stay tuned for local updates",
+    summary: "News headlines from Surigao City and the region will appear here.",
+    time: "Today",
+    icon: "ti-news"
+  },
+  {
+    title: "Community programs continue this week",
+    summary: "DXSJ 93.3 Infinite Radio keeps bringing news, music, and community programs around the clock.",
+    time: "Today",
+    icon: "ti-speakerphone"
+  },
+  {
+    title: "More headlines coming soon",
+    summary: "Check the News tab for the full list of stories.",
+    time: "Today",
+    icon: "ti-clock"
+  }
+];
+
+function renderNewsHeadlines(containerId, limit){
+  const container = document.getElementById(containerId);
+  if(!container) return;
+
+  const items = limit ? newsHeadlines.slice(0, limit) : newsHeadlines;
+
+  if(items.length === 0){
+    container.innerHTML = `
+      <div class="news-item">
+        <div class="news-icon"><i class="ti ti-news" aria-hidden="true"></i></div>
+        <div class="news-text">
+          <h4>Stay tuned</h4>
+          <p>Local news updates will appear here soon.</p>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = items.map(n => `
+    <div class="news-item">
+      <div class="news-icon"><i class="ti ${n.icon || 'ti-news'}" aria-hidden="true"></i></div>
+      <div class="news-text">
+        <h4>${n.title}</h4>
+        <p>${n.summary}</p>
+        ${n.time ? `<span class="news-time">${n.time}</span>` : ""}
+      </div>
+    </div>
+  `).join("");
+}
+
 const networkStations = [
   { id:"aurora", name:"88.1 AIMCOOP INFINITE RADIO", location:"Aurora", live:false, youtubeChannelId:null },
   { id:"bislig", name:"100.1 INFINITE RADIO", location:"Bislig", live:false, youtubeChannelId:null },
@@ -2264,7 +2538,6 @@ const networkStations = [
 ];
 
 let selectedStationId = "surigao";
-let selectedMode = "listen";
 
 let stationYouTubeLiveStatus = {};
 
@@ -2289,52 +2562,15 @@ function buildInlinePanelHTML(station){
     const isYtLive = ytStatus && ytStatus.live;
 
     const watchBtnClasses = ["mode-toggle-btn"];
-    if(selectedMode === "watch") watchBtnClasses.push("active");
     if(isYtLive) watchBtnClasses.push("has-live-pulse");
 
     const listenBtnClasses = ["mode-toggle-btn"];
-    if(selectedMode === "listen") listenBtnClasses.push("active");
 
     const watchAvailability = station.youtubeChannelId
       ? (isYtLive
           ? `<span class="mode-live-dot"></span>Video Live`
           : `<span class="mode-offline-dot"></span>No video stream`)
       : `<span class="mode-offline-dot"></span>Coming soon`;
-
-    let contentHTML = "";
-    if(selectedMode === "watch"){
-      if(isYtLive){
-        contentHTML = `
-          <div class="inline-watch-wrap">
-            <div class="yt-video-sticky-inline">
-              <div class="yt-video-wrap">
-                <div id="ytWatchPlayerEl"></div>
-              </div>
-            </div>
-            <div class="yt-chat-card-inline">
-              <div class="yt-chat-header">
-                <div class="section-title" style="margin-bottom:0;"><i class="ti ti-message-circle" aria-hidden="true"></i>LIVE CHAT</div>
-                <button class="yt-signin-btn" id="ytSigninBtn">
-                  <i class="ti ti-brand-youtube" aria-hidden="true"></i>
-                  Sign in to comment
-                </button>
-              </div>
-              <div class="yt-chat-wrap">
-                <iframe id="ytChatFrame" src="" frameborder="0"></iframe>
-              </div>
-            </div>
-          </div>
-        `;
-      } else {
-        contentHTML = `
-          <div class="watch-unavailable-block">
-            <i class="ti ti-video-off" aria-hidden="true"></i>
-            <h3>No livestream right now</h3>
-            <p style="color:var(--text2);">This station isn't streaming video at the moment. Check back soon, or switch to Listen for the audio stream.</p>
-          </div>
-        `;
-      }
-    }
 
     return `
       <div class="glass-card current-program-card inline-station-panel" id="stationScheduleCard">
@@ -2361,8 +2597,6 @@ function buildInlinePanelHTML(station){
           </button>
         </div>
         <div class="mode-availability-row">${watchAvailability}</div>
-
-        ${contentHTML}
       </div>
     `;
   } else {
@@ -2432,37 +2666,38 @@ function renderStationList(){
       selectMode(btn.dataset.mode, btn.dataset.stationId);
     });
   });
-
-  if(selectedMode === "watch"){
-    const station = networkStations.find(s => s.id === selectedStationId);
-    const ytStatus = stationYouTubeLiveStatus[selectedStationId];
-    if(station && ytStatus && ytStatus.live){
-      attachWatchPlayer(ytStatus.videoId);
-    }
-  }
 }
 
 function selectMode(mode, stationId){
-  selectedMode = mode;
+  const station = networkStations.find(s => s.id === stationId);
 
   if(mode === "listen"){
-    if(ytWatchPlayer) ytWatchPlayer.stopVideo();
+    playerSheet.classList.add("show");
     if(!isPlaying) startStream();
   } else if(mode === "watch"){
     const ytStatus = stationYouTubeLiveStatus[stationId];
-    if(ytStatus && ytStatus.live){
-      if(isPlaying) stopStream();
+    const isLive = ytStatus && ytStatus.live;
+
+    if(isPlaying) stopStream();
+
+    const watchSheet = document.getElementById("watchSheet");
+    const watchTitle = document.getElementById("watchSheetTitle");
+    const unavailableBlock = document.getElementById("watchUnavailableBlock");
+    const watchLayout = document.querySelector(".watch-sheet-layout");
+
+    if(watchTitle && station) watchTitle.textContent = station.name;
+
+    if(isLive){
+      if(unavailableBlock) unavailableBlock.style.display = "none";
+      if(watchLayout) watchLayout.style.display = "flex";
+      attachWatchPlayer(ytStatus.videoId);
+    } else {
+      if(unavailableBlock) unavailableBlock.style.display = "block";
+      if(watchLayout) watchLayout.style.display = "none";
     }
+
+    if(watchSheet) watchSheet.classList.add("show");
   }
-
-  renderStationList();
-
-  requestAnimationFrame(() => {
-    const card = document.getElementById("stationScheduleCard");
-    if(card){
-      card.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
-  });
 }
 
 function attachWatchPlayer(videoId){
@@ -2501,26 +2736,15 @@ function attachWatchPlayer(videoId){
 }
 
 function selectStation(stationId){
-  const wasAlreadySelected = stationId === selectedStationId;
-  const station = networkStations.find(s => s.id === stationId);
-
-  if(!wasAlreadySelected){
-    selectedMode = "listen";
-  }
-
   selectedStationId = stationId;
   renderStationList();
 
-  if(wasAlreadySelected && station && station.live && selectedMode === "listen"){
-    playerSheet.classList.add("show");
-  } else {
-    requestAnimationFrame(() => {
-      const card = document.getElementById("stationScheduleCard");
-      if(card){
-        card.scrollIntoView({ behavior: "smooth", block: "center" });
-      }
-    });
-  }
+  requestAnimationFrame(() => {
+    const card = document.getElementById("stationScheduleCard");
+    if(card){
+      card.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  });
 }
 
 function updateScheduleUI(){
@@ -2845,6 +3069,22 @@ if (ytSigninBtn) {
   });
 }
 
+const externalLinkButtons = {
+  contactPhoneBtn: "tel:09058278704",
+  contactWebsiteBtn: "https://sjtit.edu.ph",
+  socialFbBtn: "https://www.facebook.com/dxsj933infiniteradiosurigao/",
+  socialYtBtn: "https://www.youtube.com/@dxsj933infiniteradiosurigao",
+  socialTiktokBtn: "https://www.tiktok.com/@933infiniteradiosurigao",
+  socialZenoBtn: "https://zeno.fm/radio/dxsj-93-3-infinite-fm"
+};
+
+Object.keys(externalLinkButtons).forEach(btnId => {
+  const btn = document.getElementById(btnId);
+  if (btn) {
+    btn.addEventListener("click", () => openExternalLink(externalLinkButtons[btnId]));
+  }
+});
+
 const audio = document.getElementById("audio");
 
 const playBtn = document.getElementById("playBtn");
@@ -2916,6 +3156,21 @@ nowPlayingCard.addEventListener("keydown", (e) => {
   }
 });
 
+const newsHeadlinesCard = document.getElementById("newsHeadlinesCard");
+if (newsHeadlinesCard) {
+  const goToNews = () => {
+    const newsNavBtn = document.querySelector('.nav-btn[data-tab="news"]');
+    if (newsNavBtn) newsNavBtn.click();
+  };
+  newsHeadlinesCard.addEventListener("click", goToNews);
+  newsHeadlinesCard.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      goToNews();
+    }
+  });
+}
+
 albumArt.addEventListener("click", () => {
   if (!isPlaying) startStream();
   else stopStream();
@@ -2925,58 +3180,64 @@ closePlayerBtn.addEventListener("click", () => {
   playerSheet.classList.remove("show");
 });
 
+function setupSheetDrag(sheetEl, dragHandleEl, topEl){
+  let startY = 0;
+  let currentY = 0;
+  let dragging = false;
+
+  function dragStart(y) {
+    dragging = true;
+    startY = y;
+    currentY = y;
+    sheetEl.style.transition = "none";
+  }
+
+  function dragMove(y) {
+    if (!dragging) return;
+    currentY = y;
+    const diff = currentY - startY;
+    if (diff > 0) {
+      sheetEl.style.transform = `translateY(${diff}px)`;
+    }
+  }
+
+  function dragEnd() {
+    if (!dragging) return;
+    dragging = false;
+    sheetEl.style.transition = "";
+    sheetEl.style.transform = "";
+    const diff = currentY - startY;
+    if (diff > 120) {
+      sheetEl.classList.remove("show");
+    }
+  }
+
+  [dragHandleEl, topEl].forEach(el => {
+    if (!el) return;
+    el.addEventListener("touchstart", e => dragStart(e.touches[0].clientY), {passive:true});
+    el.addEventListener("touchmove", e => dragMove(e.touches[0].clientY), {passive:true});
+    el.addEventListener("touchend", dragEnd);
+  });
+}
+
 const playerDragHandle = document.getElementById("playerDragHandle");
-const playerTop = document.querySelector(".player-top");
+const playerTopEl = playerSheet.querySelector(".player-top");
+setupSheetDrag(playerSheet, playerDragHandle, playerTopEl);
 
-let sheetStartY = 0;
-let sheetCurrentY = 0;
-let sheetDragging = false;
-
-function sheetDragStart(y) {
-  sheetDragging = true;
-  sheetStartY = y;
-  sheetCurrentY = y;
-  playerSheet.style.transition = "none";
+const watchSheet = document.getElementById("watchSheet");
+const watchDragHandle = document.getElementById("watchDragHandle");
+const watchTopEl = watchSheet ? watchSheet.querySelector(".player-top") : null;
+if (watchSheet) {
+  setupSheetDrag(watchSheet, watchDragHandle, watchTopEl);
 }
 
-function sheetDragMove(y) {
-  if (!sheetDragging) return;
-
-  sheetCurrentY = y;
-  const diff = sheetCurrentY - sheetStartY;
-
-  if (diff > 0) {
-    playerSheet.style.transform = `translateY(${diff}px)`;
-  }
+const closeWatchBtn = document.getElementById("closeWatch");
+if (closeWatchBtn && watchSheet) {
+  closeWatchBtn.addEventListener("click", () => {
+    watchSheet.classList.remove("show");
+    if (ytWatchPlayer) ytWatchPlayer.stopVideo();
+  });
 }
-
-function sheetDragEnd() {
-  if (!sheetDragging) return;
-  sheetDragging = false;
-
-  playerSheet.style.transition = "";
-  playerSheet.style.transform = "";
-
-  const diff = sheetCurrentY - sheetStartY;
-
-  if (diff > 120) {
-    playerSheet.classList.remove("show");
-  }
-}
-
-[playerDragHandle, playerTop].forEach(el => {
-  if (!el) return;
-
-  el.addEventListener("touchstart", e => {
-    sheetDragStart(e.touches[0].clientY);
-  }, {passive:true});
-
-  el.addEventListener("touchmove", e => {
-    sheetDragMove(e.touches[0].clientY);
-  }, {passive:true});
-
-  el.addEventListener("touchend", sheetDragEnd);
-});
 
 let streamRetries = 0;
 
@@ -3447,6 +3708,8 @@ switchTab("home");
 renderScheduleList();
 updateScheduleUI();
 renderStationList();
+renderNewsHeadlines("homeNewsContainer", 3);
+renderNewsHeadlines("newsContainer");
 updateTime();
 checkYouTubeLive();
 runOnboardingPrompts();
