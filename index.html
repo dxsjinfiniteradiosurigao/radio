@@ -187,6 +187,22 @@ animation:fadePage .3s ease;
 display:block;
 }
 
+.watch-tab-page{
+padding-bottom:0;
+display:flex;
+flex-direction:column;
+height:100vh;
+box-sizing:border-box;
+}
+
+.watch-tab-page.active{
+display:flex;
+}
+
+.watch-tab-page .page-header{
+flex-shrink:0;
+}
+
 @keyframes fadePage{
 from{opacity:0;transform:translateY(10px);}
 to{opacity:1;transform:none;}
@@ -611,7 +627,8 @@ background:#000;
 position:relative;
 }
 
-.yt-banner-preview iframe{
+.yt-banner-preview iframe,
+.yt-banner-preview #ytBannerPlayerEl{
 position:absolute;
 top:50%;
 left:50%;
@@ -642,18 +659,35 @@ overflow:hidden;
 text-overflow:ellipsis;
 }
 
+.watch-live-layout{
+display:flex;
+flex-direction:column;
+flex:1;
+min-height:0;
+padding-bottom:calc(var(--nav-height) + 16px);
+}
+
+.yt-video-sticky{
+position:sticky;
+top:0;
+z-index:5;
+flex-shrink:0;
+background:var(--bg);
+padding-bottom:12px;
+}
+
 .yt-video-wrap{
 position:relative;
 width:100%;
 padding-top:56.25%;
 border-radius:var(--radius);
 overflow:hidden;
-margin-bottom:16px;
 background:#000;
 box-shadow:var(--shadow);
 }
 
-.yt-video-wrap iframe{
+.yt-video-wrap iframe,
+.yt-video-wrap #ytWatchPlayerEl{
 position:absolute;
 inset:0;
 width:100%;
@@ -661,16 +695,56 @@ height:100%;
 border:none;
 }
 
-.yt-chat-card{
-padding:16px 0 0;
-overflow:hidden;
+.yt-chat-scroll-area{
+flex:1;
+overflow-y:auto;
+overflow-x:hidden;
+-webkit-overflow-scrolling:touch;
+min-height:0;
 }
 
-.yt-chat-card .section-title{padding:0 18px;}
+.yt-chat-card{
+padding:14px 0 0;
+overflow:hidden;
+display:flex;
+flex-direction:column;
+height:100%;
+}
+
+.yt-chat-header{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:10px;
+padding:0 16px 12px;
+flex-shrink:0;
+}
+
+.yt-signin-btn{
+display:flex;
+align-items:center;
+gap:6px;
+background:linear-gradient(135deg,rgba(220,30,60,.16),rgba(77,125,255,.1));
+border:1px solid rgba(255,90,110,.3);
+color:#ff8fa3;
+font-size:11px;
+font-weight:700;
+padding:7px 12px;
+border-radius:999px;
+cursor:pointer;
+white-space:nowrap;
+flex-shrink:0;
+transition:transform .15s, border-color .2s;
+}
+
+.yt-signin-btn i{font-size:14px;}
+.yt-signin-btn:active{transform:scale(.95);}
+.yt-signin-btn:hover{border-color:rgba(255,90,110,.5);}
 
 .yt-chat-wrap{
 width:100%;
-height:420px;
+flex:1;
+min-height:380px;
 }
 
 .yt-chat-wrap iframe{
@@ -1739,7 +1813,7 @@ display:none;
 
     <div class="glass-card yt-live-banner" id="ytLiveBanner" role="button" tabindex="0" aria-label="Watch live now" style="display:none;">
         <div class="yt-banner-preview">
-            <iframe id="ytBannerFrame" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen tabindex="-1"></iframe>
+            <div id="ytBannerPlayerEl"></div>
         </div>
         <div class="yt-banner-info">
             <div class="yt-banner-badge"><span class="pulse"></span>LIVE NOW</div>
@@ -1776,19 +1850,30 @@ display:none;
     <div class="station-list" id="stationList"></div>
 </section>
 
-<section id="watchTab" class="tab-page">
+<section id="watchTab" class="tab-page watch-tab-page">
     <div class="page-header">
         <h2>Watch Live</h2>
     </div>
 
-    <div id="watchLiveContent" style="display:none;">
-        <div class="yt-video-wrap">
-            <iframe id="ytWatchFrame" src="" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture; web-share" allowfullscreen></iframe>
+    <div id="watchLiveContent" class="watch-live-layout" style="display:none;">
+        <div class="yt-video-sticky">
+            <div class="yt-video-wrap">
+                <div id="ytWatchPlayerEl"></div>
+            </div>
         </div>
-        <div class="glass-card yt-chat-card">
-            <div class="section-title"><i class="ti ti-message-circle" aria-hidden="true"></i>LIVE CHAT</div>
-            <div class="yt-chat-wrap">
-                <iframe id="ytChatFrame" src="" frameborder="0"></iframe>
+
+        <div class="yt-chat-scroll-area">
+            <div class="glass-card yt-chat-card">
+                <div class="yt-chat-header">
+                    <div class="section-title" style="margin-bottom:0;"><i class="ti ti-message-circle" aria-hidden="true"></i>LIVE CHAT</div>
+                    <button class="yt-signin-btn" id="ytSigninBtn">
+                        <i class="ti ti-brand-youtube" aria-hidden="true"></i>
+                        Sign in to comment
+                    </button>
+                </div>
+                <div class="yt-chat-wrap">
+                    <iframe id="ytChatFrame" src="" frameborder="0"></iframe>
+                </div>
             </div>
         </div>
     </div>
@@ -2321,6 +2406,34 @@ const YT_API_KEY = "AIzaSyDyDPFf592sReUiXF5B_re0iBzLEL0qi74";
 const YT_CHANNEL_ID = "UCw-3ZPyFuyVEK7p72f1RcGw";
 let ytLiveVideoId = null;
 let ytIsLive = false;
+let ytBannerPlayer = null;
+let ytWatchPlayer = null;
+let ytApiReady = false;
+let ytApiReadyCallbacks = [];
+
+function loadYouTubeIframeAPI(){
+  if (document.getElementById("yt-iframe-api-script")) return;
+  const tag = document.createElement("script");
+  tag.id = "yt-iframe-api-script";
+  tag.src = "https://www.youtube.com/iframe_api";
+  document.head.appendChild(tag);
+}
+
+window.onYouTubeIframeAPIReady = function(){
+  ytApiReady = true;
+  ytApiReadyCallbacks.forEach(cb => cb());
+  ytApiReadyCallbacks = [];
+};
+
+function whenYouTubeAPIReady(cb){
+  if (ytApiReady && window.YT && window.YT.Player) {
+    cb();
+  } else {
+    ytApiReadyCallbacks.push(cb);
+  }
+}
+
+loadYouTubeIframeAPI();
 
 async function checkYouTubeLive(){
   try {
@@ -2347,24 +2460,56 @@ function setYouTubeLive(videoId){
   if (wasAlreadyLive) return;
 
   const banner = document.getElementById("ytLiveBanner");
-  const bannerFrame = document.getElementById("ytBannerFrame");
-  if (banner && bannerFrame) {
-    bannerFrame.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&modestbranding=1&playsinline=1`;
-    banner.style.display = "flex";
-  }
+  if (banner) banner.style.display = "flex";
 
   const watchContent = document.getElementById("watchLiveContent");
-  const watchFrame = document.getElementById("ytWatchFrame");
   const chatFrame = document.getElementById("ytChatFrame");
   const offlinePlaceholder = document.getElementById("watchOfflinePlaceholder");
 
-  if (watchContent && watchFrame && chatFrame && offlinePlaceholder) {
+  if (watchContent && chatFrame && offlinePlaceholder) {
     const embedHost = window.location.hostname || "localhost";
-    watchFrame.src = `https://www.youtube.com/embed/${videoId}?autoplay=0&modestbranding=1&playsinline=1`;
     chatFrame.src = `https://www.youtube.com/live_chat?v=${videoId}&embed_domain=${embedHost}`;
-    watchContent.style.display = "block";
+    watchContent.style.display = "flex";
     offlinePlaceholder.style.display = "none";
   }
+
+  whenYouTubeAPIReady(() => {
+    if (!ytBannerPlayer) {
+      ytBannerPlayer = new YT.Player("ytBannerPlayerEl", {
+        videoId: videoId,
+        playerVars: {
+          autoplay: 1, mute: 1, controls: 0, modestbranding: 1, rel: 0,
+          disablekb: 1, fs: 0, iv_load_policy: 3, playsinline: 1
+        },
+        events: {
+          onReady: (e) => { e.target.mute(); e.target.playVideo(); }
+        }
+      });
+    } else {
+      ytBannerPlayer.loadVideoById(videoId);
+      ytBannerPlayer.mute();
+    }
+
+    if (!ytWatchPlayer) {
+      ytWatchPlayer = new YT.Player("ytWatchPlayerEl", {
+        videoId: videoId,
+        playerVars: {
+          autoplay: 0, controls: 1, modestbranding: 1, rel: 0,
+          disablekb: 1, fs: 1, iv_load_policy: 3, playsinline: 1
+        },
+        events: {
+          onStateChange: (e) => {
+            if (e.data === YT.PlayerState.PLAYING) {
+              if (isPlaying) stopStream();
+              if (ytBannerPlayer) ytBannerPlayer.pauseVideo();
+            }
+          }
+        }
+      });
+    } else {
+      ytWatchPlayer.loadVideoById(videoId);
+    }
+  });
 }
 
 function setYouTubeOffline(){
@@ -2375,22 +2520,24 @@ function setYouTubeOffline(){
   if (wasAlreadyOffline) return;
 
   const banner = document.getElementById("ytLiveBanner");
-  const bannerFrame = document.getElementById("ytBannerFrame");
-  if (banner && bannerFrame) {
-    bannerFrame.src = "";
-    banner.style.display = "none";
-  }
+  if (banner) banner.style.display = "none";
+  if (ytBannerPlayer) ytBannerPlayer.stopVideo();
+  if (ytWatchPlayer) ytWatchPlayer.stopVideo();
 
   const watchContent = document.getElementById("watchLiveContent");
-  const watchFrame = document.getElementById("ytWatchFrame");
   const chatFrame = document.getElementById("ytChatFrame");
   const offlinePlaceholder = document.getElementById("watchOfflinePlaceholder");
 
-  if (watchContent && watchFrame && chatFrame && offlinePlaceholder) {
-    watchFrame.src = "";
+  if (watchContent && chatFrame && offlinePlaceholder) {
     chatFrame.src = "";
     watchContent.style.display = "none";
     offlinePlaceholder.style.display = "block";
+  }
+}
+
+function pauseYouTubeForRadio(){
+  if (ytWatchPlayer && ytWatchPlayer.getPlayerState && ytWatchPlayer.getPlayerState() === YT.PlayerState.PLAYING) {
+    ytWatchPlayer.pauseVideo();
   }
 }
 
@@ -2406,6 +2553,24 @@ if (ytLiveBanner) {
       const watchNavBtn = document.querySelector('.nav-btn[data-tab="watch"]');
       if (watchNavBtn) watchNavBtn.click();
     }
+  });
+}
+
+function openExternalLink(url){
+  const isKodularWebView = navigator.userAgent.indexOf("wv") !== -1 || window.AppInventor !== undefined;
+  console.log("OPEN_EXTERNAL:" + url);
+  if (!isKodularWebView) {
+    window.open(url, "_blank", "noopener");
+  }
+}
+
+const ytSigninBtn = document.getElementById("ytSigninBtn");
+if (ytSigninBtn) {
+  ytSigninBtn.addEventListener("click", () => {
+    const targetUrl = ytLiveVideoId
+      ? `https://www.youtube.com/watch?v=${ytLiveVideoId}`
+      : `https://www.youtube.com/channel/${YT_CHANNEL_ID}/live`;
+    openExternalLink(targetUrl);
   });
 }
 
@@ -2547,6 +2712,7 @@ let streamRetries = 0;
 
 async function startStream() {
   try {
+    pauseYouTubeForRadio();
     audio.crossOrigin = "anonymous";
     audio.src = STREAM_URL;
     setMiniStatus("Connecting...");
