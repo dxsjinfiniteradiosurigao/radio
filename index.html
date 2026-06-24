@@ -1449,6 +1449,42 @@ overflow:hidden;
 text-overflow:ellipsis;
 }
 
+.station-video-indicator{
+position:relative;
+display:flex;
+align-items:center;
+justify-content:center;
+width:18px;
+height:18px;
+border-radius:50%;
+background:linear-gradient(135deg,#ff4d4d,#dc1e3c);
+flex-shrink:0;
+}
+
+.station-video-indicator i{
+font-size:10px;
+color:#fff;
+position:relative;
+z-index:1;
+}
+
+.video-indicator-pulse{
+position:absolute;
+inset:0;
+border-radius:50%;
+background:rgba(220,30,60,.6);
+animation:videoPulse 1.4s ease-out infinite;
+}
+
+@keyframes videoPulse{
+0%{transform:scale(1);opacity:.7;}
+100%{transform:scale(1.9);opacity:0;}
+}
+
+.station-row.has-video-live{
+border-color:rgba(255,90,110,.3);
+}
+
 .station-sub-text{
 font-size:12px;
 color:var(--text2);
@@ -1601,6 +1637,131 @@ font-size:13px;
 font-weight:600;
 color:#ff8fa3;
 transition:opacity .25s;
+}
+
+.mode-toggle-row{
+display:flex;
+gap:10px;
+margin-top:16px;
+position:relative;
+z-index:1;
+}
+
+.mode-toggle-btn{
+flex:1;
+display:flex;
+align-items:center;
+justify-content:center;
+gap:7px;
+background:var(--surface);
+border:1px solid var(--border);
+color:var(--text2);
+font-size:13px;
+font-weight:700;
+padding:11px 0;
+border-radius:14px;
+cursor:pointer;
+position:relative;
+transition:background .25s, border-color .25s, color .25s, transform .15s;
+}
+
+.mode-toggle-btn i{font-size:16px;}
+.mode-toggle-btn:active{transform:scale(.96);}
+
+.mode-toggle-btn.active{
+background:linear-gradient(135deg,rgba(220,30,60,.18),rgba(77,125,255,.12));
+border-color:rgba(255,90,110,.4);
+color:var(--text);
+}
+
+.mode-toggle-btn.has-live-pulse:not(.active){
+border-color:rgba(255,90,110,.3);
+}
+
+.mode-btn-pulse{
+position:absolute;
+top:6px;
+right:10px;
+width:7px;
+height:7px;
+border-radius:50%;
+background:#ff3d5e;
+animation:blink 1.2s ease-in-out infinite;
+}
+
+.mode-availability-row{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:6px;
+margin-top:10px;
+font-size:11px;
+font-weight:600;
+color:var(--text3);
+position:relative;
+z-index:1;
+}
+
+.mode-live-dot,.mode-offline-dot{
+width:6px;
+height:6px;
+border-radius:50%;
+display:inline-block;
+}
+
+.mode-live-dot{
+background:#ff3d5e;
+animation:blink 1.2s ease-in-out infinite;
+}
+
+.mode-offline-dot{
+background:var(--text3);
+}
+
+.inline-watch-wrap{
+margin-top:16px;
+position:relative;
+z-index:1;
+}
+
+.yt-video-sticky-inline{
+margin-bottom:14px;
+}
+
+.yt-chat-card-inline{
+background:rgba(0,0,0,.18);
+border-radius:16px;
+padding:14px 0 0;
+overflow:hidden;
+}
+
+.yt-chat-card-inline .yt-chat-header{
+padding:0 14px 12px;
+}
+
+.yt-chat-card-inline .yt-chat-wrap{
+min-height:320px;
+height:320px;
+}
+
+.watch-unavailable-block{
+margin-top:16px;
+text-align:center;
+padding:32px 10px 10px;
+position:relative;
+z-index:1;
+}
+
+.watch-unavailable-block i{
+font-size:38px;
+color:var(--text3);
+margin-bottom:10px;
+}
+
+.watch-unavailable-block h3{
+font-weight:700;
+margin-bottom:6px;
+font-size:15px;
 }
 
 .news-item{
@@ -1842,47 +2003,12 @@ display:none;
 
 <section id="listenTab" class="tab-page">
     <div class="page-header">
-        <h2>Listen</h2>
+        <h2>Stream</h2>
     </div>
 
     <div class="section-title station-list-title"><i class="ti ti-list" aria-hidden="true"></i>INFINITE RADIO NETWORK</div>
 
     <div class="station-list" id="stationList"></div>
-</section>
-
-<section id="watchTab" class="tab-page watch-tab-page">
-    <div class="page-header">
-        <h2>Watch Live</h2>
-    </div>
-
-    <div id="watchLiveContent" class="watch-live-layout" style="display:none;">
-        <div class="yt-video-sticky">
-            <div class="yt-video-wrap">
-                <div id="ytWatchPlayerEl"></div>
-            </div>
-        </div>
-
-        <div class="yt-chat-scroll-area">
-            <div class="glass-card yt-chat-card">
-                <div class="yt-chat-header">
-                    <div class="section-title" style="margin-bottom:0;"><i class="ti ti-message-circle" aria-hidden="true"></i>LIVE CHAT</div>
-                    <button class="yt-signin-btn" id="ytSigninBtn">
-                        <i class="ti ti-brand-youtube" aria-hidden="true"></i>
-                        Sign in to comment
-                    </button>
-                </div>
-                <div class="yt-chat-wrap">
-                    <iframe id="ytChatFrame" src="" frameborder="0"></iframe>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="glass-card placeholder-block" id="watchOfflinePlaceholder">
-        <i class="ti ti-video" aria-hidden="true"></i>
-        <h3>Livestream Offline</h3>
-        <p style="color:var(--text2);">We're not live on YouTube right now. Check back soon!</p>
-    </div>
 </section>
 
 <section id="newsTab" class="tab-page">
@@ -2012,16 +2138,10 @@ display:none;
             <span>Home</span>
         </div>
     </button>
-    <button class="nav-btn" data-tab="listen" aria-label="Listen">
+    <button class="nav-btn" data-tab="listen" aria-label="Stream">
         <div class="nav-btn-inner">
-            <i class="ti ti-headphones"></i>
-            <span>Listen</span>
-        </div>
-    </button>
-    <button class="nav-btn" data-tab="watch" aria-label="Watch live">
-        <div class="nav-btn-inner">
-            <i class="ti ti-video"></i>
-            <span>Watch</span>
+            <i class="ti ti-broadcast"></i>
+            <span>Stream</span>
         </div>
     </button>
     <button class="nav-btn" data-tab="news" aria-label="News">
@@ -2121,29 +2241,32 @@ function getCurrentProgram(){
 }
 
 const networkStations = [
-  { id:"aurora", name:"88.1 AIMCOOP INFINITE RADIO", location:"Aurora", live:false },
-  { id:"bislig", name:"100.1 INFINITE RADIO", location:"Bislig", live:false },
-  { id:"bukidnon", name:"94.5 PARTNER RADIO", location:"Bukidnon", live:false },
-  { id:"butuan", name:"90.1 NONGLADING INFINITE RADIO", location:"Butuan", live:false },
-  { id:"calbayog", name:"92.1 Infinite Radio", location:"Calbayog", live:false },
-  { id:"claver", name:"99.3 INFINITE RADIO", location:"Claver", live:false },
-  { id:"gensan", name:"96.7 INFINITE RADIO", location:"Gensan", live:false },
-  { id:"isulan", name:"93.3 INFINITE RADIO", location:"Isulan", live:false },
-  { id:"jagna", name:"92.9 INFINITE RADIO", location:"Jagna", live:false },
-  { id:"lipa", name:"INFINITE RADIO 102.3", location:"Lipa Batangas", live:false },
-  { id:"mati", name:"107.9 INFINITE RADIO", location:"Mati", live:false },
-  { id:"oroquieta", name:"94.5 PARTNER RADIO", location:"Oroquieta", live:false },
-  { id:"panabo", name:"96.1 INFINITE RADIO", location:"Panabo", live:false },
-  { id:"sanfrancisco", name:"100.1 NONGLADING INFINITE RADIO", location:"San Francisco", live:false },
-  { id:"sugbongcogon", name:"100.3 INFINITE RADIO", location:"Sugbongcogon", live:false },
-  { id:"surigao", name:"93.3 Infinite Radio", location:"Surigao City", live:true },
-  { id:"tandag", name:"90.1 INFINITE RADIO", location:"Tandag", live:false },
-  { id:"valencia", name:"91.3 NONGLADING INFINITE RADIO", location:"Valencia", live:false },
-  { id:"villaba", name:"94.9 INFINITE RADIO", location:"Villaba", live:false },
-  { id:"partnerfm", name:"94.3 PARTNER RADIO FM", location:"", live:false }
+  { id:"aurora", name:"88.1 AIMCOOP INFINITE RADIO", location:"Aurora", live:false, youtubeChannelId:null },
+  { id:"bislig", name:"100.1 INFINITE RADIO", location:"Bislig", live:false, youtubeChannelId:null },
+  { id:"bukidnon", name:"94.5 PARTNER RADIO", location:"Bukidnon", live:false, youtubeChannelId:null },
+  { id:"butuan", name:"90.1 NONGLADING INFINITE RADIO", location:"Butuan", live:false, youtubeChannelId:null },
+  { id:"calbayog", name:"92.1 Infinite Radio", location:"Calbayog", live:false, youtubeChannelId:null },
+  { id:"claver", name:"99.3 INFINITE RADIO", location:"Claver", live:false, youtubeChannelId:null },
+  { id:"gensan", name:"96.7 INFINITE RADIO", location:"Gensan", live:false, youtubeChannelId:null },
+  { id:"isulan", name:"93.3 INFINITE RADIO", location:"Isulan", live:false, youtubeChannelId:null },
+  { id:"jagna", name:"92.9 INFINITE RADIO", location:"Jagna", live:false, youtubeChannelId:null },
+  { id:"lipa", name:"INFINITE RADIO 102.3", location:"Lipa Batangas", live:false, youtubeChannelId:null },
+  { id:"mati", name:"107.9 INFINITE RADIO", location:"Mati", live:false, youtubeChannelId:null },
+  { id:"oroquieta", name:"94.5 PARTNER RADIO", location:"Oroquieta", live:false, youtubeChannelId:null },
+  { id:"panabo", name:"96.1 INFINITE RADIO", location:"Panabo", live:false, youtubeChannelId:null },
+  { id:"sanfrancisco", name:"100.1 NONGLADING INFINITE RADIO", location:"San Francisco", live:false, youtubeChannelId:null },
+  { id:"sugbongcogon", name:"100.3 INFINITE RADIO", location:"Sugbongcogon", live:false, youtubeChannelId:null },
+  { id:"surigao", name:"93.3 Infinite Radio", location:"Surigao City", live:true, youtubeChannelId:"UCw-3ZPyFuyVEK7p72f1RcGw" },
+  { id:"tandag", name:"90.1 INFINITE RADIO", location:"Tandag", live:false, youtubeChannelId:null },
+  { id:"valencia", name:"91.3 NONGLADING INFINITE RADIO", location:"Valencia", live:false, youtubeChannelId:null },
+  { id:"villaba", name:"94.9 INFINITE RADIO", location:"Villaba", live:false, youtubeChannelId:null },
+  { id:"partnerfm", name:"94.3 PARTNER RADIO FM", location:"", live:false, youtubeChannelId:null }
 ];
 
 let selectedStationId = "surigao";
+let selectedMode = "listen";
+
+let stationYouTubeLiveStatus = {};
 
 function buildInlinePanelHTML(station){
   if(station.live){
@@ -2162,6 +2285,57 @@ function buildInlinePanelHTML(station){
     const title = current ? current.title : "Music Automation";
     const status = current ? "NOW ON AIR" : "No live show";
 
+    const ytStatus = stationYouTubeLiveStatus[station.id];
+    const isYtLive = ytStatus && ytStatus.live;
+
+    const watchBtnClasses = ["mode-toggle-btn"];
+    if(selectedMode === "watch") watchBtnClasses.push("active");
+    if(isYtLive) watchBtnClasses.push("has-live-pulse");
+
+    const listenBtnClasses = ["mode-toggle-btn"];
+    if(selectedMode === "listen") listenBtnClasses.push("active");
+
+    const watchAvailability = station.youtubeChannelId
+      ? (isYtLive
+          ? `<span class="mode-live-dot"></span>Video Live`
+          : `<span class="mode-offline-dot"></span>No video stream`)
+      : `<span class="mode-offline-dot"></span>Coming soon`;
+
+    let contentHTML = "";
+    if(selectedMode === "watch"){
+      if(isYtLive){
+        contentHTML = `
+          <div class="inline-watch-wrap">
+            <div class="yt-video-sticky-inline">
+              <div class="yt-video-wrap">
+                <div id="ytWatchPlayerEl"></div>
+              </div>
+            </div>
+            <div class="yt-chat-card-inline">
+              <div class="yt-chat-header">
+                <div class="section-title" style="margin-bottom:0;"><i class="ti ti-message-circle" aria-hidden="true"></i>LIVE CHAT</div>
+                <button class="yt-signin-btn" id="ytSigninBtn">
+                  <i class="ti ti-brand-youtube" aria-hidden="true"></i>
+                  Sign in to comment
+                </button>
+              </div>
+              <div class="yt-chat-wrap">
+                <iframe id="ytChatFrame" src="" frameborder="0"></iframe>
+              </div>
+            </div>
+          </div>
+        `;
+      } else {
+        contentHTML = `
+          <div class="watch-unavailable-block">
+            <i class="ti ti-video-off" aria-hidden="true"></i>
+            <h3>No livestream right now</h3>
+            <p style="color:var(--text2);">This station isn't streaming video at the moment. Check back soon, or switch to Listen for the audio stream.</p>
+          </div>
+        `;
+      }
+    }
+
     return `
       <div class="glass-card current-program-card inline-station-panel" id="stationScheduleCard">
         <div class="section-title"><i class="ti ti-broadcast" aria-hidden="true"></i>CURRENT PROGRAM</div>
@@ -2174,6 +2348,21 @@ function buildInlinePanelHTML(station){
           </div>
         </div>
         ${hostsHTML}
+
+        <div class="mode-toggle-row">
+          <button class="${listenBtnClasses.join(' ')}" data-mode="listen" data-station-id="${station.id}">
+            <i class="ti ti-headphones" aria-hidden="true"></i>
+            Listen
+          </button>
+          <button class="${watchBtnClasses.join(' ')}" data-mode="watch" data-station-id="${station.id}">
+            <i class="ti ti-video" aria-hidden="true"></i>
+            Watch
+            ${isYtLive ? '<span class="mode-btn-pulse"></span>' : ''}
+          </button>
+        </div>
+        <div class="mode-availability-row">${watchAvailability}</div>
+
+        ${contentHTML}
       </div>
     `;
   } else {
@@ -2194,9 +2383,16 @@ function renderStationList(){
   const html = networkStations.map(s => {
     const isSelected = s.id === selectedStationId;
     const isLive = s.live;
+    const ytStatus = stationYouTubeLiveStatus[s.id];
+    const isYtLive = ytStatus && ytStatus.live;
     const rowClasses = ["station-row"];
     if(isSelected) rowClasses.push("selected");
     if(isLive) rowClasses.push("is-live");
+    if(isYtLive) rowClasses.push("has-video-live");
+
+    const videoIndicator = isYtLive
+      ? `<div class="station-video-indicator" aria-label="Video livestream available"><i class="ti ti-video" aria-hidden="true"></i><span class="video-indicator-pulse"></span></div>`
+      : "";
 
     const rowHTML = `
       <div class="${rowClasses.join(' ')}" data-station-id="${s.id}" role="button" tabindex="0">
@@ -2204,6 +2400,7 @@ function renderStationList(){
         <div class="station-info">
           <div class="station-name-row">
             <span class="station-name-text">${s.name}</span>
+            ${videoIndicator}
           </div>
           <div class="station-sub-text">${s.location || "Infinite Radio Network"}</div>
         </div>
@@ -2228,16 +2425,93 @@ function renderStationList(){
       }
     });
   });
+
+  container.querySelectorAll(".mode-toggle-btn").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      selectMode(btn.dataset.mode, btn.dataset.stationId);
+    });
+  });
+
+  if(selectedMode === "watch"){
+    const station = networkStations.find(s => s.id === selectedStationId);
+    const ytStatus = stationYouTubeLiveStatus[selectedStationId];
+    if(station && ytStatus && ytStatus.live){
+      attachWatchPlayer(ytStatus.videoId);
+    }
+  }
+}
+
+function selectMode(mode, stationId){
+  selectedMode = mode;
+
+  if(mode === "listen"){
+    if(ytWatchPlayer) ytWatchPlayer.stopVideo();
+    if(!isPlaying) startStream();
+  } else if(mode === "watch"){
+    const ytStatus = stationYouTubeLiveStatus[stationId];
+    if(ytStatus && ytStatus.live){
+      if(isPlaying) stopStream();
+    }
+  }
+
+  renderStationList();
+
+  requestAnimationFrame(() => {
+    const card = document.getElementById("stationScheduleCard");
+    if(card){
+      card.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  });
+}
+
+function attachWatchPlayer(videoId){
+  whenYouTubeAPIReady(() => {
+    const el = document.getElementById("ytWatchPlayerEl");
+    if(!el) return;
+
+    const chatFrame = document.getElementById("ytChatFrame");
+    if(chatFrame){
+      const embedHost = window.location.hostname || "localhost";
+      chatFrame.src = `https://www.youtube.com/live_chat?v=${videoId}&embed_domain=${embedHost}`;
+    }
+
+    if (!ytWatchPlayer) {
+      ytWatchPlayer = new YT.Player("ytWatchPlayerEl", {
+        videoId: videoId,
+        playerVars: {
+          autoplay: 1, controls: 1, modestbranding: 1, rel: 0,
+          disablekb: 1, fs: 1, iv_load_policy: 3, playsinline: 1
+        },
+        events: {
+          onReady: (e) => { e.target.playVideo(); },
+          onStateChange: (e) => {
+            if (e.data === YT.PlayerState.PLAYING) {
+              if (isPlaying) stopStream();
+              if (ytBannerPlayer) ytBannerPlayer.pauseVideo();
+            }
+          }
+        }
+      });
+    } else {
+      ytWatchPlayer.loadVideoById(videoId);
+      ytWatchPlayer.playVideo();
+    }
+  });
 }
 
 function selectStation(stationId){
   const wasAlreadySelected = stationId === selectedStationId;
   const station = networkStations.find(s => s.id === stationId);
 
+  if(!wasAlreadySelected){
+    selectedMode = "listen";
+  }
+
   selectedStationId = stationId;
   renderStationList();
 
-  if(wasAlreadySelected && station && station.live){
+  if(wasAlreadySelected && station && station.live && selectedMode === "listen"){
     playerSheet.classList.add("show");
   } else {
     requestAnimationFrame(() => {
@@ -2362,8 +2636,22 @@ let notifsEnabled = false;
 
 function requestNotifPermission(){
   if("Notification" in window){
-    Notification.requestPermission();
+    Notification.requestPermission().then((perm) => {
+      notifsEnabled = perm === "granted";
+    });
   }
+}
+
+function runOnboardingPrompts(){
+  requestNotifPermission();
+
+  setTimeout(() => {
+    const locText = document.getElementById("locationText");
+    const alreadySet = locText && locText.dataset.lat && locText.dataset.lon;
+    if (!alreadySet) {
+      openLocationInput();
+    }
+  }, 600);
 }
 
 function notify(title){
@@ -2404,6 +2692,7 @@ const STREAM_URL =
 
 const YT_API_KEY = "AIzaSyDyDPFf592sReUiXF5B_re0iBzLEL0qi74";
 const YT_CHANNEL_ID = "UCw-3ZPyFuyVEK7p72f1RcGw";
+const YT_PRIMARY_STATION_ID = "surigao";
 let ytLiveVideoId = null;
 let ytIsLive = false;
 let ytBannerPlayer = null;
@@ -2436,19 +2725,35 @@ function whenYouTubeAPIReady(cb){
 loadYouTubeIframeAPI();
 
 async function checkYouTubeLive(){
-  try {
-    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${YT_CHANNEL_ID}&eventType=live&type=video&key=${YT_API_KEY}`;
-    const res = await fetch(url);
-    const data = await res.json();
+  const stationsWithYouTube = networkStations.filter(s => s.youtubeChannelId);
 
-    if (data.items && data.items.length > 0) {
-      const videoId = data.items[0].id.videoId;
-      setYouTubeLive(videoId);
-    } else {
-      setYouTubeOffline();
+  for (const station of stationsWithYouTube) {
+    try {
+      const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${station.youtubeChannelId}&eventType=live&type=video&key=${YT_API_KEY}`;
+      const res = await fetch(url);
+      const data = await res.json();
+
+      if (data.items && data.items.length > 0) {
+        const videoId = data.items[0].id.videoId;
+        stationYouTubeLiveStatus[station.id] = { live: true, videoId: videoId };
+
+        if (station.id === YT_PRIMARY_STATION_ID) {
+          setYouTubeLive(videoId);
+        }
+      } else {
+        stationYouTubeLiveStatus[station.id] = { live: false, videoId: null };
+
+        if (station.id === YT_PRIMARY_STATION_ID) {
+          setYouTubeOffline();
+        }
+      }
+    } catch (e) {
+      console.log("YouTube live check failed for " + station.id, e);
     }
-  } catch (e) {
-    console.log("YouTube live check failed", e);
+  }
+
+  if (selectedStationId && stationYouTubeLiveStatus[selectedStationId] !== undefined) {
+    renderStationList();
   }
 }
 
@@ -2461,17 +2766,6 @@ function setYouTubeLive(videoId){
 
   const banner = document.getElementById("ytLiveBanner");
   if (banner) banner.style.display = "flex";
-
-  const watchContent = document.getElementById("watchLiveContent");
-  const chatFrame = document.getElementById("ytChatFrame");
-  const offlinePlaceholder = document.getElementById("watchOfflinePlaceholder");
-
-  if (watchContent && chatFrame && offlinePlaceholder) {
-    const embedHost = window.location.hostname || "localhost";
-    chatFrame.src = `https://www.youtube.com/live_chat?v=${videoId}&embed_domain=${embedHost}`;
-    watchContent.style.display = "flex";
-    offlinePlaceholder.style.display = "none";
-  }
 
   whenYouTubeAPIReady(() => {
     if (!ytBannerPlayer) {
@@ -2489,26 +2783,6 @@ function setYouTubeLive(videoId){
       ytBannerPlayer.loadVideoById(videoId);
       ytBannerPlayer.mute();
     }
-
-    if (!ytWatchPlayer) {
-      ytWatchPlayer = new YT.Player("ytWatchPlayerEl", {
-        videoId: videoId,
-        playerVars: {
-          autoplay: 0, controls: 1, modestbranding: 1, rel: 0,
-          disablekb: 1, fs: 1, iv_load_policy: 3, playsinline: 1
-        },
-        events: {
-          onStateChange: (e) => {
-            if (e.data === YT.PlayerState.PLAYING) {
-              if (isPlaying) stopStream();
-              if (ytBannerPlayer) ytBannerPlayer.pauseVideo();
-            }
-          }
-        }
-      });
-    } else {
-      ytWatchPlayer.loadVideoById(videoId);
-    }
   });
 }
 
@@ -2524,15 +2798,8 @@ function setYouTubeOffline(){
   if (ytBannerPlayer) ytBannerPlayer.stopVideo();
   if (ytWatchPlayer) ytWatchPlayer.stopVideo();
 
-  const watchContent = document.getElementById("watchLiveContent");
   const chatFrame = document.getElementById("ytChatFrame");
-  const offlinePlaceholder = document.getElementById("watchOfflinePlaceholder");
-
-  if (watchContent && chatFrame && offlinePlaceholder) {
-    chatFrame.src = "";
-    watchContent.style.display = "none";
-    offlinePlaceholder.style.display = "block";
-  }
+  if (chatFrame) chatFrame.src = "";
 }
 
 function pauseYouTubeForRadio(){
@@ -2544,14 +2811,18 @@ function pauseYouTubeForRadio(){
 const ytLiveBanner = document.getElementById("ytLiveBanner");
 if (ytLiveBanner) {
   ytLiveBanner.addEventListener("click", () => {
-    const watchNavBtn = document.querySelector('.nav-btn[data-tab="watch"]');
-    if (watchNavBtn) watchNavBtn.click();
+    const listenNavBtn = document.querySelector('.nav-btn[data-tab="listen"]');
+    if (listenNavBtn) listenNavBtn.click();
+    selectedStationId = "surigao";
+    selectMode("watch", "surigao");
   });
   ytLiveBanner.addEventListener("keydown", (e) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
-      const watchNavBtn = document.querySelector('.nav-btn[data-tab="watch"]');
-      if (watchNavBtn) watchNavBtn.click();
+      const listenNavBtn = document.querySelector('.nav-btn[data-tab="listen"]');
+      if (listenNavBtn) listenNavBtn.click();
+      selectedStationId = "surigao";
+      selectMode("watch", "surigao");
     }
   });
 }
@@ -2602,7 +2873,6 @@ const navBtns = document.querySelectorAll(".nav-btn");
 const tabs = {
   home: document.getElementById("homeTab"),
   listen: document.getElementById("listenTab"),
-  watch: document.getElementById("watchTab"),
   news: document.getElementById("newsTab"),
   about: document.getElementById("aboutTab")
 };
@@ -3179,6 +3449,7 @@ updateScheduleUI();
 renderStationList();
 updateTime();
 checkYouTubeLive();
+runOnboardingPrompts();
 
 setInterval(updateTime, 1000);
 setInterval(() => {
