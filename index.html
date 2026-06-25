@@ -1332,6 +1332,92 @@ transition:transform .15s;
 
 #miniPlay:active{transform:scale(.88);}
 
+#miniWatchPlayer{
+position:fixed;
+left:12px;
+right:12px;
+bottom:96px;
+height:70px;
+display:none;
+align-items:center;
+gap:12px;
+padding:8px 10px;
+border-radius:20px;
+background:rgba(255,255,255,.08);
+border:1px solid rgba(255,90,110,.3);
+z-index:500;
+box-shadow:var(--shadow);
+}
+
+#miniWatchPlayer.show{display:flex;}
+
+.mini-watch-video{
+width:78px;
+height:54px;
+border-radius:12px;
+overflow:hidden;
+background:#000;
+flex-shrink:0;
+position:relative;
+}
+
+.mini-watch-video iframe{
+position:absolute;
+inset:0;
+width:100%;
+height:100%;
+border:none;
+pointer-events:none;
+}
+
+.mini-watch-info{
+flex:1;
+min-width:0;
+display:flex;
+align-items:center;
+gap:6px;
+}
+
+.mini-watch-live-dot{
+width:7px;
+height:7px;
+border-radius:50%;
+background:#ff3355;
+flex-shrink:0;
+animation:miniWatchDotBlink 1.2s ease-in-out infinite;
+}
+
+@keyframes miniWatchDotBlink{
+0%,100%{opacity:1;}
+50%{opacity:.25;}
+}
+
+#miniWatchTitle{
+font-size:13px;
+font-weight:700;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+}
+
+#miniWatchPlayPause,#miniWatchClose{
+background:var(--surface);
+border:none;
+color:#fff;
+width:38px;
+height:38px;
+border-radius:50%;
+font-size:15px;
+cursor:pointer;
+flex-shrink:0;
+display:flex;
+align-items:center;
+justify-content:center;
+transition:transform .15s;
+}
+
+#miniWatchPlayPause:active,#miniWatchClose:active{transform:scale(.88);}
+
 #bottomNav{
 position:fixed;
 left:8px;
@@ -2353,6 +2439,20 @@ display:none;
     </button>
 </div>
 
+<div id="miniWatchPlayer">
+    <div class="mini-watch-video" id="miniWatchVideoEl"></div>
+    <div class="mini-watch-info">
+        <div class="mini-watch-live-dot"></div>
+        <span id="miniWatchTitle">Live</span>
+    </div>
+    <button id="miniWatchPlayPause" aria-label="Play or pause livestream">
+        <i class="ti ti-player-pause-filled"></i>
+    </button>
+    <button id="miniWatchClose" aria-label="Close livestream">
+        <i class="ti ti-x"></i>
+    </button>
+</div>
+
 <nav id="bottomNav">
     <button class="nav-btn active" data-tab="home" aria-label="Home">
         <div class="nav-btn-inner">
@@ -2691,6 +2791,9 @@ function selectMode(mode, stationId){
       if(unavailableBlock) unavailableBlock.style.display = "none";
       if(watchLayout) watchLayout.style.display = "flex";
       attachWatchPlayer(ytStatus.videoId);
+
+      const miniWatchPlayer = document.getElementById("miniWatchPlayer");
+      if(miniWatchPlayer) miniWatchPlayer.classList.remove("show");
     } else {
       if(unavailableBlock) unavailableBlock.style.display = "block";
       if(watchLayout) watchLayout.style.display = "none";
@@ -2725,14 +2828,69 @@ function attachWatchPlayer(videoId){
               if (isPlaying) stopStream();
               if (ytBannerPlayer) ytBannerPlayer.pauseVideo();
             }
+            updateMiniWatchPlayPauseIcon();
           }
         }
       });
     } else {
+      const fullscreenContainer = document.getElementById("ytWatchPlayerEl");
+      if (fullscreenContainer && ytWatchPlayer.getIframe) {
+        const iframe = ytWatchPlayer.getIframe();
+        if (iframe && iframe.parentElement !== fullscreenContainer) {
+          fullscreenContainer.appendChild(iframe);
+        }
+      }
       ytWatchPlayer.loadVideoById(videoId);
       ytWatchPlayer.playVideo();
     }
   });
+}
+
+function minimizeWatchSheet(){
+  if (!ytWatchPlayer || !ytWatchPlayer.getIframe) return;
+
+  const iframe = ytWatchPlayer.getIframe();
+  const miniContainer = document.getElementById("miniWatchVideoEl");
+  if (iframe && miniContainer) {
+    miniContainer.appendChild(iframe);
+  }
+
+  const station = networkStations.find(s => s.id === selectedStationId);
+  const miniTitle = document.getElementById("miniWatchTitle");
+  if (miniTitle && station) miniTitle.textContent = station.name;
+
+  const miniWatchPlayer = document.getElementById("miniWatchPlayer");
+  if (miniWatchPlayer) miniWatchPlayer.classList.add("show");
+
+  updateMiniWatchPlayPauseIcon();
+}
+
+function expandWatchSheet(){
+  if (!ytWatchPlayer || !ytWatchPlayer.getIframe) return;
+
+  const iframe = ytWatchPlayer.getIframe();
+  const fullscreenContainer = document.getElementById("ytWatchPlayerEl");
+  if (iframe && fullscreenContainer) {
+    fullscreenContainer.appendChild(iframe);
+  }
+
+  const miniWatchPlayer = document.getElementById("miniWatchPlayer");
+  if (miniWatchPlayer) miniWatchPlayer.classList.remove("show");
+
+  if (watchSheet) watchSheet.classList.add("show");
+}
+
+function updateMiniWatchPlayPauseIcon(){
+  const icon = document.querySelector("#miniWatchPlayPause i");
+  if (!icon || !ytWatchPlayer || !ytWatchPlayer.getPlayerState) return;
+  const state = ytWatchPlayer.getPlayerState();
+  icon.className = state === YT.PlayerState.PLAYING ? "ti ti-player-pause-filled" : "ti ti-player-play-filled";
+}
+
+function closeMiniWatchPlayer(){
+  if (ytWatchPlayer) ytWatchPlayer.stopVideo();
+  const miniWatchPlayer = document.getElementById("miniWatchPlayer");
+  if (miniWatchPlayer) miniWatchPlayer.classList.remove("show");
 }
 
 function selectStation(stationId){
@@ -3022,6 +3180,9 @@ function setYouTubeOffline(){
   if (ytBannerPlayer) ytBannerPlayer.stopVideo();
   if (ytWatchPlayer) ytWatchPlayer.stopVideo();
 
+  const miniWatchPlayer = document.getElementById("miniWatchPlayer");
+  if (miniWatchPlayer) miniWatchPlayer.classList.remove("show");
+
   const chatFrame = document.getElementById("ytChatFrame");
   if (chatFrame) chatFrame.src = "";
 }
@@ -3029,6 +3190,7 @@ function setYouTubeOffline(){
 function pauseYouTubeForRadio(){
   if (ytWatchPlayer && ytWatchPlayer.getPlayerState && ytWatchPlayer.getPlayerState() === YT.PlayerState.PLAYING) {
     ytWatchPlayer.pauseVideo();
+    updateMiniWatchPlayPauseIcon();
   }
 }
 
@@ -3180,7 +3342,7 @@ closePlayerBtn.addEventListener("click", () => {
   playerSheet.classList.remove("show");
 });
 
-function setupSheetDrag(sheetEl, dragHandleEl, topEl){
+function setupSheetDrag(sheetEl, dragHandleEl, topEl, onDismiss){
   let startY = 0;
   let currentY = 0;
   let dragging = false;
@@ -3209,6 +3371,7 @@ function setupSheetDrag(sheetEl, dragHandleEl, topEl){
     const diff = currentY - startY;
     if (diff > 120) {
       sheetEl.classList.remove("show");
+      if (typeof onDismiss === "function") onDismiss();
     }
   }
 
@@ -3228,14 +3391,45 @@ const watchSheet = document.getElementById("watchSheet");
 const watchDragHandle = document.getElementById("watchDragHandle");
 const watchTopEl = watchSheet ? watchSheet.querySelector(".player-top") : null;
 if (watchSheet) {
-  setupSheetDrag(watchSheet, watchDragHandle, watchTopEl);
+  setupSheetDrag(watchSheet, watchDragHandle, watchTopEl, minimizeWatchSheet);
 }
 
 const closeWatchBtn = document.getElementById("closeWatch");
 if (closeWatchBtn && watchSheet) {
   closeWatchBtn.addEventListener("click", () => {
     watchSheet.classList.remove("show");
-    if (ytWatchPlayer) ytWatchPlayer.stopVideo();
+    minimizeWatchSheet();
+  });
+}
+
+const miniWatchPlayPauseBtn = document.getElementById("miniWatchPlayPause");
+if (miniWatchPlayPauseBtn) {
+  miniWatchPlayPauseBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (!ytWatchPlayer || !ytWatchPlayer.getPlayerState) return;
+    const state = ytWatchPlayer.getPlayerState();
+    if (state === YT.PlayerState.PLAYING) {
+      ytWatchPlayer.pauseVideo();
+    } else {
+      ytWatchPlayer.playVideo();
+    }
+    updateMiniWatchPlayPauseIcon();
+  });
+}
+
+const miniWatchCloseBtn = document.getElementById("miniWatchClose");
+if (miniWatchCloseBtn) {
+  miniWatchCloseBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    closeMiniWatchPlayer();
+  });
+}
+
+const miniWatchPlayerEl = document.getElementById("miniWatchPlayer");
+if (miniWatchPlayerEl) {
+  miniWatchPlayerEl.addEventListener("click", (e) => {
+    if (e.target.closest("#miniWatchPlayPause") || e.target.closest("#miniWatchClose")) return;
+    expandWatchSheet();
   });
 }
 
