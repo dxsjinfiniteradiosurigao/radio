@@ -1235,7 +1235,7 @@ left:12px;
 right:12px;
 bottom:96px;
 height:70px;
-display:flex;
+display:none;
 align-items:center;
 justify-content:space-between;
 padding:10px 14px;
@@ -1246,6 +1246,8 @@ z-index:500;
 box-shadow:var(--shadow);
 transition:border-color .3s;
 }
+
+#miniPlayer.show{display:flex;}
 
 #miniPlayer.playing{
 border-color:rgba(220,30,60,.35);
@@ -2773,7 +2775,13 @@ function selectMode(mode, stationId){
 
   if(mode === "listen"){
     playerSheet.classList.add("show");
-    if(!isPlaying) startStream();
+    if(!isPlaying) {
+      startStream();
+    } else {
+      const miniWatchPlayer = document.getElementById("miniWatchPlayer");
+      if(miniWatchPlayer) miniWatchPlayer.classList.remove("show");
+      miniPlayer.classList.add("show");
+    }
   } else if(mode === "watch"){
     const ytStatus = stationYouTubeLiveStatus[stationId];
     const isLive = ytStatus && ytStatus.live;
@@ -2807,6 +2815,8 @@ function attachWatchPlayer(videoId){
   whenYouTubeAPIReady(() => {
     const el = document.getElementById("ytWatchPlayerEl");
     if(!el) return;
+
+    if (isPlaying) stopStream();
 
     const chatFrame = document.getElementById("ytChatFrame");
     if(chatFrame){
@@ -2861,6 +2871,8 @@ function minimizeWatchSheet(){
 
   const miniWatchPlayer = document.getElementById("miniWatchPlayer");
   if (miniWatchPlayer) miniWatchPlayer.classList.add("show");
+
+  if (miniPlayer) miniPlayer.classList.remove("show");
 
   updateMiniWatchPlayPauseIcon();
 }
@@ -3601,6 +3613,7 @@ function updateUIPlaying(state) {
 
     playerSheet.classList.add("playing");
     miniPlayer.classList.add("playing");
+    miniPlayer.classList.add("show");
     heroLogo.classList.add("is-live");
     heroEq.classList.add("show");
     playBtn.classList.add("is-live");
@@ -3612,12 +3625,16 @@ function updateUIPlaying(state) {
     if (vizIdleLabel) vizIdleLabel.style.opacity = "0";
     setPlayerStatus("live");
 
+    const miniWatchPlayer = document.getElementById("miniWatchPlayer");
+    if (miniWatchPlayer) miniWatchPlayer.classList.remove("show");
+
   } else {
     icon.className = "ti ti-player-play-filled";
     miniIcon.className = "ti ti-player-play-filled";
 
     playerSheet.classList.remove("playing");
     miniPlayer.classList.remove("playing");
+    miniPlayer.classList.remove("show");
     heroLogo.classList.remove("is-live");
     heroEq.classList.remove("show");
     playBtn.classList.remove("is-live");
