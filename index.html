@@ -2402,7 +2402,7 @@ display:none;
 
     <div class="watch-sheet-layout">
         <div class="yt-video-sticky">
-            <div class="yt-video-wrap">
+            <div class="yt-video-wrap" id="ytWatchPlayerWrap">
                 <div id="ytWatchPlayerEl"></div>
             </div>
         </div>
@@ -2843,7 +2843,7 @@ function attachWatchPlayer(videoId){
         }
       });
     } else {
-      const fullscreenContainer = document.getElementById("ytWatchPlayerEl");
+      const fullscreenContainer = document.getElementById("ytWatchPlayerWrap");
       if (fullscreenContainer && ytWatchPlayer.getIframe) {
         const iframe = ytWatchPlayer.getIframe();
         if (iframe && iframe.parentElement !== fullscreenContainer) {
@@ -2861,7 +2861,7 @@ function minimizeWatchSheet(){
 
   const iframe = ytWatchPlayer.getIframe();
   const miniContainer = document.getElementById("miniWatchVideoEl");
-  if (iframe && miniContainer) {
+  if (iframe && miniContainer && iframe.parentElement !== miniContainer) {
     miniContainer.appendChild(iframe);
   }
 
@@ -2881,8 +2881,8 @@ function expandWatchSheet(){
   if (!ytWatchPlayer || !ytWatchPlayer.getIframe) return;
 
   const iframe = ytWatchPlayer.getIframe();
-  const fullscreenContainer = document.getElementById("ytWatchPlayerEl");
-  if (iframe && fullscreenContainer) {
+  const fullscreenContainer = document.getElementById("ytWatchPlayerWrap");
+  if (iframe && fullscreenContainer && iframe.parentElement !== fullscreenContainer) {
     fullscreenContainer.appendChild(iframe);
   }
 
