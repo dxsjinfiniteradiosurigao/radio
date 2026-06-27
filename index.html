@@ -1870,6 +1870,59 @@ position:relative;
 z-index:1;
 }
 
+.coming-up-next-row{
+display:flex;
+align-items:center;
+gap:12px;
+margin-top:14px;
+padding:12px 14px;
+border-radius:14px;
+background:rgba(255,255,255,.04);
+border:1px solid var(--border);
+position:relative;
+z-index:1;
+}
+
+.coming-up-next-icon{
+width:34px;
+height:34px;
+border-radius:50%;
+background:rgba(77,125,255,.16);
+color:#8fb3ff;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:15px;
+flex-shrink:0;
+}
+
+.coming-up-next-text{
+flex:1;
+min-width:0;
+}
+
+.coming-up-next-label{
+font-size:9px;
+font-weight:800;
+letter-spacing:1.2px;
+color:#8fb3ff;
+margin-bottom:2px;
+}
+
+.coming-up-next-title{
+font-size:13px;
+font-weight:700;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+}
+
+.coming-up-next-time{
+font-size:11px;
+color:var(--text2);
+margin-top:1px;
+}
+
 .mode-live-dot,.mode-offline-dot{
 width:6px;
 height:6px;
@@ -2540,19 +2593,22 @@ function getCurrentProgram(){
   const day = now.getDay();
   const mins = now.getHours()*60 + now.getMinutes();
 
+  const todaysShows = schedule
+    .filter(s => s.days.includes(day))
+    .slice()
+    .sort((a,b) => toMinutes(a.start) - toMinutes(b.start));
+
   let current = null;
   let next = null;
 
-  for(let i=0;i<schedule.length;i++){
-    let s = schedule[i];
-    if(!s.days.includes(day)) continue;
-
-    let start = toMinutes(s.start);
-    let end = toMinutes(s.end);
+  for(let i=0;i<todaysShows.length;i++){
+    const s = todaysShows[i];
+    const start = toMinutes(s.start);
+    const end = toMinutes(s.end);
 
     if(mins >= start && mins < end){
       current = s;
-      next = schedule[i+1] || null;
+      next = todaysShows[i+1] || null;
       break;
     }
 
@@ -2645,7 +2701,7 @@ let stationYouTubeLiveStatus = {};
 
 function buildInlinePanelHTML(station){
   if(station.live){
-    const { current } = getCurrentProgram();
+    const { current, next } = getCurrentProgram();
     const hostsHTML = (current && current.hosts && current.hosts.length) ? `
       <div class="host-chip-row">
         ${current.hosts.map(h => `
@@ -2659,6 +2715,17 @@ function buildInlinePanelHTML(station){
 
     const title = current ? current.title : "Music Automation";
     const status = current ? "NOW ON AIR" : "No live show";
+
+    const comingUpNextHTML = next ? `
+      <div class="coming-up-next-row">
+        <div class="coming-up-next-icon"><i class="ti ti-clock-hour-4" aria-hidden="true"></i></div>
+        <div class="coming-up-next-text">
+          <div class="coming-up-next-label">COMING UP NEXT</div>
+          <div class="coming-up-next-title">${next.title}</div>
+          <div class="coming-up-next-time">${formatTime12(next.start)} - ${formatTime12(next.end)}</div>
+        </div>
+      </div>
+    ` : "";
 
     const ytStatus = stationYouTubeLiveStatus[station.id];
     const isYtLive = ytStatus && ytStatus.live;
@@ -2686,6 +2753,7 @@ function buildInlinePanelHTML(station){
           </div>
         </div>
         ${hostsHTML}
+        ${comingUpNextHTML}
 
         <div class="mode-toggle-row">
           <button class="${listenBtnClasses.join(' ')}" data-mode="listen" data-station-id="${station.id}">
